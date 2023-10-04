@@ -686,7 +686,7 @@ def main():
 #####################################################################
 
             # Cài đặt phông chữ hỗ trợ tiếng Nhật
-            pdfmetrics.registerFont(TTFont('MSMINCHO.TTF', 'form/MSMINCHO.TTF'))          
+            pdfmetrics.registerFont(TTFont('MSMINCHO.TTF', 'C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\testcode0006\\form\\MSMINCHO.TTF'))          
             
             # Hàm để tạo mã QR với kích thước cố định
             def create_qr_code(df_bvbs, size=100):
@@ -709,7 +709,7 @@ def main():
 
             # Hàm để tạo tệp PDF chứa danh sách BBVS, văn bản và hình ảnh
             def create_pdf(bbvs_list, image_list, text_list, text_positions):
-                buffer = io.BytesIO()
+                buffer = BytesIO()
                 c = canvas.Canvas(buffer, pagesize=A4)  # Sử dụng trang giấy A4
 
                 # Kích thước trang A4
@@ -1547,7 +1547,7 @@ def main():
                         #no = 1  # Đặt lại biến đếm NO
 
                 # Đặt vị trí và in văn bản
-                c.drawString(-10, -10, text_content)
+                    c.drawString(-10, -10, text_content)
                 # Lưu PDF
                 c.save()
                 buffer.seek(0)
@@ -2067,43 +2067,43 @@ def main():
 #################################################################################################################################        
             # Danh sách điều kiện và đường dẫn đến các hình ảnh
             image_list = [
-                "image/0.png",
-                "image/1.png",
-                "image/2.png",
-                "image/3.png",
-                "image/4.png",
-                "image/5.png",
-                "image/6.png",
-                "image/7.png",
-                "image/8.png",
-                "image/9.png",
-                "image/10.png",
-                "image/11.png",
-                "image/12.png",
-                "image/13.png",
-                "image/14.png",
-                "image/15.png",
-                "image/16.png",
-                "image/17.png",
-                "image/18.png",
-                "image/19.png",
-                "image/20.png",
-                "image/21.png",
-                "image/22.png",
-                "image/23.png",
-                "image/24.png",
-                "image/25.png",
-                "image/26.png",
-                "image/27.png",
-                "image/28.png",
-                "image/29.png",                              
-                "image/30.png",
-                "image/31.png",
-                "image/32.png",
-                "image/33.png",
-                "image/34.png",
-                "image/35.png",
-                "image/36.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\0.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\1.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\2.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\3.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\4.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\5.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\6.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\7.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\8.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\9.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\10.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\11.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\12.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\13.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\14.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\15.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\16.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\17.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\18.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\19.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\20.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\21.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\22.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\23.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\24.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\25.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\26.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\27.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\28.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\29.png",                              
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\30.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\31.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\32.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\33.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\34.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\35.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\36.png",
             ]
 
             # Hiển thị widget để nhập nội dung văn bản và chỉnh sửa vị trí của từng văn bản
@@ -2126,11 +2126,11 @@ def main():
             st.title("PDFを作成する")
             #if st.button("PDFを作成する"):
             pdf_buffer = create_pdf(df_bvbs, image_list, text_list, text_positions)
-            st.download_button("Download PDF", pdf_buffer, key="download_pdf")
+            st.download_button("Download PDF", pdf_buffer,file_name="BVBS.pdf",key="download_pdf")
 
             # Thêm nút để tải về PDF
             pdf_buffer = create_pdf1()
-            st.download_button(label="Download PDF",data=pdf_buffer,file_name="example_with_rectangles_text_images.pdf",key="download-pdf-button")
+            st.download_button(label="Download PDF",data=pdf_buffer,file_name="example.pdf",key="download-pdf-button")
 
 if __name__ == "__main__":
     session = st.session_state
