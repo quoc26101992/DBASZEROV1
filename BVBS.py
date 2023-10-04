@@ -118,6 +118,9 @@ c.drawString(rect_x_position + 110, rect_y_position + 149, 'mm')
 c.drawString(rect_x_position + 165, rect_y_position + 147, '本')
 c.drawString(rect_x_position + 220, rect_y_position + 147, 'ピン＝')
 
+c.setFont('MSMINCHO.TTF', 14)
+c.drawString(rect_x_position + 110, rect_y_position + 10, "SD" + str(数量1[0]))
+
 c.setFont('MSMINCHO.TTF', 16)
 c.drawString(rect_x_position + 15, rect_y_position + 135, "D" + result['d'])
 c.drawString(rect_x_position + 80, rect_y_position + 135, result['l'])
@@ -652,16 +655,16 @@ def main():
             st.header("BVBS")
             df_bvbs = df_last.loc[:, ["BVBS"]]
 
-            st.write(df_last) #09/08
+            #st.write(df_last) #09/08
 
-            #st.write(df_bvbs)
+            st.write(df_bvbs)
     
             buf = io.BytesIO()
             df_bvbs.to_csv(buf, index=False, header=False)
             file_name_3 = download_bvbs(session.file_name)
             #st.download_button("Download BVBS",buf.getvalue(),file_name_3) #Download BVBS
-            #st.write("""------------------------------------------------------""")
-            #st.header("集計表")
+            st.write("""------------------------------------------------------""")
+            st.header("集計表")
             # Thêm cột mới 
             #df_last['定尺'] = "" #None
             df_table = df_last.loc[:, ["番号","径","切寸","数量","材質","重量(kg)","s"]]
@@ -709,7 +712,7 @@ def main():
 
             # Hàm để tạo tệp PDF chứa danh sách BBVS, văn bản và hình ảnh
             def create_pdf(bbvs_list, image_list, text_list, text_positions):
-                buffer = io.BytesIO()
+                buffer = BytesIO()
                 c = canvas.Canvas(buffer, pagesize=A4)  # Sử dụng trang giấy A4
 
                 # Kích thước trang A4
@@ -725,8 +728,8 @@ def main():
                 qr_y_offset = 27
 
                 # Vị trí ban đầu của hình chữ nhật
-                initial_rect_x_position = 9
-                initial_rect_y_position = page_height - rect_height - 7
+                initial_rect_x_position = 10
+                initial_rect_y_position = page_height - rect_height - 10
 
                 # Khoảng cách giữa các hình
                 x_spacing = 10
@@ -750,6 +753,10 @@ def main():
                 selected_column = 'BVBS'
                 for value001 in df[selected_column]:
                     #st.write(value001)
+                    # Sử dụng biểu thức chính quy để tìm số sau "SD" đến ký tự "@"
+                    数量 = r'SD(\d+\.\d+|\d+)@'
+                    # Tìm tất cả các kết quả phù hợp với biểu thức chính quy
+                    数量1 = re.findall(数量 , value001)
                     qr_image = create_qr_code(value001, size=qr_size)
 ################################################################
                     # Vẽ hình chữ nhật trắng với đường viền đen
@@ -813,11 +820,11 @@ def main():
 
                         exec(code_string)
 
-                        c.drawString(rect_x_position + 112, rect_y_position + 105, l1) #phải trên
-                        c.drawString(rect_x_position + 112, rect_y_position + 70, l2) #phải
+                        c.drawString(rect_x_position + 112, rect_y_position + 105, l5) #phải trên
+                        c.drawString(rect_x_position + 112, rect_y_position + 70, l4) #phải
                         c.drawString(rect_x_position + 78, rect_y_position + 40, l3) #trên
-                        c.drawString(rect_x_position + 44, rect_y_position + 72, l4)  #trái
-                        c.drawString(rect_x_position + 44, rect_y_position + 105, l5)  #trái trÊN
+                        c.drawString(rect_x_position + 44, rect_y_position + 72, l2)  #trái
+                        c.drawString(rect_x_position + 44, rect_y_position + 105, l1)  #trái trÊN
 
             #TH33   BF2D@Hj@r@i@p1@l1719@n1@e1.71@d13@gSD295@s39@v@a@Gl530@w90@l360@w90@l300@w90@l280@w-90@l350@w0@C95@   
                     elif count_l == 6 and count_w == 5 and (w1=="90" and w2=="90" and w3=="90" and w4=="-90" and w5=="0" or w1=="90" and w2=="-90" and w3=="-90" and w4=="-90" and w5=="0"):
@@ -913,11 +920,11 @@ def main():
 
                         exec(code_string)
 
-                        c.drawString(rect_x_position + 113, rect_y_position + 41, l1) #phải dưới
-                        c.drawString(rect_x_position + 113, rect_y_position + 75, l2) #phải trên
+                        c.drawString(rect_x_position + 113, rect_y_position + 41, l5) #phải dưới
+                        c.drawString(rect_x_position + 113, rect_y_position + 75, l4) #phải trên
                         c.drawString(rect_x_position + 79, rect_y_position + 105, l3) #trên
-                        c.drawString(rect_x_position + 42, rect_y_position + 75, l4)  #trái
-                        c.drawString(rect_x_position + 43, rect_y_position + 41, l5)  #trái dưới
+                        c.drawString(rect_x_position + 42, rect_y_position + 75, l2)  #trái
+                        c.drawString(rect_x_position + 43, rect_y_position + 41, l1)  #trái dưới
                         
             #TH28   BF2D@Hj@r@i@p1@l1181@n1@e0.66@d10@gSD295@s30@v@a@Gl150@w90@l300@w-90@l230@w90@l560@w0@C88@
                     elif count_l == 5 and count_w == 4 and w1 == "90" and w2 == "-90" and w3 == "90" and w4 == "0":
@@ -1259,7 +1266,7 @@ def main():
                             c.drawString(rect_x_position + 110, rect_y_position + 105, l1) #phải
 
             #TH12   BF2D@Hj@r@i@p1@l2248@n1@e3.51@d16@gSD295@s80@v@a@Gl218@w90@l1800@w135@l270@w0@C80@
-                    elif count_l == 4 and count_w == 3 and (w1 == "90" and 90 < int(w2) < 180 and w3 == "0" or 90 < int(w1) < 180 and w2 == "-90" and w3 == "0"):
+                    elif count_l == 4 and count_w == 3 and (w1 == "90" and 90 < int(w2) < 180 and w3 == "0" or 90 < int(w1) < 180 and w2 == "90" and w3 == "0"):
                         
                         value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
@@ -1540,8 +1547,9 @@ def main():
                     # Kiểm tra nếu đã in đủ 4 hình từ trên xuống dưới, thì thêm trang mới
                     if rects_on_page >= 8:
                         c.showPage()  # Thêm trang mới
+                        
                         rect_x_position = initial_rect_x_position
-                        rect_y_position = page_height - rect_height - 20
+                        rect_y_position = page_height - rect_height - 10
                         rects_on_page = 0
                         
                         #no = 1  # Đặt lại biến đếm NO
@@ -1904,7 +1912,7 @@ def main():
                             p.drawString(14.1 * 28.3465, (y1 + 0.63) * 28.3465 , l2.center(6)) #l4.center(6)
                             p.drawString(14.95 * 28.3465, (y1 + 1.53) * 28.3465 , l1) #
 #TH12   BF2D@Hj@r@i@p1@l2248@n1@e3.51@d16@gSD295@s80@v@a@Gl218@w90@l1800@w135@l270@w0@C80@
-                    elif count_l == 4 and count_w == 3 and (w1 == "90" and 90 < int(w2) < 180 and w3 == "0" or 90 < int(w1) < 180 and w2 == "-90" and w3 == "0"):
+                    elif count_l == 4 and count_w == 3 and (w1 == "90" and 90 < int(w2) < 180 and w3 == "0" or 90 < int(w1) < 180 and w2 == "90" and w3 == "0"):
                         img_path = image_list[12]
                         exec(code_string2) 
                         p.setFont('MSMINCHO.TTF', 10)
@@ -1995,11 +2003,11 @@ def main():
                         exec(code_string2) 
                         p.setFont('MSMINCHO.TTF', 10)
                         if int(l1) > int(l2):
-                            p.drawString(14.4 * 28.3465, (y1 + 1.06) * 28.3465 , l1.center(6)) #l4.center(6)      
-                            p.drawString(12.9 * 28.3465, (y1 + 0.7) * 28.3465 , l2.rjust(5)) #1.rjust(5)
-                        else:
-                            p.drawString(14.4 * 28.3465, (y1 + 1.06) * 28.3465 , l2.center(6) ) #l4.center(6)      
+                            p.drawString(14.4 * 28.3465, (y1 + 1.06) * 28.3465 , l2.center(6)) #l4.center(6)      
                             p.drawString(12.9 * 28.3465, (y1 + 0.7) * 28.3465 , l1.rjust(5)) #1.rjust(5)
+                        else:
+                            p.drawString(14.4 * 28.3465, (y1 + 1.06) * 28.3465 , l1.center(6) ) #l4.center(6)      
+                            p.drawString(12.9 * 28.3465, (y1 + 0.7) * 28.3465 , l2.rjust(5)) #1.rjust(5)
 #TH3    BF2D@Hj@r@i@p1@l1744@n1@e5.3@d22@gSD345@s88@v@a@Gl204@w180@l1500@w0@C77@    
                     elif count_l == 3 and count_w == 2 and w1=="180" and w2=="0": 
                         img_path = image_list[3]
@@ -2123,14 +2131,14 @@ def main():
                 text_list.append(text)
 
             # Tạo PDF khi người dùng nhấn nút "Tạo PDF"
-            st.title("PDFを作成する")
+            st.title("BVBSと加工帳のPDFを作成する")
             #if st.button("PDFを作成する"):
             pdf_buffer = create_pdf(df_bvbs, image_list, text_list, text_positions)
-            st.download_button("Download PDF", pdf_buffer,file_name="エフ.pdf",key="download_pdf")
+            st.download_button("Download BVBS.pdf", pdf_buffer,file_name="BVBS.pdf",key="download_pdf")
 
             # Thêm nút để tải về PDF
             pdf_buffer = create_pdf1()
-            st.download_button(label="Download PDF",data=pdf_buffer,file_name="加工帳.pdf",key="download-pdf-button")
+            st.download_button(label="Download 加工帳.pdf",data=pdf_buffer,file_name="加工帳.pdf",key="download-pdf-button")
 
 if __name__ == "__main__":
     session = st.session_state
