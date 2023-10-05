@@ -95,7 +95,7 @@ for x_cm, y_cm, width_cm, height_cm in rectangles:
     if KK % 2 == 0:
         p.drawString(17.5 * 28.3465, 28.4 * 28.3465, f"ページ: {K}/{int(KK)}")
     elif KK < 1:
-        p.drawString(17.5 * 28.3465, 28.4 * 28.3465, f"ページ: {K}")
+        p.drawString(17.5 * 28.3465, 28.4 * 28.3465, "")
     elif KK > 1:
         KK += 1
         p.drawString(17.5 * 28.3465, 28.4 * 28.3465, f"ページ: {K}/{int(KK)}")
