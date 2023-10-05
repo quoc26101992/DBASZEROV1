@@ -939,16 +939,16 @@ def main():
 
                         exec(code_string)
 
-                        if w1 == "90":
-                            c.drawString(rect_x_position + 12, rect_y_position + 57, l1)  #trái
-                            c.drawString(rect_x_position + 43, rect_y_position + 73, l2)  #dưới
-                            c.drawString(rect_x_position + 75, rect_y_position + 81, l3) #phải
-                            c.drawString(rect_x_position + 90, rect_y_position + 105, l4) #trên 
-                        else:
+                        if int(l1) > int(l4):
                             c.drawString(rect_x_position + 12, rect_y_position + 57, l4)  #trái
                             c.drawString(rect_x_position + 43, rect_y_position + 73, l3)  #dưới
                             c.drawString(rect_x_position + 75, rect_y_position + 81, l2) #phải
                             c.drawString(rect_x_position + 90, rect_y_position + 105, l1) #trên 
+                        else:
+                            c.drawString(rect_x_position + 12, rect_y_position + 57, l1)  #trái
+                            c.drawString(rect_x_position + 43, rect_y_position + 73, l2)  #dưới
+                            c.drawString(rect_x_position + 75, rect_y_position + 81, l3) #phải
+                            c.drawString(rect_x_position + 90, rect_y_position + 105, l4) #trên 
 
             #TH27   BF2D@Hj@r@i@p1@l1204@n1@e1.2@d13@gSD295@s39@v@a@Gl350@w90@l300@w90@l280@w-90@l350@w0@C69@
                     elif count_l == 5 and count_w == 4 and (w1=="90" and w2=="90" and w3=="-90" and w4=="0" or w1=="90" and w2=="-90" and w3=="-90" and w4=="0"):
@@ -1156,7 +1156,7 @@ def main():
                             c.drawString(rect_x_position + 25, rect_y_position + 83, l1)  #trái                      
 
             #TH17   BF2D@Hj@r@i@p1@l1477@n1@e1.47@d13@gSD295@s39@v@a@Gl86@w180@l1200@w135@l180@w0@C76@
-                    elif count_l == 4 and count_w == 3 and (w1=="180" and 90 < int(w2) < 180 and w3=="0" or 90 < int(w1) < 180 and w2=="-180" and w3=="0"):
+                    elif count_l == 4 and count_w == 3 and (w1=="180" and 90 < int(w2) < 180 and w3=="0" or 90 < int(w1) < 180 and w2=="180" and w3=="0"):
 
                         value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
@@ -1173,8 +1173,8 @@ def main():
                             c.drawString(rect_x_position + 80, rect_y_position + 81, l2)  #giữa
                             c.drawString(rect_x_position + 28, rect_y_position + 90, l3)  #trái        
                         else:
-                            c.drawString(rect_x_position + 142, rect_y_position + 90, l3) #phải
-                            c.drawString(rect_x_position + 80, rect_y_position + 81, l2)  #giữa           
+                            c.drawString(rect_x_position + 110, rect_y_position + 105, l3) #phải
+                            c.drawString(rect_x_position + 80, rect_y_position + 81, l2)  #giữa
                             c.drawString(rect_x_position + 28, rect_y_position + 90, l1)  #trái
 
             #TH16   BF2D@Hj@r@i@p1@l1267@n1@e1.26@d13@gSD295@s39@v@a@Gl86@w180@l1000@w-135@l170@w0@C72@
@@ -1200,7 +1200,7 @@ def main():
                             c.drawString(rect_x_position + 25, rect_y_position + 58, l1) #phải
 
             #TH15   BF2D@Hj@r@i@p1@l1278@n1@e1.99@d16@gSD295@s80@v@a@Gl218@w90@l900@w-135@l200@w0@C78@
-                    elif count_l == 4 and count_w == 3 and (w1=="90" and w2=="-135" and w3=="0" or w1=="135" and w2=="-90" and w3=="0"):
+                    elif count_l == 4 and count_w == 3 and (w1=="90" and -180 < int(w2) < -90 and w3=="0" or 90 < int(w1) < 180 and w2=="-90" and w3=="0"):
 
                         value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
@@ -1289,8 +1289,7 @@ def main():
 
                         #c.drawString(rect_x_position + 75, rect_y_position + 40, l5)  #dưới
             #TH11   BF2D@Hj@r@i@p1@l2559@n1@e7.78@d22@gSD345@s88@v@a@Gl311@w90@l2100@w45@l210@w0@C95@
-                    elif count_l == 4 and count_w == 3 and (w1=="90" and int(w2) < 90 and w3=="0" or int(w1) < 90 and w2=="-90"  and w3=="0"):
-
+                    elif count_l == 4 and count_w == 3 and (w1 == "90" and 0 < int(w2) < 90 and w3 =="0" or 0 < int(w1) < 90 and w2 =="90"  and w3 =="0"):
                         value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
@@ -1723,16 +1722,16 @@ def main():
                         img_path = image_list[28]
                         exec(code_string2) 
                         p.setFont('MSMINCHO.TTF', 10)   
-                        if w1 == "90":
-                            p.drawString(14.6 * 28.3465, (y1 + 1.52) * 28.3465 , l4) #
-                            p.drawString(14.3 * 28.3465, (y1 + 1) * 28.3465 , l3) #l4.center(6)
-                            p.drawString(13.25 * 28.3465, (y1 + 0.87) * 28.3465 , l2.rjust(5)) #1.rjust(5)
-                            p.drawString(12.68 * 28.3465, (y1 + 0.5) * 28.3465 , l1.rjust(5)) #1.rjust(5)
-                        else:
+                        if int(l1) > int(l4):
                             p.drawString(14.6 * 28.3465, (y1 + 1.52) * 28.3465 , l1) #
                             p.drawString(14.3 * 28.3465, (y1 + 1) * 28.3465 , l2) #l4.center(6)
                             p.drawString(13.25 * 28.3465, (y1 + 0.87) * 28.3465 , l3.rjust(5)) #1.rjust(5)
                             p.drawString(12.68 * 28.3465, (y1 + 0.5) * 28.3465 , l4.rjust(5)) #1.rjust(5)
+                        else:
+                            p.drawString(14.6 * 28.3465, (y1 + 1.52) * 28.3465 , l4) #
+                            p.drawString(14.3 * 28.3465, (y1 + 1) * 28.3465 , l3) #l4.center(6)
+                            p.drawString(13.25 * 28.3465, (y1 + 0.87) * 28.3465 , l2.rjust(5)) #1.rjust(5)
+                            p.drawString(12.68 * 28.3465, (y1 + 0.5) * 28.3465 , l1.rjust(5)) #1.rjust(5)
 #TH27   BF2D@Hj@r@i@p1@l1204@n1@e1.2@d13@gSD295@s39@v@a@Gl350@w90@l300@w90@l280@w-90@l350@w0@C69@
                     elif count_l == 5 and count_w == 4 and (w1=="90" and w2=="90" and w3=="-90" and w4=="0" or w1=="90" and w2=="-90" and w3=="-90" and w4=="0"):
                         img_path = image_list[27]
@@ -1847,7 +1846,7 @@ def main():
                         else:
                              exec(code_string3)
 #TH17   BF2D@Hj@r@i@p1@l1477@n1@e1.47@d13@gSD295@s39@v@a@Gl86@w180@l1200@w135@l180@w0@C76@
-                    elif count_l == 4 and count_w == 3 and (w1=="180" and 90 < int(w2) < 180 and w3=="0" or 90 < int(w1) < 180 and w2=="-180" and w3=="0"):
+                    elif count_l == 4 and count_w == 3 and (w1=="180" and 90 < int(w2) < 180 and w3=="0" or 90 < int(w1) < 180 and w2=="180" and w3=="0"):
                         img_path = image_list[17]
                         exec(code_string2) 
                         p.setFont('MSMINCHO.TTF', 10)
@@ -1873,7 +1872,7 @@ def main():
                             p.drawString(14.1 * 28.3465, (y1 + 1.05) * 28.3465 , l2.center(6)) #l4.center(6)
                             p.drawString(12.9 * 28.3465, (y1 + 0.5) * 28.3465 , l1.rjust(5)) #1.rjust(5)
 #TH15   BF2D@Hj@r@i@p1@l1278@n1@e1.99@d16@gSD295@s80@v@a@Gl218@w90@l900@w-135@l200@w0@C78@
-                    elif count_l == 4 and count_w == 3 and (w1=="90" and w2=="-135" and w3=="0" or w1=="135" and w2=="-90" and w3=="0"):
+                    elif count_l == 4 and count_w == 3 and (w1=="90" and -180 < int(w2) < -90 and w3=="0" or 90 < int(w1) < 180 and w2=="-90" and w3=="0"):
                         img_path = image_list[15]
                         exec(code_string2) 
                         p.setFont('MSMINCHO.TTF', 10)
@@ -1925,7 +1924,7 @@ def main():
                             p.drawString(14.2 * 28.3465, (y1 + 0.63) * 28.3465 , l2.center(6)) #l4.center(6)
                             p.drawString(12.8 * 28.3465, (y1 + 1.15) * 28.3465 , l1.rjust(5) ) #1.rjust(5)         
 #TH11   BF2D@Hj@r@i@p1@l2559@n1@e7.78@d22@gSD345@s88@v@a@Gl311@w90@l2100@w45@l210@w0@C95@
-                    elif count_l == 4 and count_w == 3 and (w1=="90" and int(w2) < 90 and w3=="0" or int(w1) < 90 and w2=="-90"  and w3=="0"):
+                    elif count_l == 4 and count_w == 3 and (w1 == "90" and 0 < int(w2) < 90 and w3 =="0" or 0 < int(w1) < 90 and w2 =="90"  and w3=="0"):
                         img_path = image_list[11]
                         exec(code_string2) 
                         p.setFont('MSMINCHO.TTF', 10)
@@ -2003,11 +2002,11 @@ def main():
                         exec(code_string2) 
                         p.setFont('MSMINCHO.TTF', 10)
                         if int(l1) > int(l2):
-                            p.drawString(14.4 * 28.3465, (y1 + 1.06) * 28.3465 , l2.center(6)) #l4.center(6)      
-                            p.drawString(12.9 * 28.3465, (y1 + 0.7) * 28.3465 , l1.rjust(5)) #1.rjust(5)
-                        else:
-                            p.drawString(14.4 * 28.3465, (y1 + 1.06) * 28.3465 , l1.center(6) ) #l4.center(6)      
+                            p.drawString(14.4 * 28.3465, (y1 + 1.06) * 28.3465 , l1.center(6)) #l4.center(6)      
                             p.drawString(12.9 * 28.3465, (y1 + 0.7) * 28.3465 , l2.rjust(5)) #1.rjust(5)
+                        else:
+                            p.drawString(14.4 * 28.3465, (y1 + 1.06) * 28.3465 , l2.center(6) ) #l4.center(6)      
+                            p.drawString(12.9 * 28.3465, (y1 + 0.7) * 28.3465 , l1.rjust(5)) #1.rjust(5)
 #TH3    BF2D@Hj@r@i@p1@l1744@n1@e5.3@d22@gSD345@s88@v@a@Gl204@w180@l1500@w0@C77@    
                     elif count_l == 3 and count_w == 2 and w1=="180" and w2=="0": 
                         img_path = image_list[3]
