@@ -21,6 +21,7 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from datetime import datetime  # Thêm thư viện datetime
 import re
+import pytz
 
 code_string3 = """
 p.drawString(14 * 28.3465, (y1 + 1.52) * 28.3465 , '1') #l1.rjust(5)
@@ -70,11 +71,20 @@ code_string1 = """
 for x_cm, y_cm, width_cm, height_cm in rectangles: 
     p.setLineWidth(border_width1)
     p.rect(x_cm * 28.3465, y_cm * 28.3465, width_cm * 28.3465, height_cm * 28.3465) 
-        # Sử dụng font "IPAexGothic" cho văn bản tiếng Nhật với kích thước font 16 điểm
-    p.setFont('MSMINCHO.TTF', 16)
-        # Vẽ văn bản tiếng Nhật và tiếng Anh với kích thước font khác nhau
-    p.drawString(8 * 28.3465, 28.4 * 28.3465, ">>>>> 加工帳 <<<<<")  # # 
+    p.setFont('MSMINCHO.TTF', 20)
+    p.drawString(9.6 * 28.3465, 28.7 * 28.3465, "加工帳")  # 
     y2 = 27.2
+    p.setFont('MSMINCHO.TTF', 14)
+    p.drawString(0.7 * 28.3465, 28.8 * 28.3465, "工事名: 作神橋")
+    p.drawString(0.7 * 28.3465, 28.1 * 28.3465, "使用場所: A1")
+    p.drawString(4.8 * 28.3465, 28.1 * 28.3465, "運搬日: 10/24")
+    p.drawString(4.8 * 28.3465, 28.1 * 28.3465, "協力会社:" "ナイトウ建商".rjust(50)) #ナイトウ建商
+
+    p.setFont('MSMINCHO.TTF', 7)
+    p.drawString(8.2 * 28.3465, 28.3 * 28.3465, "AM")
+    p.drawString(8.2 * 28.3465, 28.06 * 28.3465, "PM")
+
+    p.setFont('MSMINCHO.TTF', 16)
     p.drawString(1 * 28.3465, y2 * 28.3465, "番号")     # 1
     p.drawString(3 * 28.3465, y2 * 28.3465, "直径")     # 2
     p.drawString(5 * 28.3465, y2 * 28.3465, "切寸")     # 3
@@ -86,19 +96,27 @@ for x_cm, y_cm, width_cm, height_cm in rectangles:
     p.drawString(18.8 * 28.3465, y2 * 28.3465, "重量")    # 9
 
     # In ngày tháng năm hiện tại
+    # Thiết lập múi giờ
+    desired_timezone = 'Asia/Tokyo'
+    # Tạo đối tượng múi giờ
+    desired_tz = pytz.timezone(desired_timezone)
+    # Lấy thời gian hiện tại theo múi giờ đã thiết lập
+    current_time = datetime.now(desired_tz)
+    # Định dạng và hiển thị thời gian
+    formatted_time = current_time.strftime("%Y/%m/%d")
     p.setFont('MSMINCHO.TTF', 13)
-    current_date = datetime.now().strftime("%Y/%m/%d")
-    p.drawString(1 * 28.3465, 28.4 * 28.3465, f"作成日: {current_date}")
+    p.drawString(15.2 * 28.3465, 28.9 * 28.3465, f"作成日: {formatted_time}")
     df = pd.DataFrame(df_bvbs)
     so_hang = len(df['BVBS'])
     KK = so_hang / 14
+    p.setFont('MSMINCHO.TTF', 9)
     if KK % 2 == 0:
-        p.drawString(17.5 * 28.3465, 28.4 * 28.3465, f"ページ: {K}/{int(KK)}")
+        p.drawString(17.5 * 28.3465, 29 * 28.3465, f"ページ: {K}/{int(KK)}")
     elif KK < 1:
-        p.drawString(17.5 * 28.3465, 28.4 * 28.3465, "")
+        p.drawString(17.5 * 28.3465, 834.5, f"ページ: {K}")
     elif KK > 1:
         KK += 1
-        p.drawString(17.5 * 28.3465, 28.4 * 28.3465, f"ページ: {K}/{int(KK)}")
+        p.drawString(17.5 * 28.3465, 29 * 28.3465, f"ページ: {K}/{int(KK)}")
 """
 ##############################################################################
 # Đặt toàn bộ mã lệnh vào một biến (ví dụ: code_string)
@@ -544,8 +562,18 @@ def main():
     """
     )
     st.text('IFCデータをアップロードされた後、BVBSデータをダウンロードすることができます。')
-    current_date = datetime.now().strftime("%Y/%m/%d")
-    st.sidebar.write(f"更新日: {current_date}")
+
+
+    # Thiết lập múi giờ
+    desired_timezone = 'Asia/Tokyo'
+    # Tạo đối tượng múi giờ
+    desired_tz = pytz.timezone(desired_timezone)
+    # Lấy thời gian hiện tại theo múi giờ đã thiết lập
+    current_time = datetime.now(desired_tz)
+    # Định dạng và hiển thị thời gian
+    formatted_time = current_time.strftime("%Y/%m/%d")
+    st.sidebar.write(f"更新日: {formatted_time}")
+    
     st.sidebar.write("""
 
     DBS Co.,Ltd
@@ -598,8 +626,12 @@ def main():
             DF_kei=df_sort['直径']
             DF_length=df_sort['切寸']
             df_r=DF.loc[DF.index.repeat(df_1.CountSegments)].reset_index(drop=True)
-            df_plus= df_r+df_2['曲線 半径']
-            df_diameter= (df_2['曲線 半径'] - df_r)*2
+            df_2.loc[:, 'INDEX'] = df_2.index
+            df_2.reset_index(inplace = True, drop = True)
+            df_2['R'] = df_r
+            df_2['PLUS']= df_2['R']+df_2['曲線 半径']
+            df_2['DIAMETER']= (df_2['曲線 半径'] - df_2['R'])*2
+            df_2 = df_2.set_index('INDEX')
             df_kei=DF_kei.loc[DF.index.repeat(df_1.CountSegments)].reset_index(drop=True)
             df_length=DF_length.loc[DF.index.repeat(df_1.CountSegments)].reset_index(drop=True)
             df_dropcol1=df_2.drop(['Id','曲線 Center_x','曲線 Center_y','曲線 Center_z','曲線 半径','曲げ角度w1','曲げ角度w2','w2-w1(1)','w2-w1(2)'], axis=1)
@@ -619,8 +651,8 @@ def main():
             df_2 = df_2.set_index('index')
             df_2.loc[df_2['check4'] == 0, 'check4'] = ""
 
-            df_2.loc[(180-df_2_w2w1>90), 'plus'] = df_plus/(np.tan(np.radians(90-df_2_w2w1/2)))
-            df_2.loc[(180-df_2_w2w1<=90), 'plus'] = df_plus
+            df_2.loc[(180-df_2_w2w1>90), 'plus'] = df_2['PLUS']/(np.tan(np.radians(90-df_2_w2w1/2)))
+            df_2.loc[(180-df_2_w2w1<=90), 'plus'] = df_2['PLUS']
             df_2.loc[df_2_w2w1==00, 'plus'] = 0
             shif_1= df_2['plus'].shift(periods=1, fill_value=0)
             shif_2= df_2['plus'].shift(periods=-1, fill_value=0)
@@ -630,7 +662,7 @@ def main():
 
             shif_s= df_2['曲線 半径'].shift(periods=-2, fill_value=0)
             df_2.loc[:, 'help s'] = shif_s
-            df_2.loc[(df_2_w2w1!=0) & (df_2['help s']==0) , 's'] = df_diameter.astype(str).str.replace('.0', '')
+            df_2.loc[(df_2_w2w1!=0) & (df_2['help s']==0) , 's'] = df_2['DIAMETER'].astype(str).str.replace('.0', '')
             df_2.loc[(df_2_w2w1!=0) & (df_2['help s']!=0) , 's'] = ""
             df_2.loc[df_2_w2w1==0, 's'] = ""
             df_help = df_1.loc[df_1.index.repeat(df_1.CountSegments)].reset_index(drop=True)
@@ -664,7 +696,7 @@ def main():
             buf = io.BytesIO()
             df_bvbs.to_csv(buf, index=False, header=False)
             file_name_3 = download_bvbs(session.file_name)
-            st.download_button("Download BVBS",buf.getvalue(),file_name_3) #Download BVBS
+            #st.download_button("Download BVBS",buf.getvalue(),file_name_3) #Download BVBS
             st.write("""------------------------------------------------------""")
             st.header("集計表")
             # Thêm cột mới 
@@ -678,7 +710,7 @@ def main():
             buf = io.BytesIO()
             df_table.to_excel(buf, index=False, header=True)
             file_name_0 = download_excel(session.file_name)
-            st.download_button("Download Excel",buf.getvalue(),file_name_0,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") #Download Excel
+            #st.download_button("Download Excel",buf.getvalue(),file_name_0,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") #Download Excel
 #############################################################################
             #name11 = df_table['径']#[0]  lấy trong 径 D x
             #st.write(name11)
@@ -1477,10 +1509,10 @@ def main():
                     
                         if int(l1) > int(l2):
                             c.drawString(rect_x_position + 8, rect_y_position + 62, l2.rjust(6))
-                            c.drawString(rect_x_position + 78, rect_y_position + 81, l1.center(6))
+                            c.drawString(rect_x_position + 79, rect_y_position + 81, l1.center(6))
                         else:
                             c.drawString(rect_x_position + 8, rect_y_position + 62, l1.rjust(6))
-                            c.drawString(rect_x_position + 78, rect_y_position + 81, l2.center(6))
+                            c.drawString(rect_x_position + 79, rect_y_position + 81, l2.center(6))
 
             #TH1    BF2D@Hj@r@i@p1@l2250@n1@e14.02@d32@gSD390@s@v@a@Gl2250@w0@C83@
                     elif count_l == 2 and count_w == 1 and w1=="0":                         
@@ -1495,7 +1527,7 @@ def main():
                     
                         exec(code_string)
                     
-                        c.drawString(rect_x_position + 78, rect_y_position + 80, l1.center(6))
+                        c.drawString(rect_x_position + 79, rect_y_position + 80, l1.center(6))
             #TH0
                     else:
                         value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
@@ -1576,7 +1608,7 @@ def main():
                 y1 = 25
                 cao = 1.9
                 NO1 = 1
-                border_width1 = 0.5
+                border_width1 = 1.5
                 K = 1
                 # Tạo danh sách các hình chữ nhật: (x_cm, y_cm, width_cm, height_cm)
                 rectangles = [
@@ -2078,7 +2110,7 @@ def main():
 #################################################################################################################################        
             # Danh sách điều kiện và đường dẫn đến các hình ảnh
             image_list = [
-                "image/0.png",
+		        "image/0.png",
                 "image/1.png",
                 "image/2.png",
                 "image/3.png",
