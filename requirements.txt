@@ -10,4 +10,4 @@ Pillow
 datetime
 fpdf
 canvas
-
+pytz
