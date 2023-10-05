@@ -1576,7 +1576,7 @@ def main():
                 y1 = 25
                 cao = 1.9
                 NO1 = 1
-                border_width1 = 1.5
+                border_width1 = 1
                 K = 1
                 # Tạo danh sách các hình chữ nhật: (x_cm, y_cm, width_cm, height_cm)
                 rectangles = [
