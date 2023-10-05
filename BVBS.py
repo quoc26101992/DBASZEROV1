@@ -664,7 +664,7 @@ def main():
             buf = io.BytesIO()
             df_bvbs.to_csv(buf, index=False, header=False)
             file_name_3 = download_bvbs(session.file_name)
-            #st.download_button("Download BVBS",buf.getvalue(),file_name_3) #Download BVBS
+            st.download_button("Download BVBS",buf.getvalue(),file_name_3) #Download BVBS
             st.write("""------------------------------------------------------""")
             st.header("集計表")
             # Thêm cột mới 
@@ -678,7 +678,7 @@ def main():
             buf = io.BytesIO()
             df_table.to_excel(buf, index=False, header=True)
             file_name_0 = download_excel(session.file_name)
-            #st.download_button("Download Excel",buf.getvalue(),file_name_0,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") #Download Excel
+            st.download_button("Download Excel",buf.getvalue(),file_name_0,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") #Download Excel
 #############################################################################
             #name11 = df_table['径']#[0]  lấy trong 径 D x
             #st.write(name11)
