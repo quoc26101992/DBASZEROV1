@@ -58,14 +58,14 @@ for x_cm, y_cm, width_cm, height_cm in rectangles1:
     p.rect(x_cm * 28.3465, y1 * 28.3465, width_cm * 28.3465, height_cm * 28.3465)
     p.setFont('MSMINCHO.TTF', 16) 
     # Vẽ văn bản tiếng Nhật và tiếng Anh với kích thước font khác nhau
-    p.drawString(0.85 * 28.3465, (y1 + 0.7) * 28.3465 , (f'No.{NO1}').center(5))  #1
-    p.drawString(2.9 * 28.3465, (y1 + 0.7) * 28.3465 , ("D" + result['d']).center(5))  #2 
-    p.drawString(4.75 * 28.3465, (y1 + 0.7) * 28.3465 , (result['l']).center(5))  #3 
-    p.drawString(6.85 * 28.3465, (y1 + 0.7) * 28.3465 , (result['n']).center(5))  #4 
-    p.drawString(8.9 * 28.3465, (y1 + 0.7) * 28.3465 , "")  #5 
-    p.drawString(10.9 * 28.3465, (y1 + 0.7) * 28.3465 , ("SD" + 数量1[0]).center(5))  #6 
-    p.drawString(16.65 * 28.3465, (y1 + 0.7) * 28.3465 , (result['s']).center(5))  #8 
-    p.drawString(18.5 * 28.3465, (y1 + 0.7) * 28.3465 , ee1.center(5))   #9 
+    p.drawCentredString(1.6 * 28.3465, (y1 + 0.7) * 28.3465 , (f'No.{NO1}'))  #1
+    p.drawCentredString(3.6 * 28.3465, (y1 + 0.7) * 28.3465 , ("D" + result['d']))  #2 
+    p.drawCentredString(5.6 * 28.3465, (y1 + 0.7) * 28.3465 , (result['l']))  #3 
+    p.drawCentredString(7.6 * 28.3465, (y1 + 0.7) * 28.3465 , (result['n']))  #4 
+    p.drawCentredString(9.65 * 28.3465, (y1 + 0.7) * 28.3465 , "")  #5 
+    p.drawCentredString(11.65 * 28.3465, (y1 + 0.7) * 28.3465 , ("SD" + 数量1[0]))  #6 
+    p.drawCentredString(17.47 * 28.3465, (y1 + 0.7) * 28.3465 , (result['s']))  #8 
+    p.drawCentredString(19.35 * 28.3465, (y1 + 0.7) * 28.3465 , ee1)   #9 
 """
 #########_PDF2_###############
 code_string1 = """
@@ -2190,13 +2190,14 @@ def main():
             
             # Tạo PDF khi người dùng nhấn nút "Tạo PDF"
             st.title("BVBSと加工帳のPDFを作成する")
-            #if st.button("PDFを作成する"):
-            pdf_buffer = create_pdf(df_bvbs, image_list, text11, text22, text33, text44)
-            st.download_button("Download BVBS.pdf", pdf_buffer,file_name="BVBS.pdf",key="download_pdf")
+            if st.button("BVBS.PDFを作成する"):
+                pdf_buffer = create_pdf(df_bvbs, image_list, text11, text22, text33, text44)
+                st.download_button("Download BVBS.pdf", pdf_buffer,file_name="BVBS.pdf",key="download_pdf")
 
             # Thêm nút để tải về PDF
-            pdf_buffer = create_pdf1(text11, text22, text44, text55, text66)
-            st.download_button(label="Download 加工帳.pdf",data=pdf_buffer,file_name="加工帳.pdf",key="download-pdf-button")
+            if st.button("加工帳.PDFを作成する"):
+                pdf_buffer = create_pdf1(text11, text22, text44, text55, text66)
+                st.download_button(label="Download 加工帳.pdf",data=pdf_buffer,file_name="加工帳.pdf",key="download-pdf-button")
 
 if __name__ == "__main__":
     session = st.session_state
