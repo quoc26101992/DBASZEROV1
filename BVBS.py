@@ -142,8 +142,8 @@ c.drawString(rect_x_position + 110, rect_y_position + 10, "SD" + str(数量1[0])
 
 c.setFont('MSMINCHO.TTF', 16)
 c.drawString(rect_x_position + 15, rect_y_position + 135, "D" + result['d'])
-c.drawString(rect_x_position + 85, rect_y_position + 135, result['l'].rjust(5))
-c.drawString(rect_x_position + 140, rect_y_position + 135, result['n'].rjust(6))
+c.drawRightString(rect_x_position + 125, rect_y_position + 135, result['l'])
+c.drawRightString(rect_x_position + 187, rect_y_position + 135, result['n'])
 
 c.setFont('MSMINCHO.TTF', 10)
 c.drawString(rect_x_position + 255, rect_y_position + 147, result['s'])
@@ -1930,7 +1930,7 @@ def main():
                             p.drawString(14.1 * 28.3465, (y1 + 0.63) * 28.3465 , l2.center(6)) #l4.center(6)
                             p.drawString(15.35 * 28.3465, (y1 + 1.2) * 28.3465 , l1) #
 #TH14   BF2D@Hj@r@i@p1@l2489@n1@e3.88@d16@gSD295@s80@v@a@Gl218@w90@l1860@w-45@l460@w0@C91@
-                    elif count_l == 4 and count_w == 3 and (w1=="90" and -90 < int(w2) < 0 and w3=="0" or 0 < int(w2) < 90 and w2=="-90" and w3=="0"):
+                     
                         img_path = image_list[14]
                         exec(code_string2) 
                         p.setFont('MSMINCHO.TTF', 10)
@@ -2163,7 +2163,12 @@ def main():
             text22 = st.text_input("協力会社", "株式会社オノコム")
             text33 = st.text_input("鉄筋メーカー", "トピー工業株式会社")
             text44 = st.text_input("使用場所", "Y1-X1 柱")
-           
+
+            x1, y1 = 2, 184
+            x2, y2 = 2, 164
+            x3, y3 = 280, 184
+            x4, y4 = 280, 164
+
             # Tạo hai cột, một cho text_input và một cho radio buttons
             col1, col2 = st.columns([2, 1])
             # Trong cột đầu tiên (col1), đặt text_input
@@ -2176,17 +2181,7 @@ def main():
             else:
                 text66 = "PM"
 
-            # Tạo radio buttons với hai tùy chọn là "AM" và "PM"
-            #selected_option = 
-            # Hiển thị thông báo dựa trên tùy chọn được chọn
-            #if selected_option == "AM":
-                #st.write("Bạn đã chọn AM")
-           # else:
-                #st.write("Bạn đã chọn PM")
-            x1, y1 = 2, 184
-            x2, y2 = 2, 164
-            x3, y3 = 280, 184
-            x4, y4 = 280, 164
+            
             
             # Tạo PDF khi người dùng nhấn nút "Tạo PDF"
             st.title("BVBSと加工帳のPDFを作成する")
