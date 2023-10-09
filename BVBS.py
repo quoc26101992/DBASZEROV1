@@ -23,6 +23,7 @@ from datetime import datetime  # Thêm thư viện datetime
 import re
 import pytz
 
+
 code_string3 = """
 p.drawString(14 * 28.3465, (y1 + 1.52) * 28.3465 , '1') #l1.rjust(5)
 p.drawString(14.5 * 28.3465, (y1 + 1.52) * 28.3465 , '2') #l4.center(6)
@@ -74,11 +75,13 @@ for x_cm, y_cm, width_cm, height_cm in rectangles:
     p.setFont('MSMINCHO.TTF', 20)
     p.drawString(9.6 * 28.3465, 28.7 * 28.3465, "加工帳")  # 
     y2 = 27.2
+    sss = "ナイトウ建商"
+    sss_str = str(sss)
     p.setFont('MSMINCHO.TTF', 14)
     p.drawString(0.7 * 28.3465, 28.8 * 28.3465, "工事名: 作神橋")
     p.drawString(0.7 * 28.3465, 28.1 * 28.3465, "使用場所: A1")
     p.drawString(4.8 * 28.3465, 28.1 * 28.3465, "運搬日: 10/24")
-    p.drawString(4.8 * 28.3465, 28.1 * 28.3465, "協力会社:" "ナイトウ建商".rjust(50)) #ナイトウ建商
+    p.drawString(5.3 * 28.3465, 28.1 * 28.3465, f"協力会社: {sss_str}".rjust(50) ) #ナイトウ建商 f"協力会社: { sss_str.rjust(50)}"
 
     p.setFont('MSMINCHO.TTF', 7)
     p.drawString(8.2 * 28.3465, 28.3 * 28.3465, "AM")
@@ -105,18 +108,18 @@ for x_cm, y_cm, width_cm, height_cm in rectangles:
     # Định dạng và hiển thị thời gian
     formatted_time = current_time.strftime("%Y/%m/%d")
     p.setFont('MSMINCHO.TTF', 13)
-    p.drawString(15.2 * 28.3465, 28.9 * 28.3465, f"作成日: {formatted_time}")
+    p.drawString(13.2 * 28.3465, 28.9 * 28.3465, f"作成日: {formatted_time}" )
     df = pd.DataFrame(df_bvbs)
     so_hang = len(df['BVBS'])
     KK = so_hang / 14
-    p.setFont('MSMINCHO.TTF', 9)
+    p.setFont('MSMINCHO.TTF', 13)
     if KK % 2 == 0:
-        p.drawString(17.5 * 28.3465, 29 * 28.3465, f"ページ: {K}/{int(KK)}")
+        p.drawString(17.8 * 28.3465, 28.9 * 28.3465, f"ページ: {K}/{int(KK)}")
     elif KK < 1:
-        p.drawString(17.5 * 28.3465, 834.5, f"ページ: {K}")
+        p.drawString(17.8 * 28.3465, 28.9 * 28.3465, f"ページ: {K}")
     elif KK > 1:
         KK += 1
-        p.drawString(17.5 * 28.3465, 29 * 28.3465, f"ページ: {K}/{int(KK)}")
+        p.drawString(17.8 * 28.3465, 28.9 * 28.3465, f"ページ: {K}/{int(KK)}")
 """
 ##############################################################################
 # Đặt toàn bộ mã lệnh vào một biến (ví dụ: code_string)
@@ -745,13 +748,14 @@ def main():
                 return img_pil
 
             # Hàm để tạo tệp PDF chứa danh sách BBVS, văn bản và hình ảnh
-            def create_pdf(bbvs_list, image_list, text_list, text_positions):
+            def create_pdf(bbvs_list, image_list,text11,text22,text33,text44):
                 buffer = BytesIO()
                 c = canvas.Canvas(buffer, pagesize=A4)  # Sử dụng trang giấy A4
 
                 # Kích thước trang A4
                 page_width , page_height = A4
 
+                right_margin = 50
                 # Kích thước cố định cho mã QR code và hình chữ nhật
                 qr_size = 100
                 rect_width = 283.5  # Chiều dài 10cm chuyển thành pixel (1 cm = 28.35 pixel)
@@ -772,7 +776,7 @@ def main():
                 # Đặt độ dày cho đường kẻ và đường viền (thay đổi giá trị tùy ý)
                 line_width = 0.5  # Độ dày của đường kẻ
                 border_width = 0.25  # Độ dày của đường viền
-
+                
                 # Vị trí hiện tại của hình chữ nhật
                 rect_x_position = initial_rect_x_position
                 rect_y_position = initial_rect_y_position
@@ -782,6 +786,8 @@ def main():
 
                 # Tạo biến NO ban đầu
                 no = 1
+                
+
 ################################################################
                 df = pd.DataFrame(df_bvbs)
                 selected_column = 'BVBS'
@@ -1556,16 +1562,23 @@ def main():
                         c.drawString(rect_x_position + 70, rect_y_position + 70, "非定型")  #giữa
 #######################################################################################################           
                     # Thêm nội dung văn bản vào hình chữ nhật từ danh sách text_list
-                    if text_list:
-                        c.setFont('MSMINCHO.TTF', 12)
-                        for i, text_content in enumerate(text_list):
-                            x, y = text_positions.get(f'T{i + 1}', (0, 0))
-                            c.drawString(rect_x_position + x, rect_y_position + y, text_content)
-                                
-                    # In ngày tháng năm hiện tại
-                    current_date = datetime.now().strftime("%Y/%m/%d")
+
+                    c.drawString(rect_x_position + x1, rect_y_position + y1, text11)
+                    c.drawString(rect_x_position + x2, rect_y_position + y2, text22)
+                    #Lệnh canh lề phải trong pdf
+                    c.drawRightString(rect_x_position + x3, rect_y_position + y3, text33)
+                    c.drawRightString(rect_x_position + x4, rect_y_position + y4, text44)
+                    
+                    # Thiết lập múi giờ
+                    desired_timezone = 'Asia/Tokyo'
+                    # Tạo đối tượng múi giờ
+                    desired_tz = pytz.timezone(desired_timezone)
+                    # Lấy thời gian hiện tại theo múi giờ đã thiết lập
+                    current_time = datetime.now(desired_tz)
+                    # Định dạng và hiển thị thời gian
+                    formatted_time = current_time.strftime("%Y/%m/%d")
                     c.setFont('MSMINCHO.TTF', 10)
-                    c.drawString(rect_x_position + 202, rect_y_position + 10, current_date)
+                    c.drawString(rect_x_position + 202, rect_y_position + 10, formatted_time)
 
                     # Di chuyển đến vị trí tiếp theo
                     rect_x_position += rect_width + x_spacing
@@ -1590,7 +1603,7 @@ def main():
                         #no = 1  # Đặt lại biến đếm NO
 
                 # Đặt vị trí và in văn bản
-                c.drawString(-10, -10, text_content)
+                #c.drawString(-10, -10, text_content)
                 # Lưu PDF
                 c.save()
                 buffer.seek(0)
@@ -2151,24 +2164,21 @@ def main():
 
             # Hiển thị widget để nhập nội dung văn bản và chỉnh sửa vị trí của từng văn bản
             st.title("情報を入力する")
-            text_list = []
-            # Định danh cho từng ô văn bản
+            # Tạo các trường nhập văn bản "朝日インテック新棟建設", "株式会社オノコム", "トピー工業株式会社", "Y1-X1 柱"
+            text11 = st.text_input("工事名", "朝日インテック新棟建設")
+            text22 = st.text_input("協力会社", "株式会社オノコム")
+            text33 = st.text_input("鉄筋メーカー", "トピー工業株式会社")
+            text44 = st.text_input("使用場所", "Y1-X1 柱")
 
-            text_names = ["朝日インテック新棟建設", "株式会社オノコム", "トピー工業株式会社", "Y1-X1 柱".rjust(0)]
-            text_positions = {
-                'T1': (2, 184),
-                'T2': (2, 164),
-                'T3': (170, 184),
-                'T4': (225, 164),
-            }
-            for i in range(len(text_names)):
-                text = st.text_input(text_names[i], text_names[i]) #xoa text_name để nhập
-                text_list.append(text)
+            x1, y1 = 2, 184
+            x2, y2 = 2, 164
+            x3, y3 = 280, 184
+            x4, y4 = 280, 164
 
             # Tạo PDF khi người dùng nhấn nút "Tạo PDF"
             st.title("BVBSと加工帳のPDFを作成する")
             #if st.button("PDFを作成する"):
-            pdf_buffer = create_pdf(df_bvbs, image_list, text_list, text_positions)
+            pdf_buffer = create_pdf(df_bvbs, image_list,text11,text22,text33,text44)
             st.download_button("Download BVBS.pdf", pdf_buffer,file_name="BVBS.pdf",key="download_pdf")
 
             # Thêm nút để tải về PDF
