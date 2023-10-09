@@ -73,19 +73,38 @@ for x_cm, y_cm, width_cm, height_cm in rectangles:
     p.setLineWidth(border_width1)
     p.rect(x_cm * 28.3465, y_cm * 28.3465, width_cm * 28.3465, height_cm * 28.3465) 
     p.setFont('MSMINCHO.TTF', 20)
-    p.drawString(9.6 * 28.3465, 28.7 * 28.3465, "加工帳")  # 
+    p.drawString(9.3 * 28.3465, 28.7 * 28.3465, "> 加工帳 <")  # 
     y2 = 27.2
-    sss = "ナイトウ建商"
-    sss_str = str(sss)
-    p.setFont('MSMINCHO.TTF', 14)
-    p.drawString(0.7 * 28.3465, 28.8 * 28.3465, "工事名: 作神橋")
-    p.drawString(0.7 * 28.3465, 28.1 * 28.3465, "使用場所: A1")
-    p.drawString(4.8 * 28.3465, 28.1 * 28.3465, "運搬日: 10/24")
-    p.drawString(5.3 * 28.3465, 28.1 * 28.3465, f"協力会社: {sss_str}".rjust(50) ) #ナイトウ建商 f"協力会社: { sss_str.rjust(50)}"
-
-    p.setFont('MSMINCHO.TTF', 7)
-    p.drawString(8.2 * 28.3465, 28.3 * 28.3465, "AM")
-    p.drawString(8.2 * 28.3465, 28.06 * 28.3465, "PM")
+    p.setFont('MSMINCHO.TTF', 10)
+    AM = 'AM'
+    PM = 'PM'
+    x_text44 = (0.7 * 28.3465)
+    y_text44 = (28.1 * 28.3465)
+    p.setFont('MSMINCHO.TTF', 12)
+    p.drawString(0.7 * 28.3465, 28.9 * 28.3465, f"工事名: {text11}")    #f"工事名: {text11}"
+    p.drawString(x_text44, y_text44, f"使用場所: {text44}    運搬日: {text55} {text66}")  #f"使用場所: {text44}"
+    p.drawRightString(20.3 * 28.3465, 28.1 * 28.3465, f"協力会社: {text22}") #ナイトウ建商
+    
+    # In ngày tháng năm hiện tại
+    # Thiết lập múi giờ
+    desired_timezone = 'Asia/Tokyo'
+    # Tạo đối tượng múi giờ
+    desired_tz = pytz.timezone(desired_timezone)
+    # Lấy thời gian hiện tại theo múi giờ đã thiết lập
+    current_time = datetime.now(desired_tz)
+    # Định dạng và hiển thị thời gian
+    formatted_time = current_time.strftime("%Y/%m/%d")
+    #p.drawString(13.2 * 28.3465, 28.9 * 28.3465, f"作成日: {formatted_time}")
+    df = pd.DataFrame(df_bvbs)
+    so_hang = len(df['BVBS'])
+    KK = so_hang / 14
+    if KK % 2 == 0:
+        p.drawRightString(20.3 * 28.3465, 28.9 * 28.3465, f"作成日: {formatted_time}" "   " f"ページ: {K}/{int(KK)}")
+    elif KK < 1:
+        p.drawRightString(20.3 * 28.3465, 28.9 * 28.3465, f"作成日: {formatted_time}" "   " f"ページ: {K}")
+    elif KK > 1:
+        KK += 1
+        p.drawRightString(20.3 * 28.3465, 28.9 * 28.3465, f"作成日: {formatted_time}" "   " f"ページ: {K}/{int(KK)}")
 
     p.setFont('MSMINCHO.TTF', 16)
     p.drawString(1 * 28.3465, y2 * 28.3465, "番号")     # 1
@@ -97,29 +116,6 @@ for x_cm, y_cm, width_cm, height_cm in rectangles:
     p.drawString(13.8 * 28.3465, y2 * 28.3465, "加工図")  # 7
     p.drawString(16.9 * 28.3465, y2 * 28.3465, "ピン")    # 8
     p.drawString(18.8 * 28.3465, y2 * 28.3465, "重量")    # 9
-
-    # In ngày tháng năm hiện tại
-    # Thiết lập múi giờ
-    desired_timezone = 'Asia/Tokyo'
-    # Tạo đối tượng múi giờ
-    desired_tz = pytz.timezone(desired_timezone)
-    # Lấy thời gian hiện tại theo múi giờ đã thiết lập
-    current_time = datetime.now(desired_tz)
-    # Định dạng và hiển thị thời gian
-    formatted_time = current_time.strftime("%Y/%m/%d")
-    p.setFont('MSMINCHO.TTF', 13)
-    p.drawString(13.2 * 28.3465, 28.9 * 28.3465, f"作成日: {formatted_time}" )
-    df = pd.DataFrame(df_bvbs)
-    so_hang = len(df['BVBS'])
-    KK = so_hang / 14
-    p.setFont('MSMINCHO.TTF', 13)
-    if KK % 2 == 0:
-        p.drawString(17.8 * 28.3465, 28.9 * 28.3465, f"ページ: {K}/{int(KK)}")
-    elif KK < 1:
-        p.drawString(17.8 * 28.3465, 28.9 * 28.3465, f"ページ: {K}")
-    elif KK > 1:
-        KK += 1
-        p.drawString(17.8 * 28.3465, 28.9 * 28.3465, f"ページ: {K}/{int(KK)}")
 """
 ##############################################################################
 # Đặt toàn bộ mã lệnh vào một biến (ví dụ: code_string)
@@ -699,7 +695,7 @@ def main():
             buf = io.BytesIO()
             df_bvbs.to_csv(buf, index=False, header=False)
             file_name_3 = download_bvbs(session.file_name)
-            #st.download_button("Download BVBS",buf.getvalue(),file_name_3) #Download BVBS
+            st.download_button("Download BVBS",buf.getvalue(),file_name_3) #Download BVBS
             st.write("""------------------------------------------------------""")
             st.header("集計表")
             # Thêm cột mới 
@@ -713,7 +709,7 @@ def main():
             buf = io.BytesIO()
             df_table.to_excel(buf, index=False, header=True)
             file_name_0 = download_excel(session.file_name)
-            #st.download_button("Download Excel",buf.getvalue(),file_name_0,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") #Download Excel
+            st.download_button("Download Excel",buf.getvalue(),file_name_0,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") #Download Excel
 #############################################################################
             #name11 = df_table['径']#[0]  lấy trong 径 D x
             #st.write(name11)
@@ -1437,7 +1433,7 @@ def main():
                         exec(code_string)
                     
                         c.drawString(rect_x_position + 8, rect_y_position + 63, l1.rjust(6))  #trái
-                        c.drawString(rect_x_position + 80, rect_y_position + 81, l2.center(6))  #giữa
+                        c.drawString(rect_x_position + 78, rect_y_position + 81, l2.center(6))  #giữa
                         c.drawString(rect_x_position + 142, rect_y_position + 63, l3) #phải 
 
             #TH5    BF2D@Hj@r@i@p1@l1057@n1@e1.05@d13@gSD295@s39@v@a@Gl111@w135@l950@w0@C77@    
@@ -1610,7 +1606,7 @@ def main():
                 return buffer
             
             # Hàm để tạo PDF với hình chữ nhật và hình ảnh
-            def create_pdf1():
+            def create_pdf1(text11,text22, text44, text55, text66):
                 buffer = BytesIO()
                 p = canvas.Canvas(buffer, pagesize=A4)
                 # Kích thước mới của hình ảnh (đơn vị điểm)
@@ -2162,27 +2158,44 @@ def main():
                 "image/36.png",
             ]
 
-            # Hiển thị widget để nhập nội dung văn bản và chỉnh sửa vị trí của từng văn bản
             st.title("情報を入力する")
-            # Tạo các trường nhập văn bản "朝日インテック新棟建設", "株式会社オノコム", "トピー工業株式会社", "Y1-X1 柱"
             text11 = st.text_input("工事名", "朝日インテック新棟建設")
             text22 = st.text_input("協力会社", "株式会社オノコム")
             text33 = st.text_input("鉄筋メーカー", "トピー工業株式会社")
             text44 = st.text_input("使用場所", "Y1-X1 柱")
+           
+            # Tạo hai cột, một cho text_input và một cho radio buttons
+            col1, col2 = st.columns([2, 1])
+            # Trong cột đầu tiên (col1), đặt text_input
+            text55 = col1.text_input("運搬日: mm/dd", "10/24")
+            # Trong cột thứ hai (col2), đặt radio buttons
+            selected_option = col2.radio("AM/PM", ["AM", "PM"])
+            # Hiển thị thông báo dựa trên tùy chọn được chọn
+            if selected_option == "AM":
+                text66 = "AM"
+            else:
+                text66 = "PM"
 
+            # Tạo radio buttons với hai tùy chọn là "AM" và "PM"
+            #selected_option = 
+            # Hiển thị thông báo dựa trên tùy chọn được chọn
+            #if selected_option == "AM":
+                #st.write("Bạn đã chọn AM")
+           # else:
+                #st.write("Bạn đã chọn PM")
             x1, y1 = 2, 184
             x2, y2 = 2, 164
             x3, y3 = 280, 184
             x4, y4 = 280, 164
-
+            
             # Tạo PDF khi người dùng nhấn nút "Tạo PDF"
             st.title("BVBSと加工帳のPDFを作成する")
             #if st.button("PDFを作成する"):
-            pdf_buffer = create_pdf(df_bvbs, image_list,text11,text22,text33,text44)
+            pdf_buffer = create_pdf(df_bvbs, image_list, text11, text22, text33, text44)
             st.download_button("Download BVBS.pdf", pdf_buffer,file_name="BVBS.pdf",key="download_pdf")
 
             # Thêm nút để tải về PDF
-            pdf_buffer = create_pdf1()
+            pdf_buffer = create_pdf1(text11, text22, text44, text55, text66)
             st.download_button(label="Download 加工帳.pdf",data=pdf_buffer,file_name="加工帳.pdf",key="download-pdf-button")
 
 if __name__ == "__main__":
