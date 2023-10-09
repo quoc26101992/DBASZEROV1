@@ -1259,7 +1259,7 @@ def main():
                             c.drawString(rect_x_position + 130, rect_y_position + 90, l1) #phải
 
             #TH14   BF2D@Hj@r@i@p1@l2489@n1@e3.88@d16@gSD295@s80@v@a@Gl218@w90@l1860@w-45@l460@w0@C91@
-                    elif count_l == 4 and count_w == 3 and (w1=="90" and w2=="-45" and w3=="0" or w1=="45" and w2=="-90" and w3=="0"):
+                    elif count_l == 4 and count_w == 3 and (w1=="90" and -90 < int(w2) < 0 and w3=="0" or 0 < int(w2) < 90 and w2=="-90" and w3=="0"):
 
                         value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
@@ -1930,7 +1930,7 @@ def main():
                             p.drawString(14.1 * 28.3465, (y1 + 0.63) * 28.3465 , l2.center(6)) #l4.center(6)
                             p.drawString(15.35 * 28.3465, (y1 + 1.2) * 28.3465 , l1) #
 #TH14   BF2D@Hj@r@i@p1@l2489@n1@e3.88@d16@gSD295@s80@v@a@Gl218@w90@l1860@w-45@l460@w0@C91@
-                    elif count_l == 4 and count_w == 3 and (w1=="90" and w2=="-45" and w3=="0" or w1=="45" and w2=="-90" and w3=="0"):
+                    elif count_l == 4 and count_w == 3 and (w1=="90" and -90 < int(w2) < 0 and w3=="0" or 0 < int(w2) < 90 and w2=="-90" and w3=="0"):
                         img_path = image_list[14]
                         exec(code_string2) 
                         p.setFont('MSMINCHO.TTF', 10)
