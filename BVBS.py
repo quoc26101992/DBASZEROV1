@@ -22,8 +22,71 @@ from reportlab.pdfbase.ttfonts import TTFont
 from datetime import datetime  # Thêm thư viện datetime
 import re
 import pytz
+def process_input_string(input_string):
+    # Tìm tất cả các chuỗi từ "G" đến "w0" trong input_string
+    matches = re.findall(r'G(.*?)w0', input_string)
+    
+    # Lấy cả dấu trừ (nếu có), và các số phía sau "w" và "l" trong các chuỗi tìm được
+    l_values = []
+    w_values = []
+    w_values_after_change = []
 
+    for match in matches:
+        data = re.findall(r'l(\d+)|w(-?\d+)', match)
+        for item in data:
+            if item[0]:  # Nếu là số sau "l"
+                l_values.append(int(item[0]))
+            elif item[1]:  # Nếu là số sau "w"
+                w_value = int(item[1])
+                w_values.append(w_value)
+                if w_value < 0:
+                    new_w_value = abs(w_value)
+                else:
+                    new_w_value = -w_value
+                w_values_after_change.append(new_w_value)
 
+    # Kiểm tra giá trị cuối cùng của "w" và chỉ đổi dấu nếu nó là số âm
+    if w_values_after_change[-1] < 0:
+        w_values_after_change = [-w for w in w_values_after_change]
+
+    # Đảo ngược giá trị của các số "l"
+    reversed_l_values = list(reversed(l_values))
+
+    # Đảo ngược giá trị của các số "w" và in ra sau khi đã đổi dấu
+    reversed_w_values = list(reversed(w_values_after_change))
+
+    new_matches = []
+
+    for match in matches:
+        match = re.sub(r'l(\d+)', lambda x: f'l{reversed_l_values.pop(0)}', match)
+        match = re.sub(r'w(-?\d+)', lambda x: f'w{reversed_w_values.pop(0)}', match)
+        new_matches.append(match)
+
+    # In ra chuỗi mới
+    new_input_string = 'G' + 'w0'.join(new_matches) + 'w0'
+
+    start_index = input_string.find('G')
+    end_index = input_string.find('@C')  # Để bao gồm cả '@C'
+
+    # Tạo chuỗi mới bằng cách kết hợp các phần của input_string và new_code
+    new_input_string1 = input_string[:start_index] + new_input_string + input_string[end_index:]
+
+    # Tìm vị trí của ký tự "C" trong chuỗi
+    index_of_c = new_input_string1.index('C')
+    # Lấy chuỗi từ trái sang phải đến ký tự "C" bằng cách sử dụng cắt chuỗi
+    substring = new_input_string1[:index_of_c + 1]
+    # Tính tổng giá trị ASCII của từng ký tự trong chuỗi
+    ascii_sum = sum(ord(char) for char in substring)
+    IP = 96 - (ascii_sum % 32)
+    
+    start_index = new_input_string1.find('C')
+    end_index = new_input_string1.find(r'C(\d+)')  # Để bao gồm cả '@C'
+
+    # Tạo chuỗi mới bằng cách kết hợp các phần của input_string và new_code
+    new_input_string2 = new_input_string1[:start_index] + "C" + str(IP) + new_input_string1[end_index:]
+
+    return new_input_string2
+###########################################################################################
 code_string3 = """
 p.drawString(14 * 28.3465, (y1 + 1.52) * 28.3465 , '1') #l1.rjust(5)
 p.drawString(14.5 * 28.3465, (y1 + 1.52) * 28.3465 , '2') #l4.center(6)
@@ -685,13 +748,24 @@ def main():
             df_last['IP'] = [96-(sum([ord(ele) for ele in sub]))%32 for sub in df_last['searchIP']]
             df_last['BVBS'] = df_last['searchIP'] + df_last['IP'].astype(str) + "@"
             df_last['径'] = "D"+df_last['直径'].astype(str).str.replace('.0', '')
+            
             st.header("BVBS")
             df_bvbs = df_last.loc[:, ["BVBS"]]
 
             #st.write(df_last) #09/08
-
+                  
             st.write(df_bvbs)
-    
+            df = pd.DataFrame(df_bvbs)
+            selected_column = 'BVBS'
+            zz = 0
+            st.write(df)
+            for value000 in df[selected_column]:
+                zz += 1
+                is_checked = st.checkbox(f"NO:{zz} + {value000}")
+                if is_checked:
+                    value001 = process_input_string(value000)
+                    df.at[zz - 1, 'BVBS'] = value001
+                    st.write(value001)
             buf = io.BytesIO()
             df_bvbs.to_csv(buf, index=False, header=False)
             file_name_3 = download_bvbs(session.file_name)
@@ -711,6 +785,8 @@ def main():
             file_name_0 = download_excel(session.file_name)
             st.download_button("Download Excel",buf.getvalue(),file_name_0,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") #Download Excel
 #############################################################################
+            
+             
             #name11 = df_table['径']#[0]  lấy trong 径 D x
             #st.write(name11)
 #############################################################################
@@ -783,12 +859,11 @@ def main():
                 # Tạo biến NO ban đầu
                 no = 1
                 
-
+                
 ################################################################
-                df = pd.DataFrame(df_bvbs)
-                selected_column = 'BVBS'
+                #df = pd.DataFrame(df_bvbs)
+                #selected_column = 'BVBS'
                 for value001 in df[selected_column]:
-                    #st.write(value001)
                     # Sử dụng biểu thức chính quy để tìm số sau "SD" đến ký tự "@"
                     数量 = r'SD(\d+\.\d+|\d+)@'
                     # Tìm tất cả các kết quả phù hợp với biểu thức chính quy
@@ -1259,7 +1334,7 @@ def main():
                             c.drawString(rect_x_position + 130, rect_y_position + 90, l1) #phải
 
             #TH14   BF2D@Hj@r@i@p1@l2489@n1@e3.88@d16@gSD295@s80@v@a@Gl218@w90@l1860@w-45@l460@w0@C91@
-                    elif count_l == 4 and count_w == 3 and (w1=="90" and -90 < int(w2) < 0 and w3=="0" or 0 < int(w2) < 90 and w2=="-90" and w3=="0"):
+                    elif count_l == 4 and count_w == 3 and (w1=="90" and -90 < int(w2) < 0 and w3=="0" or 0 < int(w1) < 90 and w2=="-90" and w3=="0"):
 
                         value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
@@ -1930,7 +2005,7 @@ def main():
                             p.drawString(14.1 * 28.3465, (y1 + 0.63) * 28.3465 , l2.center(6)) #l4.center(6)
                             p.drawString(15.35 * 28.3465, (y1 + 1.2) * 28.3465 , l1) #
 #TH14   BF2D@Hj@r@i@p1@l2489@n1@e3.88@d16@gSD295@s80@v@a@Gl218@w90@l1860@w-45@l460@w0@C91@
-                     
+                    elif count_l == 4 and count_w == 3 and (w1=="90" and -90 < int(w2) < 0 and w3=="0" or 0 < int(w1) < 90 and w2=="-90" and w3=="0"): 
                         img_path = image_list[14]
                         exec(code_string2) 
                         p.setFont('MSMINCHO.TTF', 10)
@@ -2181,8 +2256,8 @@ def main():
             else:
                 text66 = "PM"
 
-            
-            
+            # Tạo PDF khi người dùng nhấn nút "Tạo PDF"
+            st.title("BVBSと加工帳のPDFを作成する")
             # Tạo PDF khi người dùng nhấn nút "Tạo PDF"
             st.title("BVBSと加工帳のPDFを作成する")
             if st.button("BVBS.PDFを作成する"):
