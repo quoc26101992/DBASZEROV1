@@ -778,7 +778,7 @@ def main():
             zz = 0
             for value000 in df[selected_column]:
                 zz += 1
-                is_checked = st.checkbox(f"No.{zz} : {value000}")
+                is_checked = st.checkbox(f"__No.{zz}:_{value000}")
                 if is_checked:
                     value001 = process_input_string(value000)
                     df.at[zz - 1, 'BVBS'] = value001
