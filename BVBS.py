@@ -13,7 +13,7 @@ from io import BytesIO
 import os
 from fpdf import FPDF
 import tempfile
-from reportlab.lib.pagesizes import letter  
+from reportlab.lib.pagesizes import letter
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.utils import ImageReader
 from PIL import Image as PILImage
@@ -573,15 +573,10 @@ def create_pandas_dataframe_2(data, pset_attributes):
 
 
 def callback_upload():
-    if st.session_state.uploaded_file is not None:
-        session["file_name"] = session["uploaded_file"].name
-        session["array_buffer"] = session["uploaded_file"].getvalue()
-        session["ifc_file"] = ifcopenshell.file.from_string(session["array_buffer"].decode("utf-8"))
-        session["is_file_loaded"] = True
-        session["DataFrame"] = None
-        session["DataFrame_1"] = None
-        session["DataFrame_2"] = None
-        session["IsDataFrameLoaded"] = False
+    session["file_name"] = session["uploaded_file"].name
+    session["array_buffer"] = session["uploaded_file"].getvalue()
+    session["ifc_file"] = ifcopenshell.file.from_string(session["array_buffer"].decode("utf-8"))
+    session["is_file_loaded"] = True
 
 def initialize_session_state():
     session["DataFrame"] = None
@@ -776,28 +771,19 @@ def main():
             
             st.info('鉄筋を左右反転にしたい場合は、該当箇所のチェックボックスにチェックを入れてください', icon="ℹ️")
             #st.write(df_last) #09/08      
-            #st.write(df_bvbs)
+            st.write(df_bvbs)
 ####################################################################################
             df = pd.DataFrame(df_bvbs)
             selected_column = 'BVBS'
             zz = 0
-          
             for value000 in df[selected_column]:
                 zz += 1
-                is_checked = st.checkbox(f" No.{zz} : {value000}")
+                is_checked = st.checkbox(f"No.{zz} : {value000}")
                 if is_checked:
                     value001 = process_input_string(value000)
                     df.at[zz - 1, 'BVBS'] = value001
                     colored_text = change_color(value001)
                     st.markdown("左右反転後: " + colored_text, unsafe_allow_html=True)
-                    #st.write(new_input_string)
-#####################################################################################
-                    
-
-
-
-
-
 #####################################################################################
             buf = io.BytesIO()
             df_bvbs.to_csv(buf, index=False, header=False)
@@ -1659,7 +1645,7 @@ def main():
                         c.drawString(rect_x_position + 70, rect_y_position + 70, "非定型")  #giữa
 #######################################################################################################           
                     # Thêm nội dung văn bản vào hình chữ nhật từ danh sách text_list
-
+                    c.setFont('MSMINCHO.TTF', 13)
                     c.drawString(rect_x_position + x1, rect_y_position + y1, text11)
                     c.drawString(rect_x_position + x2, rect_y_position + y2, text22)
                     #Lệnh canh lề phải trong pdf
