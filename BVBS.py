@@ -22,6 +22,23 @@ from reportlab.pdfbase.ttfonts import TTFont
 from datetime import datetime  # Thêm thư viện datetime
 import re
 import pytz
+#################################################################
+# text đổi màu
+def change_color(text):
+    # Tìm chuỗi con từ 'G' đến '@C'
+    start_index = text.find('G') + 1 
+    end_index = text.find('@w0')
+
+    if start_index != -1 and end_index != -1:
+        # Thay đổi màu của chuỗi con
+        colored_text = f'<span style="color: red;">{text[start_index:end_index]}</span>'
+
+        # Thay thế chuỗi con gốc bằng chuỗi con đã đổi màu
+        new_text = text[:start_index] + colored_text + text[end_index:]
+        return new_text
+    else:
+        return text
+####################################################################
 def process_input_string(input_string):
     # Tìm tất cả các chuỗi từ "G" đến "w0" trong input_string
     matches = re.findall(r'G(.*?)w0', input_string)
@@ -46,9 +63,10 @@ def process_input_string(input_string):
                 w_values_after_change.append(new_w_value)
 
     # Kiểm tra giá trị cuối cùng của "w" và chỉ đổi dấu nếu nó là số âm
-    if w_values_after_change[-1] < 0:
+    if len(w_values_after_change) == 0: #nếu w không có
+        print("")
+    elif w_values_after_change[-1] < 0:
         w_values_after_change = [-w for w in w_values_after_change]
-
     # Đảo ngược giá trị của các số "l"
     reversed_l_values = list(reversed(l_values))
 
@@ -660,7 +678,7 @@ def main():
     if "is_file_loaded" in session and session["is_file_loaded"]:
         st.success(f'✔️ ファイルのアップロードができました!')
         st.warning(" 新しいデータを再度アップロードする場合は、このページの更新を行ってください🔃 ", icon="⚠️")    
- 
+
 
     if not "IsDataFrameLoaded" in session:
         initialize_session_state()
@@ -749,23 +767,24 @@ def main():
             df_last['BVBS'] = df_last['searchIP'] + df_last['IP'].astype(str) + "@"
             df_last['径'] = "D"+df_last['直径'].astype(str).str.replace('.0', '')
             
-            st.header("BVBS")
             df_bvbs = df_last.loc[:, ["BVBS"]]
-
-            #st.write(df_last) #09/08
-                  
-            st.write(df_bvbs)
+            
+            st.info('鉄筋を左右反転にしたい場合は、該当箇所のチェックボックスにチェックを入れてください', icon="ℹ️")
+            #st.write(df_last) #09/08      
+            #st.write(df_bvbs)
+####################################################################################
             df = pd.DataFrame(df_bvbs)
             selected_column = 'BVBS'
             zz = 0
-            st.write(df)
             for value000 in df[selected_column]:
                 zz += 1
-                is_checked = st.checkbox(f"NO:{zz} + {value000}")
+                is_checked = st.checkbox(f"No.{zz} : {value000}")
                 if is_checked:
                     value001 = process_input_string(value000)
                     df.at[zz - 1, 'BVBS'] = value001
-                    st.write(value001)
+                    colored_text = change_color(value001)
+                    st.markdown("左右反転後: " + colored_text, unsafe_allow_html=True)
+#####################################################################################
             buf = io.BytesIO()
             df_bvbs.to_csv(buf, index=False, header=False)
             file_name_3 = download_bvbs(session.file_name)
@@ -785,18 +804,12 @@ def main():
             file_name_0 = download_excel(session.file_name)
             st.download_button("Download Excel",buf.getvalue(),file_name_0,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") #Download Excel
 #############################################################################
-            
-             
-            #name11 = df_table['径']#[0]  lấy trong 径 D x
-            #st.write(name11)
-#############################################################################
             #df = pd.DataFrame(df_bvbs)
             # Chọn cột cụ thể (ví dụ: 'Name') để lấy dữ liệu từ cột này
             #selected_column = 'BVBS'
             #for value001 in df[selected_column]:
                 #st.write(value001)
 #####################################################################
-
             # Cài đặt phông chữ hỗ trợ tiếng Nhật
             pdfmetrics.registerFont(TTFont('MSMINCHO.TTF', 'form/MSMINCHO.TTF'))          
             
@@ -858,9 +871,8 @@ def main():
 
                 # Tạo biến NO ban đầu
                 no = 1
-                
-                
 ################################################################
+
                 #df = pd.DataFrame(df_bvbs)
                 #selected_column = 'BVBS'
                 for value001 in df[selected_column]:
@@ -2256,8 +2268,6 @@ def main():
             else:
                 text66 = "PM"
 
-            # Tạo PDF khi người dùng nhấn nút "Tạo PDF"
-            st.title("BVBSと加工帳のPDFを作成する")
             # Tạo PDF khi người dùng nhấn nút "Tạo PDF"
             st.title("BVBSと加工帳のPDFを作成する")
             if st.button("BVBS.PDFを作成する"):
