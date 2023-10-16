@@ -789,7 +789,7 @@ def main():
                     value002 = process_input_string(value000)
                     df.at[zz - 1, 'BVBS'] = value002
                     colored_text = change_color(value002)
-                    st.markdown("左右反転後: " + colored_text, unsafe_allow_html=True)
+                    st.markdown('<span style="color: red; font-size: 15px;"> 左右反転後: </span>' + colored_text, unsafe_allow_html=True)
                     #st.write(new_input_string)
 #####################################################################################
 
