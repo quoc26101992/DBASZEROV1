@@ -13,7 +13,7 @@ from io import BytesIO
 import os
 from fpdf import FPDF
 import tempfile
-from reportlab.lib.pagesizes import letter
+from reportlab.lib.pagesizes import letter  
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.utils import ImageReader
 from PIL import Image as PILImage
@@ -573,10 +573,15 @@ def create_pandas_dataframe_2(data, pset_attributes):
 
 
 def callback_upload():
-    session["file_name"] = session["uploaded_file"].name
-    session["array_buffer"] = session["uploaded_file"].getvalue()
-    session["ifc_file"] = ifcopenshell.file.from_string(session["array_buffer"].decode("utf-8"))
-    session["is_file_loaded"] = True
+    if st.session_state.uploaded_file is not None:
+        session["file_name"] = session["uploaded_file"].name
+        session["array_buffer"] = session["uploaded_file"].getvalue()
+        session["ifc_file"] = ifcopenshell.file.from_string(session["array_buffer"].decode("utf-8"))
+        session["is_file_loaded"] = True
+        session["DataFrame"] = None
+        session["DataFrame_1"] = None
+        session["DataFrame_2"] = None
+        session["IsDataFrameLoaded"] = False
 
 def initialize_session_state():
     session["DataFrame"] = None
@@ -677,7 +682,7 @@ def main():
     ## Add File Name and Success Message
     if "is_file_loaded" in session and session["is_file_loaded"]:
         st.success(f'✔️ ファイルのアップロードができました!')
-        st.warning(" 新しいデータを再度アップロードする場合は、このページの更新を行ってください🔃 ", icon="⚠️")    
+        #st.warning(" 新しいデータを再度アップロードする場合は、このページの更新を行ってください🔃 ", icon="⚠️")    
 
 
     if not "IsDataFrameLoaded" in session:
@@ -768,22 +773,26 @@ def main():
             df_last['径'] = "D"+df_last['直径'].astype(str).str.replace('.0', '')
             
             df_bvbs = df_last.loc[:, ["BVBS"]]
-            
+            st.write("""------------------------------------------------------""")
+            st.title("BVBS")
             st.info('鉄筋を左右反転にしたい場合は、該当箇所のチェックボックスにチェックを入れてください', icon="ℹ️")
             #st.write(df_last) #09/08      
-            st.write(df_bvbs)
+            #st.write(df_bvbs)
 ####################################################################################
             df = pd.DataFrame(df_bvbs)
             selected_column = 'BVBS'
-            zz = 0
+            zz = 0  
             for value000 in df[selected_column]:
                 zz += 1
-                is_checked = st.checkbox(f"No.{zz} : {value000}")
+                is_checked = st.checkbox(f" No.{zz} : {value000}")
                 if is_checked:
-                    value001 = process_input_string(value000)
-                    df.at[zz - 1, 'BVBS'] = value001
-                    colored_text = change_color(value001)
+                    value002 = process_input_string(value000)
+                    df.at[zz - 1, 'BVBS'] = value002
+                    colored_text = change_color(value002)
                     st.markdown("左右反転後: " + colored_text, unsafe_allow_html=True)
+                    #st.write(new_input_string)
+#####################################################################################
+
 #####################################################################################
             buf = io.BytesIO()
             df_bvbs.to_csv(buf, index=False, header=False)
@@ -803,6 +812,7 @@ def main():
             df_table.to_excel(buf, index=False, header=True)
             file_name_0 = download_excel(session.file_name)
             st.download_button("Download Excel",buf.getvalue(),file_name_0,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") #Download Excel
+            st.write("""------------------------------------------------------""")
 #############################################################################
             #df = pd.DataFrame(df_bvbs)
             # Chọn cột cụ thể (ví dụ: 'Name') để lấy dữ liệu từ cột này
@@ -2269,6 +2279,7 @@ def main():
                 text66 = "PM"
 
             # Tạo PDF khi người dùng nhấn nút "Tạo PDF"
+            st.write("""------------------------------------------------------""")
             st.title("BVBSと加工帳のPDFを作成する")
             if st.button("BVBS.PDFを作成する"):
                 pdf_buffer = create_pdf(df_bvbs, image_list, text11, text22, text33, text44)
