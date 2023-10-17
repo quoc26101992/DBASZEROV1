@@ -32,7 +32,6 @@ def change_color(text):
     if start_index != -1 and end_index != -1:
         # Thay đổi màu của chuỗi con
         colored_text = f'<span style="color: red;">{text[start_index:end_index]}</span>'
-
         # Thay thế chuỗi con gốc bằng chuỗi con đã đổi màu
         new_text = text[:start_index] + colored_text + text[end_index:]
         return new_text
@@ -440,12 +439,12 @@ def create_pandas_dataframe(data, pset_attributes):
     return DF_sort
     
 def get_objects_data_by_class_1(file, class_type):
-
-    objects = file.by_type(class_type)
     objects_data = []
     pset_attributes = set()
+    OBJECTS = file.by_type(class_type)
+    for OBJECT in OBJECTS:
+        object = OBJECT.Representation[2][0][3][0][0]
 
-    for object in objects:
         objects_data.append(
             {
                 "Id": object.id(),
@@ -480,59 +479,60 @@ def create_pandas_dataframe_1(data, pset_attributes):
     return DF_sort1
 
 def get_objects_data_by_class_2(file, class_type):
-
-    objects = file.by_type(class_type)
     objects_data = []
     pset_attributes = set()
+    OBJECTS = file.by_type(class_type)
+    for OBJECT in OBJECTS:
+        objects = OBJECT.Representation[2][0][3][0][0][0]
 
-    for object in objects:
-        objects_data.append(
-            {
-                "Id": object.id(),
-                "直線 Point1_x": round(object.ParentCurve[0][0][0][0],2)
-                if object.ParentCurve.is_a('IfcPolyline')
-                else 0,
-                "直線 Point1_y": round(object.ParentCurve[0][0][0][1],2)
-                if object.ParentCurve.is_a('IfcPolyline')
-                else 0,
-                "直線 Point1_z": round(object.ParentCurve[0][0][0][2],2)
-                if object.ParentCurve.is_a('IfcPolyline')
-                else 0,
-                "直線 Point2_x": round(object.ParentCurve[0][1][0][0],2)
-                if object.ParentCurve.is_a('IfcPolyline')
-                else 0,
-                "直線 Point2_y": round(object.ParentCurve[0][1][0][1],2)
-                if object.ParentCurve.is_a('IfcPolyline')
-                else 0,
-                "直線 Point2_z": round(object.ParentCurve[0][1][0][2],2)
-                if object.ParentCurve.is_a('IfcPolyline')
-                else 0,
-                "曲線 Center_x": round(object.ParentCurve[0][0][0][0][0],2)
-                if object.ParentCurve.is_a('IfcTrimmedCurve')
-                else 0,
-                "曲線 Center_y": round(object.ParentCurve[0][0][0][0][1],2)
-                if object.ParentCurve.is_a('IfcTrimmedCurve')
-                else 0,
-                "曲線 Center_z": round(object.ParentCurve[0][0][0][0][2],2)
-                if object.ParentCurve.is_a('IfcTrimmedCurve')
-                else 0,
-                "曲線 半径": round(object.ParentCurve[0][1],1)
-                if object.ParentCurve.is_a('IfcTrimmedCurve')
-                else 0,
-                "曲げ角度w1": round(object.ParentCurve[1][0][0])
-                if object.ParentCurve.is_a('IfcTrimmedCurve')
-                else 0,
-                "曲げ角度w2": round(object.ParentCurve[2][0][0])
-                if object.ParentCurve.is_a('IfcTrimmedCurve')
-                else 0,
-                "w2-w1(1)": round(abs(object.ParentCurve[2][0][0] - object.ParentCurve[1][0][0]))
-                if object.ParentCurve.is_a('IfcTrimmedCurve') and round(abs(object.ParentCurve[2][0][0] - object.ParentCurve[1][0][0]))<=180
-                else 0,
-                "w2-w1(2)": round(360-abs(object.ParentCurve[2][0][0] - object.ParentCurve[1][0][0]))
-                if object.ParentCurve.is_a('IfcTrimmedCurve') and round(abs(object.ParentCurve[2][0][0] - object.ParentCurve[1][0][0]))>180
-                else 0,
-            }
-        )
+        for object in objects:
+            objects_data.append(
+                {
+                    "Id": object.id(),
+                    "直線 Point1_x": round(object.ParentCurve[0][0][0][0],2)
+                    if object.ParentCurve.is_a('IfcPolyline')
+                    else 0,
+                    "直線 Point1_y": round(object.ParentCurve[0][0][0][1],2)
+                    if object.ParentCurve.is_a('IfcPolyline')
+                    else 0,
+                    "直線 Point1_z": round(object.ParentCurve[0][0][0][2],2)
+                    if object.ParentCurve.is_a('IfcPolyline')
+                    else 0,
+                    "直線 Point2_x": round(object.ParentCurve[0][1][0][0],2)
+                    if object.ParentCurve.is_a('IfcPolyline')
+                    else 0,
+                    "直線 Point2_y": round(object.ParentCurve[0][1][0][1],2)
+                    if object.ParentCurve.is_a('IfcPolyline')
+                    else 0,
+                    "直線 Point2_z": round(object.ParentCurve[0][1][0][2],2)
+                    if object.ParentCurve.is_a('IfcPolyline')
+                    else 0,
+                    "曲線 Center_x": round(object.ParentCurve[0][0][0][0][0],2)
+                    if object.ParentCurve.is_a('IfcTrimmedCurve')
+                    else 0,
+                    "曲線 Center_y": round(object.ParentCurve[0][0][0][0][1],2)
+                    if object.ParentCurve.is_a('IfcTrimmedCurve')
+                    else 0,
+                    "曲線 Center_z": round(object.ParentCurve[0][0][0][0][2],2)
+                    if object.ParentCurve.is_a('IfcTrimmedCurve')
+                    else 0,
+                    "曲線 半径": round(object.ParentCurve[0][1],1)
+                    if object.ParentCurve.is_a('IfcTrimmedCurve')
+                    else 0,
+                    "曲げ角度w1": round(object.ParentCurve[1][0][0])
+                    if object.ParentCurve.is_a('IfcTrimmedCurve')
+                    else 0,
+                    "曲げ角度w2": round(object.ParentCurve[2][0][0])
+                    if object.ParentCurve.is_a('IfcTrimmedCurve')
+                    else 0,
+                    "w2-w1(1)": round(abs(object.ParentCurve[2][0][0] - object.ParentCurve[1][0][0]))
+                    if object.ParentCurve.is_a('IfcTrimmedCurve') and round(abs(object.ParentCurve[2][0][0] - object.ParentCurve[1][0][0]))<=180
+                    else 0,
+                    "w2-w1(2)": round(360-abs(object.ParentCurve[2][0][0] - object.ParentCurve[1][0][0]))
+                    if object.ParentCurve.is_a('IfcTrimmedCurve') and round(abs(object.ParentCurve[2][0][0] - object.ParentCurve[1][0][0]))>180
+                    else 0,
+                }
+            )
     return objects_data, list(pset_attributes)
 
 def get_attribute_value_2(object_data, attribute):
@@ -605,17 +605,16 @@ def get_ifc_pandas():
 def get_ifc_pandas_1():
     data, pset_attributes = get_objects_data_by_class_1(
         session.ifc_file,
-        "IFCCOMPOSITECURVE"
+        "IfcReinforcingBar"
     )
     return create_pandas_dataframe_1(data, pset_attributes)
 
 def get_ifc_pandas_2():
     data, pset_attributes = get_objects_data_by_class_2(
         session.ifc_file,
-        "IFCCOMPOSITECURVESEGMENT"
+        "IfcReinforcingBar"
     )
     return create_pandas_dataframe_2(data, pset_attributes)
-
 def download_excel(dataframe):
     return dataframe
 
@@ -682,7 +681,7 @@ def main():
     ## Add File Name and Success Message
     if "is_file_loaded" in session and session["is_file_loaded"]:
         st.success(f'✔️ ファイルのアップロードができました!')
-        #st.warning(" 新しいデータを再度アップロードする場合は、このページの更新を行ってください🔃 ", icon="⚠️")    
+        st.warning(" 新しいデータを再度アップロードする場合は、このページの更新を行ってください🔃 ", icon="⚠️")    
 
 
     if not "IsDataFrameLoaded" in session:
@@ -781,7 +780,9 @@ def main():
 ####################################################################################
             df = pd.DataFrame(df_bvbs)
             selected_column = 'BVBS'
-            zz = 0  
+            zz = 0
+            
+            
             for value000 in df[selected_column]:
                 zz += 1
                 is_checked = st.checkbox(f" No.{zz} : {value000}")
@@ -790,8 +791,26 @@ def main():
                     df.at[zz - 1, 'BVBS'] = value002
                     colored_text = change_color(value002)
                     st.markdown('<span style="color: red; font-size: 15px;"> 左右反転後: </span>' + colored_text, unsafe_allow_html=True)
+                    
                     #st.write(new_input_string)
 #####################################################################################
+            st.write("""------------------------------------------------------""")
+            st.title("CHỌN")
+            selected_products = [True] * len(df)
+            select_all = st.checkbox("Chọn/Bỏ chọn tất cả")
+            if select_all:
+                selected_products = [False] * len(df)
+            # Hiển thị danh sách sản phẩm với checkbox riêng cho mỗi sản phẩm
+            for index, value002 in df.iterrows():
+                selected_products[index] = st.checkbox(f"Chọn {value002['BVBS']}", selected_products[index])
+            # Hiển thị danh sách sản phẩm đã chọn dưới dạng hàng
+            st.write("Sản phẩm đã được chọn:")
+            # Lấy danh sách sản phẩm đã chọn
+            selected_product_names = df.loc[selected_products, 'BVBS']
+            for product_name in selected_product_names:   
+                st.write(product_name)
+            df1 = pd.DataFrame(selected_product_names)
+            selected_column1 = 'BVBS'
 
 #####################################################################################
             buf = io.BytesIO()
@@ -812,7 +831,6 @@ def main():
             df_table.to_excel(buf, index=False, header=True)
             file_name_0 = download_excel(session.file_name)
             st.download_button("Download Excel",buf.getvalue(),file_name_0,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") #Download Excel
-            st.write("""------------------------------------------------------""")
 #############################################################################
             #df = pd.DataFrame(df_bvbs)
             # Chọn cột cụ thể (ví dụ: 'Name') để lấy dữ liệu từ cột này
@@ -821,7 +839,7 @@ def main():
                 #st.write(value001)
 #####################################################################
             # Cài đặt phông chữ hỗ trợ tiếng Nhật
-            pdfmetrics.registerFont(TTFont('MSMINCHO.TTF', 'form/MSMINCHO.TTF'))          
+            pdfmetrics.registerFont(TTFont('MSMINCHO.TTF',  'form/MSMINCHO.TTF'))          
             
             # Hàm để tạo mã QR với kích thước cố định
             def create_qr_code(df_bvbs, size=100):
@@ -885,7 +903,8 @@ def main():
 
                 #df = pd.DataFrame(df_bvbs)
                 #selected_column = 'BVBS'
-                for value001 in df[selected_column]:
+                
+                for value001 in df1[selected_column1]:
                     # Sử dụng biểu thức chính quy để tìm số sau "SD" đến ký tự "@"
                     数量 = r'SD(\d+\.\d+|\d+)@'
                     # Tìm tất cả các kết quả phù hợp với biểu thức chính quy
@@ -2216,43 +2235,43 @@ def main():
 #################################################################################################################################        
             # Danh sách điều kiện và đường dẫn đến các hình ảnh
             image_list = [
-		        "image/0.png",
-                "image/1.png",
-                "image/2.png",
-                "image/3.png",
-                "image/4.png",
-                "image/5.png",
-                "image/6.png",
-                "image/7.png",
-                "image/8.png",
-                "image/9.png",
-                "image/10.png",
-                "image/11.png",
-                "image/12.png",
-                "image/13.png",
-                "image/14.png",
-                "image/15.png",
-                "image/16.png",
-                "image/17.png",
-                "image/18.png",
-                "image/19.png",
-                "image/20.png",
-                "image/21.png",
-                "image/22.png",
-                "image/23.png",
-                "image/24.png",
-                "image/25.png",
-                "image/26.png",
-                "image/27.png",
-                "image/28.png",
-                "image/29.png",                              
-                "image/30.png",
-                "image/31.png",
-                "image/32.png",
-                "image/33.png",
-                "image/34.png",
-                "image/35.png",
-                "image/36.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\0.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\1.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\2.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\3.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\4.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\5.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\6.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\7.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\8.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\9.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\10.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\11.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\12.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\13.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\14.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\15.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\16.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\17.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\18.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\19.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\20.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\21.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\22.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\23.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\24.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\25.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\26.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\27.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\28.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\29.png",                              
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\30.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\31.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\32.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\33.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\34.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\35.png",
+                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\36.png",
             ]
 
             st.title("情報を入力する")
@@ -2279,16 +2298,19 @@ def main():
                 text66 = "PM"
 
             # Tạo PDF khi người dùng nhấn nút "Tạo PDF"
-            st.write("""------------------------------------------------------""")
             st.title("BVBSと加工帳のPDFを作成する")
-            if st.button("BVBS.PDFを作成する"):
+            #st.markdown('<h1 style="text-align: center;">BVBSと加工帳のPDFを作成する</h1>', unsafe_allow_html=True)
+            # Tạo hai cột với tỷ lệ chiều rộng 2:1
+            col11, col22 = st.columns([2, 1])
+            
+            if col11.button("BVBS.PDFを作成する"):
                 pdf_buffer = create_pdf(df_bvbs, image_list, text11, text22, text33, text44)
-                st.download_button("Download BVBS.pdf", pdf_buffer,file_name="BVBS.pdf",key="download_pdf")
+                col11.download_button("Download BVBS.pdf", pdf_buffer, file_name="BVBS.pdf", key="download_pdf")
 
-            # Thêm nút để tải về PDF
-            if st.button("加工帳.PDFを作成する"):
+            if col22.button("加工帳.PDFを作成する"):
                 pdf_buffer = create_pdf1(text11, text22, text44, text55, text66)
-                st.download_button(label="Download 加工帳.pdf",data=pdf_buffer,file_name="加工帳.pdf",key="download-pdf-button")
+                col22.download_button("Download 加工帳.pdf", pdf_buffer, file_name="加工帳.pdf", key="download-pdf-button")
+
 
 if __name__ == "__main__":
     session = st.session_state
