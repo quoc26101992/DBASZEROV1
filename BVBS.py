@@ -22,6 +22,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 from datetime import datetime  # Thêm thư viện datetime
 import re
 import pytz
+
 #################################################################
 # text đổi màu
 def change_color(text):
@@ -175,8 +176,8 @@ for x_cm, y_cm, width_cm, height_cm in rectangles:
     # Định dạng và hiển thị thời gian
     formatted_time = current_time.strftime("%Y/%m/%d")
     #p.drawString(13.2 * 28.3465, 28.9 * 28.3465, f"作成日: {formatted_time}")
-    df = pd.DataFrame(df_bvbs)
-    so_hang = len(df['BVBS'])
+    df1 = pd.DataFrame(selected_product_names)
+    so_hang = len(df1['BVBS'])
     KK = so_hang / 14
     if KK % 2 == 0:
         p.drawRightString(20.3 * 28.3465, 28.9 * 28.3465, f"作成日: {formatted_time}" "   " f"ページ: {K}/{int(KK)}")
@@ -795,42 +796,93 @@ def main():
                     #st.write(new_input_string)
 #####################################################################################
             st.write("""------------------------------------------------------""")
-            st.title("CHỌN")
+            st.title("印刷したいBVBS")
             selected_products = [True] * len(df)
-            select_all = st.checkbox("Chọn/Bỏ chọn tất cả")
+            select_all = st.checkbox("すべての選択を解除")
             if select_all:
                 selected_products = [False] * len(df)
+            zz1 = 0
             # Hiển thị danh sách sản phẩm với checkbox riêng cho mỗi sản phẩm
             for index, value002 in df.iterrows():
-                selected_products[index] = st.checkbox(f"Chọn {value002['BVBS']}", selected_products[index])
+                zz1 += 1
+                selected_products[index] = st.checkbox(f"No.{zz1} : {value002['BVBS']}", selected_products[index])
             # Hiển thị danh sách sản phẩm đã chọn dưới dạng hàng
-            st.write("Sản phẩm đã được chọn:")
+            #st.write("Sản phẩm đã được chọn:")
             # Lấy danh sách sản phẩm đã chọn
             selected_product_names = df.loc[selected_products, 'BVBS']
-            for product_name in selected_product_names:   
-                st.write(product_name)
+            #for product_name in selected_product_names:   
+                #st.write(product_name)
             df1 = pd.DataFrame(selected_product_names)
             selected_column1 = 'BVBS'
 
-#####################################################################################
+#Download BVBS   #########################################################################
+
             buf = io.BytesIO()
-            df_bvbs.to_csv(buf, index=False, header=False)
+            #df_bvbs.to_csv(buf, index=False, header=False)
+            df1.to_csv(buf, index=False, header=False)
             file_name_3 = download_bvbs(session.file_name)
             st.download_button("Download BVBS",buf.getvalue(),file_name_3) #Download BVBS
-            st.write("""------------------------------------------------------""")
-            st.header("集計表")
-            # Thêm cột mới 
-            #df_last['定尺'] = "" #None
-            df_table = df_last.loc[:, ["番号","径","切寸","数量","材質","重量(kg)","s"]]
-            # Đổi tên cột "s" thành "Tên_Cot_Moi"
-            df_table = df_table.rename(columns={'s': 'ピン'})
-            # Thêm "No" vào mỗi giá trị trong cột "番号"
-            df_table['番号'] = df_table['番号'].apply(lambda x: f'No. {x}')
-            st.write(df_table)
+
+#集計表     ############################################################################################
+            # Biểu thức chính quy để trích xuất các số
+            regex_patterns = {
+                'l': r'l(\d+(?:\.\d+)?)@',
+                'n': r'n(\d+(?:\.\.\d+)?)@',
+                'e': r'e(\d+(?:\.\d+)?)@',
+                'd': r'd(\d+(?:\.\d+)?)@',
+                'SD': r'SD(\d+(?:\.\d+)?)@',
+                's': r's(\d+(?:\.\d+)?)@'
+            }
+
+            # Tạo từ điển để lưu các số vào các biến tương ứng
+            extracted_numbers = {key: [] for key in regex_patterns}
+
+            # Tạo danh sách để lưu giá trị biến z
+            z_values = []
+            #for value001 in df1[selected_column1]:
+                #st.write(value001)
+                # Tạo từ điển để lưu các số vào các biến tương ứng
+            for line_number, value001 in enumerate(df1[selected_column1], start=1):
+                z_values.append(f"No.{line_number}")  # Thêm "No." vào biến đếm
+                for key, pattern in regex_patterns.items():
+                    if key == 'l':
+                        matches = re.search(pattern, value001)
+                        if matches:
+                            extracted_numbers[key].append(matches.group(1))
+                        else:
+                            extracted_numbers[key].append('0')  # Thêm giá trị mặc định '0'
+                    else:
+                        matches = re.findall(pattern, value001)
+                        if matches:
+                            extracted_numbers[key].extend(matches)
+                        else:
+                            extracted_numbers[key].append('0')  # Thêm giá trị mặc định '0'
+
+            # Tạo DataFrame mới từ từ điển extracted_numbers và danh sách z_values
+            df_extracted = pd.DataFrame(extracted_numbers)
+
+            # Thêm cột mới "z" vào DataFrame với giá trị thứ tự
+            df_extracted.insert(df_extracted.columns.get_loc("l"), "番号", z_values)
+
+            # Đổi tên các cột
+            new_column_names = {
+                'l': '径',
+                'n': '切寸',
+                'e': '数量',
+                'd': '材質',
+                'SD': '重量(kg)',
+                's': 'ピン'
+            }
+
+            df_extracted.rename(columns=new_column_names, inplace=True)
+            # Hiển thị DataFrame sau khi thêm cột mới "z"
+            st.dataframe(df_extracted)
+####_download_########################################            
             buf = io.BytesIO()
-            df_table.to_excel(buf, index=False, header=True)
+            df_extracted.to_excel(buf, index=False, header=True)
             file_name_0 = download_excel(session.file_name)
             st.download_button("Download Excel",buf.getvalue(),file_name_0,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") #Download Excel
+            st.write("""------------------------------------------------------""")
 #############################################################################
             #df = pd.DataFrame(df_bvbs)
             # Chọn cột cụ thể (ví dụ: 'Name') để lấy dữ liệu từ cột này
@@ -1766,9 +1818,9 @@ def main():
                     exec(code_string1)
                     
                 # Xét chuỗi BBVS
-                df = pd.DataFrame(df_bvbs)
-                selected_column = 'BVBS'
-                for value001 in df[selected_column]:
+                df1 = pd.DataFrame(selected_product_names)
+                selected_column1 = 'BVBS'
+                for value001 in df1[selected_column1]:
                     #st.write(value001)
                     value001_str = str(value001)
                     
@@ -2235,44 +2287,45 @@ def main():
 #################################################################################################################################        
             # Danh sách điều kiện và đường dẫn đến các hình ảnh
             image_list = [
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\0.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\1.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\2.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\3.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\4.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\5.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\6.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\7.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\8.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\9.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\10.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\11.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\12.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\13.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\14.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\15.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\16.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\17.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\18.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\19.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\20.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\21.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\22.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\23.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\24.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\25.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\26.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\27.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\28.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\29.png",                              
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\30.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\31.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\32.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\33.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\34.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\35.png",
-                "C:\\Users\\DBS005\\Documents\\Python Visua\\homework\\chuyenfileandiprint\\image\\36.png",
+		        "image/0.png",
+                "image/1.png",
+                "image/2.png",
+                "image/3.png",
+                "image/4.png",
+                "image/5.png",
+                "image/6.png",
+                "image/7.png",
+                "image/8.png",
+                "image/9.png",
+                "image/10.png",
+                "image/11.png",
+                "image/12.png",
+                "image/13.png",
+                "image/14.png",
+                "image/15.png",
+                "image/16.png",
+                "image/17.png",
+                "image/18.png",
+                "image/19.png",
+                "image/20.png",
+                "image/21.png",
+                "image/22.png",
+                "image/23.png",
+                "image/24.png",
+                "image/25.png",
+                "image/26.png",
+                "image/27.png",
+                "image/28.png",
+                "image/29.png",                              
+                "image/30.png",
+                "image/31.png",
+                "image/32.png",
+                "image/33.png",
+                "image/34.png",
+                "image/35.png",
+                "image/36.png",
             ]
+
 
             st.title("情報を入力する")
             text11 = st.text_input("工事名", "朝日インテック新棟建設")
