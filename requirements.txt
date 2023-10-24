@@ -11,3 +11,4 @@ datetime
 fpdf
 canvas
 pytz
+st_aggrid
