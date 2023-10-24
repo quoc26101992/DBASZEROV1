@@ -11,4 +11,4 @@ datetime
 fpdf
 canvas
 pytz
-aggrid
+
