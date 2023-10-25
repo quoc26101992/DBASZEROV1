@@ -699,9 +699,7 @@ def main():
     ## Add File Name and Success Message
     if "is_file_loaded" in session and session["is_file_loaded"]:
         st.success(f'✔️ ファイルのアップロードができました!')
-        st.warning(" 新しいデータを再度アップロードする場合は、このページの更新を行ってください🔃 ", icon="⚠️")    
-
-
+       
     if not "IsDataFrameLoaded" in session:
         initialize_session_state()
     if not session.IsDataFrameLoaded:
