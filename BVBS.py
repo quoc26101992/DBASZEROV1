@@ -95,8 +95,11 @@ def process_input_string(input_string):
         new_matches.append(match)
 
     # In ra chuỗi mới
-    new_input_string = 'G' + 'w0'.join(new_matches) + 'w0'
-
+    if "PtSEGOPT;o0;o1;o1;o0;o0@" in input_string:
+        new_input_string = 'G' + 'w0'.join(new_matches) + 'w0@PtSEGOPT;o0;o1;o1;o0;o0'
+    else:
+        new_input_string = 'G' + 'w0'.join(new_matches) + 'w0'
+        
     start_index = input_string.find('G')
     end_index = input_string.find('@C')  # Để bao gồm cả '@C'
 
@@ -832,6 +835,7 @@ def main():
                     st.markdown('<span style="color: red; font-size: 15px;"> 左右反転後: </span>' + colored_text, unsafe_allow_html=True)
 
             st.write("""------------------------------------------------------""")
+            st.title("選ぶ鉄筋")
 #集計表     ############################################################################################
             # Biểu thức chính quy để trích xuất các số
             regex_patterns = {
@@ -920,6 +924,7 @@ def main():
 
             # Return selected data  
             selected_rows = grid_return["selected_rows"]
+            col111, col222, col333, col444 = st.columns(4)
 
             if len(selected_rows):
                 ###_#Download Excel_###
@@ -928,13 +933,15 @@ def main():
                 buf = io.BytesIO()
                 dfsnet.to_excel(buf, index=False, header=True)
                 file_name_0 = download_excel(session.file_name)
-                st.download_button("Download Excel",buf.getvalue(),file_name_0,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                col222.download_button("Download Excel",buf.getvalue()),file_name_0,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
                 ###_Download BVBS_###
+                #empty_column = pd.DataFrame(columns=[" "], data=[":"] * len(df))
+                #df_BVBS = pd.concat([dfs['番号'],empty_column,dfs['BVBS']], axis=1)
                 df_BVBS = dfs['BVBS']
                 buf = io.BytesIO()
                 df_BVBS.to_csv(buf, index=False, header=False)
                 file_name_3 = download_bvbs(session.file_name)
-                st.download_button("Download BVBS",buf.getvalue(),file_name_3)
+                col333.download_button("Download BVBS",buf.getvalue(),file_name_3)
 #####################################################################
             # Cài đặt phông chữ hỗ trợ tiếng Nhật
             pdfmetrics.registerFont(TTFont('MSMINCHO.TTF', 'form/MSMINCHO.TTF'))  
@@ -1027,14 +1034,86 @@ def main():
                     c.setFont('MSMINCHO.TTF', 15)
                     c.drawString(rect_x_position + 10, rect_y_position + 10, f'No.{no}')
 
-        # 36TH có thể xảy ra 
+            # 59TH có thể xảy ra 
                     value001_str = str(value001)
                     count_l = value001.count('l')
                     count_w = value001.count('w')
-                    w1, w2, w3, w4, w5, w6 = process_data1(value001_str) 
-                        
+                    w1, w2, w3, w4, w5, w6 = process_data1(value001_str)
+            #TH59   BF2D@Hj@r@i@p1@l1480@n1@e2.31@d16@gSD295@s80@v@a@Gl218@w90@l400@w90@l400@w90@l400@w-90@l218@w0@PtSEGOPT;o0;o1;o1;o0;o0@C82@
+                    if count_l == 6 and count_w == 5 and (w1=="90" and w2=="90" and w3=="90" and w4=="-90" and w5=="0" and "PtSEGOPT" in value001 or w1=="90" and w2=="-90" and w3=="-90" and w4=="-90" and w5=="0" and "PtSEGOPT" in value001):
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        l1, l2, l3, l4, l5 = process_data(value001_str)          
+                        img_path = image_list[59]
+
+                        exec(code_string)
+
+                        if int(l2) > int(l3):
+                            c.drawString(rect_x_position + 95, rect_y_position + 82, l1.rjust(6))  #giữa .rjust(6)
+                            c.drawString(rect_x_position + 78, rect_y_position + 105, l2.center(6)) #trên
+                            c.drawString(rect_x_position + 8, rect_y_position + 76, l3.rjust(6))  #trái .center(6)
+                            c.drawString(rect_x_position + 78, rect_y_position + 42, l4.center(6))  #dưới
+                            c.drawString(rect_x_position + 143, rect_y_position + 76, l5) #phải
+                        else:
+                            c.drawString(rect_x_position + 95, rect_y_position + 82, l1.rjust(6))  #giữa .rjust(6)
+                            c.drawString(rect_x_position + 78, rect_y_position + 105, l5.center(6)) #trên
+                            c.drawString(rect_x_position + 8, rect_y_position + 76, l4.rjust(6))  #trái .center(6)
+                            c.drawString(rect_x_position + 78, rect_y_position + 42, l3.center(6))  #dưới
+                            c.drawString(rect_x_position + 143, rect_y_position + 76, l2) #phải
+                            
+            #TH58   BF2D@Hj@r@i@p1@l1480@n1@e2.31@d16@gSD295@s80@v@a@Gl218@w90@l400@w90@l400@w90@l400@w90@l218@w0@PtSEGOPT;o0;o1;o1;o0;o0@C95@
+                    elif count_l == 6 and count_w == 5 and w1=="90" and w2=="90" and w3=="90" and w4=="90" and w5=="0" and "PtSEGOPT" in value001:
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        l1, l2, l3, l4, l5 = process_data(value001_str)          
+                        img_path = image_list[58]
+
+                        exec(code_string)
+
+                        if int(l2) > int(l3):
+                            c.drawString(rect_x_position + 95, rect_y_position + 82, l1.rjust(6))  #giữa .rjust(6)
+                            c.drawString(rect_x_position + 78, rect_y_position + 105, l2.center(6)) #trên
+                            c.drawString(rect_x_position + 8, rect_y_position + 76, l3.rjust(6))  #trái .center(6)
+                            c.drawString(rect_x_position + 78, rect_y_position + 42, l4.center(6))  #dưới
+                            c.drawString(rect_x_position + 143, rect_y_position + 76, l5) #phải
+                        else:
+                            c.drawString(rect_x_position + 95, rect_y_position + 82, l1.rjust(6))  #giữa .rjust(6)
+                            c.drawString(rect_x_position + 78, rect_y_position + 105, l5.center(6)) #trên
+                            c.drawString(rect_x_position + 8, rect_y_position + 76, l4.rjust(6))  #trái .center(6)
+                            c.drawString(rect_x_position + 78, rect_y_position + 42, l3.center(6))  #dưới
+                            c.drawString(rect_x_position + 143, rect_y_position + 76, l2) #phải               
+
+            #TH36   BF2D@Hj@r@i@p1@l1187@n1@e1.18@d13@gSD295@s39@v@a@Gl400@w66@l308@w-66@l250@w-90@l280@w0@C78@
+                    elif count_l == 5 and count_w == 4 and 0 < int(w1) < 90 and -90 < int(w2) < 0 and int(w3) == -90:
+ 
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        l1, l2, l3, l4, l5 = process_data(value001_str)          
+                        img_path = image_list[36]
+
+                        exec(code_string)
+
+                        if int(l2) > int(l3):
+                            c.drawString(rect_x_position + 95, rect_y_position + 82, l1.rjust(6))  #giữa .rjust(6)
+                            c.drawString(rect_x_position + 78, rect_y_position + 105, l2.center(6)) #trên
+                            c.drawString(rect_x_position + 8, rect_y_position + 76, l3.rjust(6))  #trái .center(6)
+                            c.drawString(rect_x_position + 78, rect_y_position + 42, l4.center(6))  #dưới  
+                        else:
+                            c.drawString(rect_x_position + 95, rect_y_position + 82, l1.rjust(6))  #giữa .rjust(6)
+                            c.drawString(rect_x_position + 78, rect_y_position + 105, l5.center(6)) #trên
+                            c.drawString(rect_x_position + 8, rect_y_position + 76, l4.rjust(6))  #trái .center(6)
+                            c.drawString(rect_x_position + 78, rect_y_position + 42, l3.center(6))  #dưới
+
             #TH35   BF2D@Hj@r@i@p1@l2738@n1@e2.72@d13@gSD295@s39@v@a@Gl112@w135@l650@w90@l650@w90@l650@w90@l650@w135@l111@w0@C95@
-                    if count_l == 7 and count_w == 6 and w1=="135" and w2=="90" and w3=="90" and w4=="90" and w5=="135" and w6=="0":
+                    elif count_l == 7 and count_w == 6 and w1=="135" and w2=="90" and w3=="90" and w4=="90" and w5=="135" and w6=="0":
  
                         value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
@@ -2368,7 +2447,7 @@ def main():
                 "image/35.png",
                 "image/36.png",
             ]
-
+            st.write("""------------------------------------------------------""")
             st.title("情報を入力する")
             text11 = st.text_input("工事名", "朝日インテック新棟建設")
             text22 = st.text_input("協力会社", "株式会社オノコム")
@@ -2393,19 +2472,21 @@ def main():
                 text66 = "PM"
 
             # Tạo PDF khi người dùng nhấn nút "Tạo PDF"
+            st.write("""------------------------------------------------------""")
             st.title("BVBSと加工帳のPDFを作成する")
             #st.markdown('<h1 style="text-align: center;">BVBSと加工帳のPDFを作成する</h1>', unsafe_allow_html=True)
             # Tạo hai cột với tỷ lệ chiều rộng 2:1
-            col11, col22, col33, col44 = st.columns([1, 1, 1,1])
+            col11, col22, col33, col44 = st.columns([1, 1, 1, 1])
             
-            if col22.button("BVBS.PDFを作成する"):
-                pdf_buffer = create_pdf(df_bvbs, image_list, text11, text22, text33, text44)
-                col22.download_button("Download BVBS.pdf", pdf_buffer, file_name="BVBS.pdf", key="download_pdf")
+            if len(selected_rows):
+                if col22.button("BVBS.PDFを作成する"):
+                    pdf_buffer = create_pdf(df_bvbs, image_list, text11, text22, text33, text44)
+                    col22.download_button("Download BVBS.pdf", pdf_buffer, file_name="BVBS.pdf", key="download_pdf")
 
-            if col33.button("加工帳.PDFを作成する"):
-                pdf_buffer = create_pdf1(text11, text22, text44, text55, text66)
-                col33.download_button("Download 加工帳.pdf", pdf_buffer, file_name="加工帳.pdf", key="download-pdf-button")
-
+            if len(selected_rows):
+                if col33.button("加工帳.PDFを作成する"):
+                    pdf_buffer = create_pdf1(text11, text22, text44, text55, text66)
+                    col33.download_button("Download 加工帳.pdf", pdf_buffer, file_name="加工帳.pdf", key="download-pdf-button")
 
 if __name__ == "__main__":
     session = st.session_state
