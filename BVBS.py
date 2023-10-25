@@ -933,7 +933,7 @@ def main():
                 buf = io.BytesIO()
                 dfsnet.to_excel(buf, index=False, header=True)
                 file_name_0 = download_excel(session.file_name)
-                col222.download_button("Download Excel",buf.getvalue()),file_name_0,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                col222.download_button("Download Excel",buf.getvalue(),file_name_0,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
                 ###_Download BVBS_###
                 #empty_column = pd.DataFrame(columns=[" "], data=[":"] * len(df))
                 #df_BVBS = pd.concat([dfs['番号'],empty_column,dfs['BVBS']], axis=1)
