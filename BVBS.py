@@ -2667,7 +2667,9 @@ def main():
                             p.drawString(14.2 * 28.3465, (y1 + 0.63) * 28.3465 , l2.center(6)) #l4.center(6)
                             p.drawString(12.9 * 28.3465, (y1 + 1) * 28.3465 , l3.rjust(5)) #1.rjust(5)
                         else:
-                             exec(code_string3)
+                            p.drawString(15 * 28.3465, (y1 + 1.52) * 28.3465 , l3) #
+                            p.drawString(14.2 * 28.3465, (y1 + 0.63) * 28.3465 , l2.center(6)) #l4.center(6)
+                            p.drawString(12.9 * 28.3465, (y1 + 1) * 28.3465 , l1.rjust(5)) #1.rjust(5)
 #TH17   BF2D@Hj@r@i@p1@l1477@n1@e1.47@d13@gSD295@s39@v@a@Gl86@w180@l1200@w135@l180@w0@C76@
                     elif count_l == 4 and count_w == 3 and (w1=="180" and 90 < int(w2) < 180 and w3=="0" or 90 < int(w1) < 180 and w2=="180" and w3=="0"):
                         img_path = image_list[17]
