@@ -3347,25 +3347,19 @@ def main():
             ]
             st.write("""------------------------------------------------------""")
             st.title("情報を入力する")
-            colA, colA1, colA2, colA3 = st.columns([1, 1, 1, 1])
-            text11 = colA.text_input("工事名", "某工事名")
+            colA1, colA2, colA3, colA4, colA5 = st.columns(5)
+            text11 = colA1.text_input("工事名", "某工事名")
             #text11 = st.text_input("工事名", "某工事名")
-            colB, colB1, colB2, colB3 = st.columns([1, 1, 1, 1])
-            text22 = colA1.text_input("協力会社", "株式会社ABC")
-            colC, colC1, colC2, colC3 = st.columns([1, 1, 1, 1])
-            text33 = colA2.text_input("鉄筋メーカー", "業株式会社")
-            colD, colD1, colD2, colD3 = st.columns([1, 1, 1, 1])
-            text44 = colA3.text_input("使用場所", "Y1-X1 柱")
+            text22 = colA2.text_input("協力会社", "株式会社ABC")
+            text33 = colA3.text_input("鉄筋メーカー", "業株式会社")
+            text44 = colA4.text_input("使用場所", "Y1-X1 柱")
+            text55 = colA5.text_input("運搬日:", formatted_time1)
 
             x1, y1 = 2, 184
             x2, y2 = 2, 164
             x3, y3 = 280, 184
             x4, y4 = 280, 164
 
-            # Tạo hai cột, một cho text_input và một cho radio buttons
-            col1, col2 = st.columns(2)
-            # Trong cột đầu tiên (col1), đặt text_input
-            text55 = formatted_time1
             # Trong cột thứ hai (col2), đặt radio buttons
             # Hiển thị thông báo dựa trên tùy chọn được chọn
             tokyo_timezone = pytz.timezone('Asia/Tokyo')
@@ -3382,8 +3376,7 @@ def main():
                 current_hour = 12
             time1 = current_time.strftime("%H:%M:%S")
             text66 = f'{am_pm}'
-            # Tạo PDF khi người dùng nhấn nút "Tạo PDF"
-            st.write("""------------------------------------------------------""")
+	    
             st.title("BVBSと加工帳のPDFを作成する")
             #st.markdown('<h1 style="text-align: center;">BVBSと加工帳のPDFを作成する</h1>', unsafe_allow_html=True)
             # Tạo hai cột với tỷ lệ chiều rộng 2:1
