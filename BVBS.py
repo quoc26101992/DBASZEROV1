@@ -2839,7 +2839,7 @@ def main():
                         img_path = image_list[35]
                         exec(code_string2)
                         p.setFont('MSMINCHO.TTF', 10)
-                        if int(l3) >= int(l4):
+                        if int(l2) >= int(l3):
                             p.drawString(14.4 * 28.3465, (y1 + 1) * 28.3465 , l1.rjust(5))
                             p.drawString(14.2 * 28.3465, (y1 + 1.55) * 28.3465 , l2.center(6))
                             p.drawString(12.65 * 28.3465, (y1 + 0.8) * 28.3465 , l3.rjust(5))
