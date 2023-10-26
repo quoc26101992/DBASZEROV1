@@ -192,6 +192,7 @@ for x_cm, y_cm, width_cm, height_cm in rectangles:
     current_time = datetime.now(desired_tz)
     # Định dạng và hiển thị thời gian
     formatted_time = current_time.strftime("%Y/%m/%d")
+  
     #p.drawString(13.2 * 28.3465, 28.9 * 28.3465, f"作成日: {formatted_time}")
 
     so_hang = len(dfs['BVBS'])
@@ -940,10 +941,10 @@ def main():
                 df_BVBS.to_csv(buf, index=False, header=False)
                 file_name_3 = download_bvbs(session.file_name)
                 col333.download_button("Download BVBS",buf.getvalue(),file_name_3)
-#####################################################################
+#####################################################################                                                        ##########################################################
             # Cài đặt phông chữ hỗ trợ tiếng Nhật
             pdfmetrics.registerFont(TTFont('MSMINCHO.TTF', 'form/MSMINCHO.TTF'))  ###########################################################
-            
+                                                                                                                             ###########################################################
             # Hàm để tạo mã QR với kích thước cố định
             def create_qr_code(df_bvbs, size=100):
                 qr = qrcode.QRCode(
@@ -2309,7 +2310,7 @@ def main():
                     
                         exec(code_string)
                     
-                        c.drawString(rect_x_position + 79, rect_y_position + 80, l1.center(6))
+                        c.drawString(rect_x_position + 79, rect_y_position + 81, l1.center(6))
             #TH0
                     else:
                         value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
@@ -3343,9 +3344,9 @@ def main():
             ]
             st.write("""------------------------------------------------------""")
             st.title("情報を入力する")
-            text11 = st.text_input("工事名", "朝日インテック新棟建設")
+            text11 = st.text_input("工事名", "某工事名")
             text22 = st.text_input("協力会社", "株式会社ABC")
-            text33 = st.text_input("鉄筋メーカー", "業株式会社")
+            text33 = st.text_input("鉄筋メーカー", "某会社")
             text44 = st.text_input("使用場所", "Y1-X1 柱")
 
             x1, y1 = 2, 184
