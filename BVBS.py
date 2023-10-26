@@ -192,7 +192,6 @@ for x_cm, y_cm, width_cm, height_cm in rectangles:
     current_time = datetime.now(desired_tz)
     # Định dạng và hiển thị thời gian
     formatted_time = current_time.strftime("%Y/%m/%d")
-  
     #p.drawString(13.2 * 28.3465, 28.9 * 28.3465, f"作成日: {formatted_time}")
 
     so_hang = len(dfs['BVBS'])
@@ -675,6 +674,7 @@ def main():
     current_time = datetime.now(desired_tz)
     # Định dạng và hiển thị thời gian
     formatted_time = current_time.strftime("%Y/%m/%d")
+    formatted_time1 = current_time.strftime("%m/%d")
     st.sidebar.write(f"更新日: {formatted_time}")
     
     st.sidebar.write("""
@@ -2354,6 +2354,7 @@ def main():
                     current_time = datetime.now(desired_tz)
                     # Định dạng và hiển thị thời gian
                     formatted_time = current_time.strftime("%Y/%m/%d")
+                    time1 = current_time.strftime("%H:%M:%S")
                     c.setFont('MSMINCHO.TTF', 10)
                     c.drawString(rect_x_position + 202, rect_y_position + 10, formatted_time)
 
@@ -2841,12 +2842,14 @@ def main():
                         p.setFont('MSMINCHO.TTF', 10)
                         if int(l2) >= int(l3):
                             p.drawString(14.4 * 28.3465, (y1 + 1) * 28.3465 , l1.rjust(5))
+
                             p.drawString(14.2 * 28.3465, (y1 + 1.55) * 28.3465 , l2.center(6))
                             p.drawString(12.65 * 28.3465, (y1 + 0.8) * 28.3465 , l3.rjust(5))
                             p.drawString(14.2 * 28.3465, (y1 + 0.1) * 28.3465 , l4.center(6))
                             p.drawString(15.7 * 28.3465, (y1 + 0.8) * 28.3465 , l5) 
                         else:
                             p.drawString(14.4 * 28.3465, (y1 + 1) * 28.3465 , l1.rjust(5))
+
                             p.drawString(14.2 * 28.3465, (y1 + 1.55) * 28.3465 , l5.center(6))
                             p.drawString(12.65 * 28.3465, (y1 + 0.8) * 28.3465 , l4.rjust(5))
                             p.drawString(14.2 * 28.3465, (y1 + 0.1) * 28.3465 , l3.center(6))
@@ -3344,10 +3347,15 @@ def main():
             ]
             st.write("""------------------------------------------------------""")
             st.title("情報を入力する")
-            text11 = st.text_input("工事名", "某工事名")
-            text22 = st.text_input("協力会社", "株式会社ABC")
-            text33 = st.text_input("鉄筋メーカー", "某会社")
-            text44 = st.text_input("使用場所", "Y1-X1 柱")
+            colA, colA1, colA2, colA3 = st.columns([1, 1, 1, 1])
+            text11 = colA.text_input("工事名", "某工事名")
+            #text11 = st.text_input("工事名", "某工事名")
+            colB, colB1, colB2, colB3 = st.columns([1, 1, 1, 1])
+            text22 = colA1.text_input("協力会社", "株式会社ABC")
+            colC, colC1, colC2, colC3 = st.columns([1, 1, 1, 1])
+            text33 = colA2.text_input("鉄筋メーカー", "業株式会社")
+            colD, colD1, colD2, colD3 = st.columns([1, 1, 1, 1])
+            text44 = colA3.text_input("使用場所", "Y1-X1 柱")
 
             x1, y1 = 2, 184
             x2, y2 = 2, 164
@@ -3355,17 +3363,25 @@ def main():
             x4, y4 = 280, 164
 
             # Tạo hai cột, một cho text_input và một cho radio buttons
-            col1, col2 = st.columns([2, 1])
+            col1, col2 = st.columns(2)
             # Trong cột đầu tiên (col1), đặt text_input
-            text55 = col1.text_input("運搬日:", formatted_time)
+            text55 = formatted_time1
             # Trong cột thứ hai (col2), đặt radio buttons
-            selected_option = col2.radio("AM/PM", ["AM", "PM"])
             # Hiển thị thông báo dựa trên tùy chọn được chọn
-            if selected_option == "AM":
-                text66 = "AM"
-            else:
-                text66 = "PM"
-
+            tokyo_timezone = pytz.timezone('Asia/Tokyo')
+            # Lấy thời gian hiện tại ở Tokyo
+            tokyo_time = datetime.now(tokyo_timezone)
+            # Lấy giờ hiện tại ở Tokyo
+            current_hour = tokyo_time.hour
+            # Định dạng AM/PM
+            am_pm = "AM" if current_hour < 12 else "PM"
+            # Chuyển đổi giờ sang định dạng 12 giờ
+            if current_hour > 12:
+                current_hour -= 12
+            elif current_hour == 0:
+                current_hour = 12
+            time1 = current_time.strftime("%H:%M:%S")
+            text66 = f'{am_pm}'
             # Tạo PDF khi người dùng nhấn nút "Tạo PDF"
             st.write("""------------------------------------------------------""")
             st.title("BVBSと加工帳のPDFを作成する")
