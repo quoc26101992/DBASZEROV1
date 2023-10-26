@@ -942,7 +942,7 @@ def main():
                 col333.download_button("Download BVBS",buf.getvalue(),file_name_3)
 #####################################################################
             # Cài đặt phông chữ hỗ trợ tiếng Nhật
-            pdfmetrics.registerFont(TTFont('MSMINCHO.TTF', 'form/MSMINCHO.TTF'))    ###########################################################
+            pdfmetrics.registerFont(TTFont('MSMINCHO.TTF', 'form/MSMINCHO.TTF'))  ###########################################################
             
             # Hàm để tạo mã QR với kích thước cố định
             def create_qr_code(df_bvbs, size=100):
@@ -1474,14 +1474,14 @@ def main():
                         exec(code_string)
 
                         if 0 < int(w1) < 90 and 0 < int(w2) < 90 and w3=="90" and w4 =="0" or w1=="90":
-                            c.drawString(rect_x_position + 100, rect_y_position + 57, l1)  
+                            c.drawString(rect_x_position + 98, rect_y_position + 43, l1)  
                             c.drawString(rect_x_position + 58, rect_y_position + 64, l2) 
-                            c.drawRightString(rect_x_position + 41, rect_y_position + 80, l3) 
+                            c.drawRightString(rect_x_position + 41, rect_y_position + 82, l3) 
                             c.drawCentredString(rect_x_position + 80, rect_y_position + 105, l4)
                         else:
-                            c.drawString(rect_x_position + 100, rect_y_position + 57, l4)  
+                            c.drawString(rect_x_position + 98, rect_y_position + 43, l4)  
                             c.drawString(rect_x_position + 58, rect_y_position + 64, l3) 
-                            c.drawRightString(rect_x_position + 41, rect_y_position + 80, l2) 
+                            c.drawRightString(rect_x_position + 41, rect_y_position + 82, l2) 
                             c.drawCentredString(rect_x_position + 80, rect_y_position + 105, l1)
                               
 
@@ -2451,8 +2451,390 @@ def main():
 
                     result = extract_numbers(value001_str)
                     l1, l2, l3, l4, l5 = process_data(value001_str)
+    #TH59   BF2D@Hj@r@i@p1@l1480@n1@e2.31@d16@gSD295@s80@v@a@Gl218@w90@l400@w90@l400@w90@l400@w-90@l218@w0@PtSEGOPT;o0;o1;o1;o0;o0@C82@            
+                    if count_l == 6 and count_w == 5 and (w1=="90" and w2=="90" and w3=="90" and w4=="-90" and w5=="0" and "PtSEGOPT" in value001 or w1=="90" and w2=="-90" and w3=="-90" and w4=="-90" and w5=="0" and "PtSEGOPT" in value001):
+                        img_path = image_list[59]
+                        exec(code_string2)
+                        p.setFont('MSMINCHO.TTF', 10)
+
+                        p.drawRightString(14.15 * 28.3465, (y1 + 0.2) * 28.3465 , l1)
+                        p.drawRightString(14.25 * 28.3465, (y1 + 0.9) * 28.3465 , l2) #p.drawCentredString
+                        p.drawCentredString(14.63 * 28.3465, (y1 + 1.4) * 28.3465 , l3) #p.drawRightString
+                        p.drawString(15 * 28.3465, (y1 + 0.85) * 28.3465 , l4) #p.drawCentredString
+                        p.drawString(15 * 28.3465, (y1 + 0.2) * 28.3465 , l5)
+
+    #TH58   BF2D@Hj@r@i@p1@l1480@n1@e2.31@d16@gSD295@s80@v@a@Gl218@w90@l400@w90@l400@w90@l400@w90@l218@w0@PtSEGOPT;o0;o1;o1;o0;o0@C95@
+                    elif count_l == 6 and count_w == 5 and w1=="90" and w2=="90" and w3=="90" and w4=="90" and w5=="0" and "PtSEGOPT" in value001:
+                        img_path = image_list[58]
+                        exec(code_string2)
+                        p.setFont('MSMINCHO.TTF', 10)
+                        p.drawRightString(14.15 * 28.3465, (y1 + 0.3) * 28.3465 , l1)
+                        p.drawRightString(14.3 * 28.3465, (y1 + 0.9) * 28.3465 , l2) #p.drawCentredString
+                        p.drawCentredString(14.68 * 28.3465, (y1 + 1.49) * 28.3465 , l3) #p.drawRightString
+                        p.drawString(15.06 * 28.3465, (y1 + 0.85) * 28.3465 , l4) #p.drawCentredString
+                        p.drawString(14.8 * 28.3465, (y1 + 0.2) * 28.3465 , l5)
+
+    #TH57   BF2D@Hj@r@i@p1@l1825@n1@e1.02@d10@gSD295@s30@v@a@Gl140@w101@l455@w79@l640@w90@l460@w-90@l200@w0@C96@
+                    elif count_l == 6 and count_w == 5 and (90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="90" and w4=="-90" and w5=="0" or w1=="90" and w2=="-90" and -90 < int(w3) < 0 and -180 < int(w4) < -90  and w5=="0"):
+                        img_path = image_list[57]
+                        exec(code_string2)
+                        p.setFont('MSMINCHO.TTF', 10)
+                        if 90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="90" and w4=="-90" and w5=="0":
+                            p.drawRightString(14.2 * 28.3465, (y1 + 1.54) * 28.3465 , l1) #p.drawRightString
+                            p.drawRightString(13.8 * 28.3465, (y1 + 0.8) * 28.3465 , l2) #p.drawCentredString
+                            p.drawCentredString(14.6 * 28.3465, (y1 + 0.15) * 28.3465 , l3)
+                            p.drawString(15.14 * 28.3465, (y1 + 0.84) * 28.3465 , l4) #p.drawCentredString
+                            p.drawString(15.1 * 28.3465, (y1 + 1.54) * 28.3465 , l5) #p.drawRightString
+                        else:
+                            p.drawRightString(14.2 * 28.3465, (y1 + 1.54) * 28.3465 , l5) #p.drawRightString
+                            p.drawRightString(13.8 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #p.drawCentredString
+                            p.drawCentredString(14.6 * 28.3465, (y1 + 0.15) * 28.3465 , l3)
+                            p.drawString(15.14 * 28.3465, (y1 + 0.84) * 28.3465 , l2) #p.drawCentredString
+                            p.drawString(15.1 * 28.3465, (y1 + 1.54) * 28.3465 , l1) #p.drawRightString
+                        
+    #TH56   BF2D@Hj@r@i@p1@l1865@n5@e5.22@d10@gSD295@s30@v@a@Gl140@w101@l455@w79@l640@w90@l460@w90@l240@w0@C91@
+                    elif count_l == 6 and count_w == 5 and (90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="90" and w4=="90" and w5=="0" or w1=="90" and w2=="90" and 0 < int(w3) < 90 and 90 < int(w4) < 180  and w5=="0"):
+                        img_path = image_list[56]
+                        exec(code_string2)
+                        p.setFont('MSMINCHO.TTF', 10)
+                        if 90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="90" and w4=="90" and w5=="0":
+                            p.drawRightString(14.2 * 28.3465, (y1 + 1.54) * 28.3465 , l1) #p.drawRightString
+                            p.drawRightString(13.8 * 28.3465, (y1 + 0.8) * 28.3465 , l2) #p.drawCentredString
+                            p.drawCentredString(14.9 * 28.3465, (y1 + 0.15) * 28.3465 , l3)
+                            p.drawString(15.65 * 28.3465, (y1 + 0.84) * 28.3465 , l4) #p.drawCentredString
+                            p.drawString(15.1 * 28.3465, (y1 + 1.54) * 28.3465 , l5) #p.drawRightString
+                        else:
+                            p.drawRightString(14.2 * 28.3465, (y1 + 1.54) * 28.3465 , l5) #p.drawRightString
+                            p.drawRightString(13.8 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #p.drawCentredString
+                            p.drawCentredString(14.9 * 28.3465, (y1 + 0.15) * 28.3465 , l3)
+                            p.drawString(15.65 * 28.3465, (y1 + 0.84) * 28.3465 , l2) #p.drawCentredString
+                            p.drawString(15.1 * 28.3465, (y1 + 1.54) * 28.3465 , l1) #p.drawRightString
+                        
+    #TH55   BF2D@Hj@r@i@p1@l1841@n1@e1.03@d10@gSD295@s30@v@a@Gl150@w79@l460@w-79@l640@w-90@l460@w90@l200@w0@C89@
+                    elif count_l == 6 and count_w == 5 and (0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="-90" and w4=="90" and w5=="0" or w1=="90" and w2=="-90" and -90 < int(w3) < 0 and 0 < int(w4) < 90  and w5=="0"):
+                        img_path = image_list[55]
+                        exec(code_string2)
+                        p.setFont('MSMINCHO.TTF', 10)
+                        if 0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="-90" and w4=="90" and w5=="0":
+                            p.drawRightString(14 * 28.3465, (y1 + 1.54) * 28.3465 , l1) #p.drawRightString
+                            p.drawRightString(14.1 * 28.3465, (y1 + 0.8) * 28.3465 , l2) #p.drawCentredString
+                            p.drawCentredString(14.7 * 28.3465, (y1 + 0.15) * 28.3465 , l3)
+                            p.drawString(15.14 * 28.3465, (y1 + 0.84) * 28.3465 , l4) #p.drawCentredString
+                            p.drawString(15.1 * 28.3465, (y1 + 1.54) * 28.3465 , l5) #p.drawRightString
+                        else:
+                            p.drawRightString(14 * 28.3465, (y1 + 1.54) * 28.3465 , l5) #p.drawRightString
+                            p.drawRightString(14.1 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #p.drawCentredString
+                            p.drawCentredString(14.7 * 28.3465, (y1 + 0.15) * 28.3465 , l3)
+                            p.drawString(15.14 * 28.3465, (y1 + 0.84) * 28.3465 , l2) #p.drawCentredString
+                            p.drawString(15.1 * 28.3465, (y1 + 1.54) * 28.3465 , l1) #p.drawRightString
+    #TH54   BF2D@Hj@r@i@p1@l2031@n1@e1.14@d10@gSD295@s30@v@a@Gl200@w90@l460@w90@l830@w79@l460@w-79@l150@w0@C75@
+                    elif count_l == 6 and count_w == 5 and (0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="-90" and w4=="-90" and w5=="0" or w1=="90" and w2=="90" and 0 < int(w3) < 90 and -90 < int(w4) < 0  and w5=="0"):
+                        img_path = image_list[54]
+                        exec(code_string2)
+                        p.setFont('MSMINCHO.TTF', 10)
+
+                        if 0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="-90" and w4=="-90" and w5=="0":
+                            p.drawRightString(14 * 28.3465, (y1 + 1.54) * 28.3465 , l1) #p.drawRightString
+                            p.drawRightString(14.07 * 28.3465, (y1 + 0.8) * 28.3465 , l2) #p.drawCentredString
+                            p.drawCentredString(15 * 28.3465, (y1 + 0.15) * 28.3465 , l3)
+                            p.drawString(15.65 * 28.3465, (y1 + 0.84) * 28.3465 , l4) #p.drawCentredString
+                            p.drawString(15.1 * 28.3465, (y1 + 1.54) * 28.3465 , l5) #p.drawRightString
+                        else:
+                            p.drawRightString(14 * 28.3465, (y1 + 1.54) * 28.3465 , l5) #p.drawRightString
+                            p.drawRightString(14.07 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #p.drawCentredString
+                            p.drawCentredString(15 * 28.3465, (y1 + 0.15) * 28.3465 , l3)
+                            p.drawString(15.65 * 28.3465, (y1 + 0.84) * 28.3465 , l2) #p.drawCentredString
+                            p.drawString(15.1 * 28.3465, (y1 + 1.54) * 28.3465 , l1) #p.drawRightString
+
+    #TH53   BF2D@Hj@r@i@p1@l1924@n1@e1.08@d10@gSD295@s30@v@a@Gl200@w106@l470@w74@l700@w79@l460@w-79@l150@w0@C81@
+                    elif count_l == 6 and count_w == 5 and (90 < int(w1) < 180 and 0 < int(w2) < 90 and 0 < int(w3) < 90 and -90 < int(w4) < 0 and w5=="0" or 0 < int(w1) < 90 and -90 < int(w2) < 0 and -90 < int(w3) < 0 and -180 < int(w4) < -90 and w5=="0"):
+                        img_path = image_list[53]
+                        exec(code_string2)
+                        p.setFont('MSMINCHO.TTF', 10)
+                        if 90 < int(w1) < 180 and 0 < int(w2) < 90 and 0 < int(w3) < 90 and -90 < int(w4) < 0 and w5=="0":
+                            p.drawRightString(14.15 * 28.3465, (y1 + 1.54) * 28.3465 , l1) #p.drawRightString
+                            p.drawRightString(14.17 * 28.3465, (y1 + 0.8) * 28.3465 , l2) #p.drawCentredString
+                            p.drawCentredString(14.8 * 28.3465, (y1 + 0.15) * 28.3465 , l3)
+                            p.drawString(15.55 * 28.3465, (y1 + 0.84) * 28.3465 , l4) #p.drawCentredString
+                            p.drawString(15 * 28.3465, (y1 + 1.54) * 28.3465 , l5) #p.drawRightString
+                        else:
+                            p.drawRightString(14.15 * 28.3465, (y1 + 1.54) * 28.3465 , l5) #p.drawRightString
+                            p.drawRightString(14.17 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #p.drawCentredString
+                            p.drawCentredString(14.8 * 28.3465, (y1 + 0.15) * 28.3465 , l3)
+                            p.drawString(15.55 * 28.3465, (y1 + 0.84) * 28.3465 , l2) #p.drawCentredString
+                            p.drawString(15 * 28.3465, (y1 + 1.54) * 28.3465 , l1) #p.drawRightString
+    #TH52   BF2D@Hj@r@i@p1@l1770@n2@e1.98@d10@gSD295@s30@v@a@Gl87@w180@l450@w90@l650@w90@l450@w-90@l180@w0@C85@
+                    elif count_l == 6 and count_w == 5 and (w1=="180" and w2=="90" and w3=="90" and w4=="-90" and w5=="0" or w1=="90" and w2=="-90" and w3=="-90" and w4=="-180" and w5=="0"):
+                        img_path = image_list[52]
+                        exec(code_string2)
+                        p.setFont('MSMINCHO.TTF', 10)
+                        if w1=="180" and w2=="90" and w3=="90" and w4=="-90" and w5=="0":
+                            p.drawRightString(14.15 * 28.3465, (y1 + 1.50) * 28.3465 , l5) #p.drawRightString
+                            p.drawRightString(14.15 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #p.drawCentredString
+                            p.drawCentredString(14.87 * 28.3465, (y1 + 0.14) * 28.3465 , l3)
+                            p.drawString(15.65 * 28.3465, (y1 + 0.84) * 28.3465 , l2) #p.drawCentredString
+                            p.drawRightString(15.35 * 28.3465, (y1 + 1.1) * 28.3465 , l1) #p.drawRightString
+                        else:
+                            p.drawRightString(14.15 * 28.3465, (y1 + 1.50) * 28.3465 , l1) #p.drawRightString
+                            p.drawRightString(14.15 * 28.3465, (y1 + 0.8) * 28.3465 , l2) #p.drawCentredString
+                            p.drawCentredString(14.87 * 28.3465, (y1 + 0.14) * 28.3465 , l3)
+                            p.drawString(15.65 * 28.3465, (y1 + 0.84) * 28.3465 , l4) #p.drawCentredString
+                            p.drawRightString(15.35 * 28.3465, (y1 + 1.1) * 28.3465 , l5) #p.drawRightString
+    #TH51   BF2D@Hj@r@i@p1@l1766@n3@e2.97@d10@gSD295@s30@v@a@Gl100@w135@l450@w90@l650@w90@l450@w-90@l180@w0@C77@
+                    elif count_l == 6 and count_w == 5 and (90 < int(w1) < 180 and w2=="90" and w3=="90" and w4=="-90" and w5=="0" or w1=="90" and w2=="-90" and w3=="-90" and -180 < int(w4) < -90 and w5=="0"):
+                        img_path = image_list[51]
+                        exec(code_string2)
+                        p.setFont('MSMINCHO.TTF', 10)
+                        if 90 < int(w1) < 180 and w2=="90" and w3=="90" and w4=="-90" and w5=="0":
+                            p.drawRightString(14.15 * 28.3465, (y1 + 1.52) * 28.3465 , l5) #p.drawRightString
+                            p.drawRightString(14.15 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #p.drawCentredString
+                            p.drawCentredString(14.87 * 28.3465, (y1 + 0.14) * 28.3465 , l3)
+                            p.drawString(15.65 * 28.3465, (y1 + 0.84) * 28.3465 , l2) #p.drawCentredString
+                            p.drawRightString(15.35 * 28.3465, (y1 + 1.25) * 28.3465 , l1) #p.drawRightString
+                        else:
+                            p.drawRightString(14.15 * 28.3465, (y1 + 1.52) * 28.3465 , l1) #p.drawRightString
+                            p.drawRightString(14.15 * 28.3465, (y1 + 0.8) * 28.3465 , l2) #p.drawCentredString
+                            p.drawCentredString(14.87 * 28.3465, (y1 + 0.14) * 28.3465 , l3)
+                            p.drawString(15.65 * 28.3465, (y1 + 0.84) * 28.3465 , l4) #p.drawCentredString
+                            p.drawRightString(15.35 * 28.3465, (y1 + 1.25) * 28.3465 , l5) #p.drawRightString
+    #TH50   BF2D@Hj@r@i@p1@l1740@n3@e2.92@d10@gSD295@s30@v@a@Gl87@w180@l450@w90@l650@w90@l450@w90@l150@w0@C76@
+                    elif count_l == 6 and count_w == 5 and (w1=="180" and w2=="90" and w3=="90" and w4=="90" and w5=="0" or w1=="90" and w2=="-90" and w3=="-90" and w4=="-180" and w5=="0"):
+                        img_path = image_list[50]
+                        exec(code_string2)
+                        p.setFont('MSMINCHO.TTF', 10)
+                        if w1=="180" and w2=="90" and w3=="90" and w4=="90" and w5=="0":
+                            p.drawRightString(14.16 * 28.3465, (y1 + 1.51) * 28.3465 , l5) #p.drawRightString
+                            p.drawRightString(13.55 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #p.drawCentredString
+                            p.drawCentredString(14.68 * 28.3465, (y1 + 0.14) * 28.3465 , l3)
+                            p.drawString(15.65 * 28.3465, (y1 + 0.84) * 28.3465 , l2) #p.drawCentredString
+                            p.drawRightString(15.35 * 28.3465, (y1 + 1.1) * 28.3465 , l1) #p.drawRightString
+                        else:
+                            p.drawRightString(14.16 * 28.3465, (y1 + 1.51) * 28.3465 , l1) #p.drawRightString
+                            p.drawRightString(13.55 * 28.3465, (y1 + 0.8) * 28.3465 , l2) #p.drawCentredString
+                            p.drawCentredString(14.68 * 28.3465, (y1 + 0.14) * 28.3465 , l3)
+                            p.drawString(15.65 * 28.3465, (y1 + 0.84) * 28.3465 , l4) #p.drawCentredString
+                            p.drawRightString(15.35 * 28.3465, (y1 + 1.1) * 28.3465 , l5) #p.drawRightString
+    #TH49   BF2D@Hj@r@i@p1@l1736@n1@e0.97@d10@gSD295@s30@v@a@Gl100@w135@l450@w90@l650@w90@l450@w90@l150@w0@C68@
+                    elif count_l == 6 and count_w == 5 and (90 < int(w1) < 180 and w2=="90" and w3=="90" and w4=="90" and w5=="0" or w1=="90" and w2=="90" and w3=="90" and 90 < int(w4) < 180 and w5=="0"):
+                        img_path = image_list[49]
+                        exec(code_string2)
+                        p.setFont('MSMINCHO.TTF', 10)
+                        if 90 < int(w1) < 180 and w2=="90" and w3=="90" and w4=="90" and w5=="0":
+                            p.drawRightString(14.16 * 28.3465, (y1 + 1.51) * 28.3465 , l5) #p.drawRightString
+                            p.drawRightString(13.55 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #p.drawCentredString
+                            p.drawCentredString(14.68 * 28.3465, (y1 + 0.14) * 28.3465 , l3)
+                            p.drawString(15.65 * 28.3465, (y1 + 0.84) * 28.3465 , l2) #p.drawCentredString
+                            p.drawRightString(15.35 * 28.3465, (y1 + 1.25) * 28.3465 , l1) #p.drawRightString
+                        else:
+                            p.drawRightString(14.16 * 28.3465, (y1 + 1.51) * 28.3465 , l1) #p.drawRightString
+                            p.drawRightString(13.55 * 28.3465, (y1 + 0.8) * 28.3465 , l2) #p.drawCentredString
+                            p.drawCentredString(14.68 * 28.3465, (y1 + 0.14) * 28.3465 , l3)
+                            p.drawString(15.65 * 28.3465, (y1 + 0.84) * 28.3465 , l4) #p.drawCentredString
+                            p.drawRightString(15.35 * 28.3465, (y1 + 1.25) * 28.3465 , l5) #p.drawRightString
+    #TH48   BF2D@Hj@r@i@p1@l1706@n1@e0.96@d10@gSD295@s30@v@a@Gl100@w135@l450@w90@l650@w90@l450@w180@l87@w0@C95@
+                    elif count_l == 6 and count_w == 5 and (90 < int(w1) < 180 and w2=="90" and w3=="90" and w4=="180" and w5=="0" or w1=="180" and w2=="90" and w3=="90" and 90 < int(w4) < 180 and w5=="0"):
+                        img_path = image_list[48]
+                        exec(code_string2)
+                        p.setFont('MSMINCHO.TTF', 10)
+                        if 90 < int(w1) < 180 and w2=="90" and w3=="90" and w4=="180" and w5=="0":
+                            p.drawString(13.88 * 28.3465, (y1 + 1.16) * 28.3465 , l5) #p.drawRightString
+                            p.drawRightString(13.55 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #p.drawCentredString
+                            p.drawCentredString(14.67 * 28.3465, (y1 + 0.14) * 28.3465 , l3)
+                            p.drawString(15.65 * 28.3465, (y1 + 0.84) * 28.3465 , l2) #p.drawCentredString
+                            p.drawRightString(15.35 * 28.3465, (y1 + 1.25) * 28.3465 , l1) #p.drawRightString
+                        else:
+                            p.drawString(13.88 * 28.3465, (y1 + 1.16) * 28.3465 , l1) #p.drawRightString
+                            p.drawRightString(13.55 * 28.3465, (y1 + 0.8) * 28.3465 , l2) #p.drawCentredString
+                            p.drawCentredString(14.67 * 28.3465, (y1 + 0.14) * 28.3465 , l3)
+                            p.drawString(15.65 * 28.3465, (y1 + 0.84) * 28.3465 , l4) #p.drawCentredString
+                            p.drawRightString(15.35 * 28.3465, (y1 + 1.25) * 28.3465 , l5) #p.drawRightString
+    #TH47   BF2D@Hj@r@i@p1@l1377@n1@e0.77@d10@gSD295@s30@v@a@Gl87@w180@l400@w90@l500@w76@l410@w0@C84@
+                    elif count_l == 5 and count_w == 4 and (w1 =="180" and w2 =="90" and 0 < int(w3) < 90 and w4 =="0" or 0 < int(w1) < 90 and w2 =="90" and w3=="180" and w4=="0"):
+                        img_path = image_list[47]
+                        exec(code_string2)
+                        p.setFont('MSMINCHO.TTF', 10)
+                        if w1 =="180" and w2 =="90" and 0 < int(w3) < 90 and w4 =="0":
+                            p.drawRightString(13.8 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #p.drawCentredString
+                            p.drawCentredString(14.89 * 28.3465, (y1 + 0.14) * 28.3465 , l3)
+                            p.drawString(15.65 * 28.3465, (y1 + 0.84) * 28.3465 , l2) #p.drawCentredString
+                            p.drawRightString(15.35 * 28.3465, (y1 + 1.1) * 28.3465 , l1) #p.drawRightString
+                        else:
+                            p.drawRightString(13.8 * 28.3465, (y1 + 0.8) * 28.3465 , l1) #p.drawCentredString
+                            p.drawCentredString(14.89 * 28.3465, (y1 + 0.14) * 28.3465 , l2)
+                            p.drawString(15.65 * 28.3465, (y1 + 0.84) * 28.3465 , l3) #p.drawCentredString
+                            p.drawRightString(15.35 * 28.3465, (y1 + 1.1) * 28.3465 , l4) #p.drawRightString
+    #TH46   BF2D@Hj@r@i@p1@l1460@n1@e0.82@d10@gSD295@s30@v@a@Gl87@w180@l400@w90@l600@w90@l400@w0@C67@
+                    elif count_l == 5 and count_w == 4 and (90 < int(w1) < 180 and w2 =="90" and 0 < int(w3) < 90 and w4 =="0" or 0 < int(w1) < 90 and w2 =="90" and 90 < int(w3) < 180 and w4=="0"):
+                        img_path = image_list[46]
+                        exec(code_string2)
+                        p.setFont('MSMINCHO.TTF', 10)
+                        if 90 < int(w1) < 180 and w2 =="90" and 0 < int(w3) < 90 and w4 =="0":
+                            p.drawRightString(13.8 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #p.drawCentredString
+                            p.drawCentredString(14.89 * 28.3465, (y1 + 0.14) * 28.3465 , l3)
+                            p.drawString(15.65 * 28.3465, (y1 + 0.84) * 28.3465 , l2) #p.drawCentredString
+                            p.drawRightString(15.37 * 28.3465, (y1 + 1.28) * 28.3465 , l1) #p.drawRightString
+                        else:
+                            p.drawRightString(13.8 * 28.3465, (y1 + 0.8) * 28.3465 , l1) #p.drawCentredString
+                            p.drawCentredString(14.89 * 28.3465, (y1 + 0.14) * 28.3465 , l2)
+                            p.drawString(15.65 * 28.3465, (y1 + 0.84) * 28.3465 , l3) #p.drawCentredString
+                            p.drawRightString(15.37 * 28.3465, (y1 + 1.28) * 28.3465 , l4) #p.drawRightString
+    #TH45   BF2D@Hj@r@i@p1@l1460@n1@e0.82@d10@gSD295@s30@v@a@Gl87@w180@l400@w90@l600@w90@l400@w0@C67@
+                    elif count_l == 5 and count_w == 4 and (w1=="180" and w2 =="90" and w3=="90" and w4 =="0" or w1=="90" and w2 =="90" and w3=="180" and w4=="0"):
+                        img_path = image_list[45]
+                        exec(code_string2)
+                        p.setFont('MSMINCHO.TTF', 10)
+                        if w1=="180" and w2 =="90" and w3=="90" and w4 =="0":
+                            p.drawRightString(13.55 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #p.drawCentredString
+                            p.drawCentredString(14.6 * 28.3465, (y1 + 0.14) * 28.3465 , l3)
+                            p.drawString(15.65 * 28.3465, (y1 + 0.84) * 28.3465 , l2) #p.drawCentredString
+                            p.drawRightString(15.35 * 28.3465, (y1 + 1.1) * 28.3465 , l1) #p.drawRightString
+                        else:
+                            p.drawRightString(13.55 * 28.3465, (y1 + 0.8) * 28.3465 , l1) #p.drawCentredString
+                            p.drawCentredString(14.6 * 28.3465, (y1 + 0.14) * 28.3465 , l2)
+                            p.drawString(15.65 * 28.3465, (y1 + 0.84) * 28.3465 , l3) #p.drawCentredString
+                            p.drawRightString(15.35 * 28.3465, (y1 + 1.1) * 28.3465 , l4) #p.drawRightString
+    #TH44   BF2D@Hj@r@i@p1@l1456@n1@e0.82@d10@gSD295@s30@v@a@Gl100@w135@l400@w90@l600@w90@l400@w0@C92@
+                    elif count_l == 5 and count_w == 4 and (90 < int(w1) < 180 and w2 =="90" and w3=="90" and w4 =="0" or w1=="90" and w2 =="90" and 90 < int(w3) < 180 and w4=="0"):
+                        img_path = image_list[44]
+                        exec(code_string2)
+                        p.setFont('MSMINCHO.TTF', 10)
+                        if 90 < int(w1) < 180 and w2 =="90" and w3=="90" and w4 =="0":
+                            p.drawRightString(13.55 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #p.drawCentredString
+                            p.drawCentredString(14.6 * 28.3465, (y1 + 0.14) * 28.3465 , l3)
+                            p.drawString(15.65 * 28.3465, (y1 + 0.84) * 28.3465 , l2) #p.drawCentredString
+                            p.drawRightString(15.37 * 28.3465, (y1 + 1.28) * 28.3465 , l1) #p.drawRightString
+                        else:
+                            p.drawRightString(13.55 * 28.3465, (y1 + 0.8) * 28.3465 , l1) #p.drawCentredString
+                            p.drawCentredString(14.6 * 28.3465, (y1 + 0.14) * 28.3465 , l2)
+                            p.drawString(15.65 * 28.3465, (y1 + 0.84) * 28.3465 , l3) #p.drawCentredString
+                            p.drawRightString(15.37 * 28.3465, (y1 + 1.28) * 28.3465 , l4) #p.drawRightString
+    #TH43   BF2D@Hj@r@i@p1@l1539@n1@e0.86@d10@gSD295@s30@v@a@Gl231@w25@l500@w-90@l350@w-90@l500@w0@C69@
+                    elif count_l == 5 and count_w == 4 and (0 < int(w1) < 90 and w2 =="-90" and w3=="-90" and w4 =="0" or w1=="90" and w2 =="90" and -90 < int(w3) < 0 and w4=="0"):
+                        img_path = image_list[43]
+                        exec(code_string2)
+                        p.setFont('MSMINCHO.TTF', 10)
+                        if 0 < int(w1) < 90 and w2 =="-90" and w3=="-90" and w4 =="0":
+                            p.drawCentredString(14.3 * 28.3465, (y1 + 1.53) * 28.3465 , l4) #p.drawRightString
+                            p.drawRightString(13.55 * 28.3465, (y1 + 0.9) * 28.3465 , l3) #p.drawCentredString
+                            p.drawCentredString(14.3 * 28.3465, (y1 + 0.36) * 28.3465 , l2) #p.drawCentredString
+                            p.drawString(15.26 * 28.3465, (y1 + 0.62) * 28.3465 , l1) #p.drawCentredString
+                        else:
+                            p.drawCentredString(14.3 * 28.3465, (y1 + 1.53) * 28.3465 , l1) #p.drawRightString
+                            p.drawRightString(13.55 * 28.3465, (y1 + 0.9) * 28.3465 , l2) #p.drawCentredString
+                            p.drawCentredString(14.3 * 28.3465, (y1 + 0.36) * 28.3465 , l3) #p.drawCentredString
+                            p.drawString(15.26 * 28.3465, (y1 + 0.62) * 28.3465 , l4) #p.drawCentredString
+
+    #TH42   BF2D@Hj@r@i@p1@l1508@n1@e0.84@d10@gSD295@s30@v@a@Gl200@w23@l500@w90@l350@w90@l500@w0@C75@
+                    elif count_l == 5 and count_w == 4 and (0 < int(w1) < 90 and w2 =="90" and w3=="90" and w4 =="0" or w1=="90" and w2 =="90" and 0 < int(w3) < 90 and w4=="0"):
+                        img_path = image_list[42]
+                        exec(code_string2)
+                        p.setFont('MSMINCHO.TTF', 10)
+                        if 0 < int(w1) < 90 and w2 =="90" and w3=="90" and w4 =="0":
+                            p.drawCentredString(14.3 * 28.3465, (y1 + 1.51) * 28.3465 , l4) #p.drawRightString
+                            p.drawRightString(13.55 * 28.3465, (y1 + 0.9) * 28.3465 , l3) #p.drawCentredString
+                            p.drawCentredString(14.15 * 28.3465, (y1 + 0.15) * 28.3465 , l2) #p.drawCentredString
+                            p.drawString(15.1 * 28.3465, (y1 + 0.35) * 28.3465 , l1) #p.drawCentredString
+                        else:
+                            p.drawCentredString(14.3 * 28.3465, (y1 + 1.51) * 28.3465 , l1) #p.drawRightString
+                            p.drawRightString(13.55 * 28.3465, (y1 + 0.9) * 28.3465 , l2) #p.drawCentredString
+                            p.drawCentredString(14.15 * 28.3465, (y1 + 0.15) * 28.3465 , l3) #p.drawCentredString
+                            p.drawString(15.1 * 28.3465, (y1 + 0.35) * 28.3465 , l4) #p.drawCentredString
+    #TH41   BF2D@Hj@r@i@p1@l1268@n1@e0.71@d10@gSD295@s30@v@a@Gl450@w65@l150@w25@l200@w90@l500@w0@C70@
+                    elif count_l == 5 and count_w == 4 and (0 < int(w1) < 90 and 0 < int(w2) < 90 and w3=="90" and w4 =="0" or w1=="90" and 0 < int(w2) < 90 and 0 < int(w3) < 90 and w4=="0"):
+                        img_path = image_list[41]
+                        exec(code_string2)
+                        p.setFont('MSMINCHO.TTF', 10)
+                        if 0 < int(w1) < 90 and 0 < int(w2) < 90 and w3=="90" and w4 =="0":
+                            p.drawCentredString(14.3 * 28.3465, (y1 + 1.51) * 28.3465 , l4) #p.drawRightString
+                            p.drawRightString(13.55 * 28.3465, (y1 + 1) * 28.3465 , l3) #p.drawCentredString
+                            p.drawString(13.95 * 28.3465, (y1 + 0.65) * 28.3465 , l2) #p.drawCentredString
+                            p.drawCentredString(14.9 * 28.3465, (y1 + 0.14) * 28.3465 , l1) #p.drawCentredString
+                        else:
+                            p.drawCentredString(14.3 * 28.3465, (y1 + 1.51) * 28.3465 , l1) #p.drawRightString
+                            p.drawRightString(13.55 * 28.3465, (y1 + 1) * 28.3465 , l2) #p.drawCentredString
+                            p.drawString(13.95 * 28.3465, (y1 + 0.65) * 28.3465 , l3) #p.drawCentredString
+                            p.drawCentredString(14.9 * 28.3465, (y1 + 0.14) * 28.3465 , l4) #p.drawCentredString
+    #TH40   BF2D@Hj@r@i@p1@l1180@n1@e0.66@d10@gSD295@s30@v@a@Gl400@w106@l394@w74@l302@w90@l130@w0@C82@
+                    elif count_l == 5 and count_w == 4 and (90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="90" and w4 =="0" or w1=="90" and 0 < int(w2) < 90 and 90 < int(w3) < 180 and w4=="0"):
+                        img_path = image_list[40]
+                        exec(code_string2)
+                        p.setFont('MSMINCHO.TTF', 10)
+                        if 90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="90" and w4 =="0":
+                            p.drawString(15.64 * 28.3465, (y1 + 0.8) * 28.3465 , l1) #p.drawCentredString
+                            p.drawRightString(14.85 * 28.3465, (y1 + 1.4) * 28.3465 , l2) #p.drawRightString
+                            p.drawRightString(13.55 * 28.3465, (y1 + 0.73) * 28.3465 , l3) #p.drawCentredString
+                            p.drawString(13.6 * 28.3465, (y1 + 0.15) * 28.3465 , l4)
+                        else:
+                            p.drawString(15.64 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #p.drawCentredString
+                            p.drawRightString(14.85 * 28.3465, (y1 + 1.4) * 28.3465 , l3) #p.drawRightString
+                            p.drawRightString(13.55 * 28.3465, (y1 + 0.73) * 28.3465 , l2) #p.drawCentredString
+                            p.drawString(13.6 * 28.3465, (y1 + 0.15) * 28.3465 , l1)
+                            
+    #TH39   BF2D@Hj@r@i@p1@l1058@n1@e0.59@d10@gSD295@s30@v@a@Gl400@w113@l250@w67@l300@w-90@l150@w0@C72@
+                    elif count_l == 5 and count_w == 4 and (90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="-90" and w4 =="0" or w1=="90" and -90 < int(w2) < 0 and -180 < int(w3) < -90 and w4=="0"):
+                        img_path = image_list[39]
+                        exec(code_string2)
+                        p.setFont('MSMINCHO.TTF', 10)
+                        if 90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="-90" and w4 =="0":
+                            p.drawString(15.64 * 28.3465, (y1 + 0.8) * 28.3465 , l1) #p.drawCentredString
+                            p.drawRightString(15.2 * 28.3465, (y1 + 1.4) * 28.3465 , l2) #p.drawRightString
+                            p.drawRightString(14.3 * 28.3465, (y1 + 0.73) * 28.3465 , l3) #p.drawCentredString
+                            p.drawString(13.7 * 28.3465, (y1 + 0.15) * 28.3465 , l4)
+                        else:
+                            p.drawString(15.64 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #p.drawCentredString
+                            p.drawRightString(15.2 * 28.3465, (y1 + 1.4) * 28.3465 , l3) #p.drawRightString
+                            p.drawRightString(14.3 * 28.3465, (y1 + 0.73) * 28.3465 , l2) #p.drawCentredString
+                            p.drawString(13.7 * 28.3465, (y1 + 0.15) * 28.3465 , l1)
+    #TH38   BF2D@Hj@r@i@p1@l1210@n1@e1.2@d13@gSD295@s39@v@a@Gl200@w90@l300@w-45@l250@w45@l500@w0@C84@
+                    elif count_l == 5 and count_w == 4 and (w1=="90" and -90 < int(w2) < 0 and 0 < int(w3) < 90 and w4 =="0" or 0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="90" and w4=="0"):
+                        img_path = image_list[38]
+                        exec(code_string2)
+                        p.setFont('MSMINCHO.TTF', 10)
+                        if w1=="90" and -90 < int(w2) < 0 and 0 < int(w3) < 90 and w4 =="0":
+                            p.drawRightString(13.55 * 28.3465, (y1 + 1.1) * 28.3465 , l1) #p.drawCentredString
+                            p.drawString(13.75 * 28.3465, (y1 + 1) * 28.3465 , l2) #p.drawCentredString
+                            p.drawRightString(14.45 * 28.3465, (y1 + 0.5) * 28.3465 , l3) #p.drawCentredString
+                            p.drawString(14.85 * 28.3465, (y1 + 0.5) * 28.3465 , l4)
+                        else:
+                            p.drawRightString(13.55 * 28.3465, (y1 + 1.1) * 28.3465 , l4) #p.drawCentredString
+                            p.drawString(13.75 * 28.3465, (y1 + 1) * 28.3465 , l3) #p.drawCentredString
+                            p.drawRightString(14.45 * 28.3465, (y1 + 0.5) * 28.3465 , l2) #p.drawCentredString
+                            p.drawString(14.85 * 28.3465, (y1 + 0.5) * 28.3465 , l1)
+
+    #TH37   BF2D@Hj@r@i@p1@l1238@n1@e1.23@d13@gSD295@s39@v@a@Gl400@w66@l300@w-66@l250@w-59@l325@w0@C88@
+                    elif count_l == 5 and count_w == 4 and (0 < int(w1) < 90 and -90 < int(w2) < 0 and -90 < int(w3) < 0 and w4 =="0" or 0 < int(w1) < 90 and 0 < int(w2) < 90 and -90 < int(w3) < 0 and w4=="0"):
+                        img_path = image_list[37]
+                        exec(code_string2)
+                        p.setFont('MSMINCHO.TTF', 10)
+                        if 0 < int(w1) < 90 and -90 < int(w2) < 0 and -90 < int(w3) < 0 and w4 =="0":
+                            p.drawString(15 * 28.3465, (y1 + 1.53) * 28.3465 , l1) #p.drawRightString
+                            p.drawString(14.9 * 28.3465, (y1 + 0.8) * 28.3465 , l2) #p.drawCentredString
+                            p.drawCentredString(14.3 * 28.3465, (y1 + 0.15) * 28.3465 , l3)
+                            p.drawRightString(13.72 * 28.3465, (y1 + 0.73) * 28.3465 , l4) #p.drawCentredString
+                            
+                        else:
+                            p.drawString(15 * 28.3465, (y1 + 1.53) * 28.3465 , l4) #p.drawRightString
+                            p.drawString(14.9 * 28.3465, (y1 + 0.8) * 28.3465 , l3) #p.drawCentredString
+                            p.drawCentredString(14.3 * 28.3465, (y1 + 0.15) * 28.3465 , l2)
+                            p.drawRightString(13.72 * 28.3465, (y1 + 0.73) * 28.3465 , l1) #p.drawCentredString
+    #TH36   BF2D@Hj@r@i@p1@l1238@n1@e1.23@d13@gSD295@s39@v@a@Gl400@w66@l300@w-66@l250@w-59@l325@w0@C88@
+                    elif count_l == 5 and count_w == 4 and (0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="-90" and w4 =="0" or w1=="90" and 0 < int(w2) < 90 and -90 < int(w3) < 0 and w4=="0"):
+                        img_path = image_list[36]
+                        exec(code_string2)
+                        p.setFont('MSMINCHO.TTF', 10)
+                        if 0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="-90" and w4 =="0":
+                            p.drawString(14.9 * 28.3465, (y1 + 1.53) * 28.3465 , l1) #p.drawRightString
+                            p.drawString(14.58 * 28.3465, (y1 + 0.8) * 28.3465 , l2) #p.drawCentredString
+                            p.drawCentredString(13.89 * 28.3465, (y1 + 0.15) * 28.3465 , l3)
+                            p.drawRightString(13.55 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #p.drawCentredString    
+                        else:
+                            p.drawString(14.9 * 28.3465, (y1 + 1.53) * 28.3465 , l4) #p.drawRightString
+                            p.drawString(14.58 * 28.3465, (y1 + 0.8) * 28.3465 , l3) #p.drawCentredString
+                            p.drawCentredString(13.89 * 28.3465, (y1 + 0.15) * 28.3465 , l2)
+                            p.drawRightString(13.55 * 28.3465, (y1 + 0.8) * 28.3465 , l1) #p.drawCentredString
+                   
     #TH35               
-                    if count_l == 7 and count_w == 6 and w1=="135" and w2=="90" and w3=="90" and w4=="90" and w5=="135" and w6=="0":
+                    elif count_l == 7 and count_w == 6 and w1=="135" and w2=="90" and w3=="90" and w4=="90" and w5=="135" and w6=="0":
                         img_path = image_list[35]
                         exec(code_string2)
                         p.setFont('MSMINCHO.TTF', 10)
@@ -2468,7 +2850,7 @@ def main():
                             p.drawString(12.65 * 28.3465, (y1 + 0.8) * 28.3465 , l4.rjust(5))
                             p.drawString(14.2 * 28.3465, (y1 + 0.1) * 28.3465 , l3.center(6))
                             p.drawString(15.7 * 28.3465, (y1 + 0.8) * 28.3465 , l2)
-#TH34           
+    #TH34           
                     elif count_l == 6 and count_w == 5 and 0 < int(w1) < 90 and -90 < int(w2) < 0 and -90 < int(w3) < 0 and 0 < int(w4) < 90 and w5=="0":
                         img_path = image_list[34]
                         exec(code_string2) 
@@ -2479,7 +2861,7 @@ def main():
                         p.drawString(15.05 * 28.3465, (y1 + 0.9) * 28.3465 , l4) #phải 1 giữa
                         p.drawString(15.05 * 28.3465, (y1 + 1.52) * 28.3465 , l5) #trên phải
                         
-#TH33   BF2D@Hj@r@i@p1@l1719@n1@e1.71@d13@gSD295@s39@v@a@Gl530@w90@l360@w90@l300@w90@l280@w-90@l350@w0@C95@   
+    #TH33   BF2D@Hj@r@i@p1@l1719@n1@e1.71@d13@gSD295@s39@v@a@Gl530@w90@l360@w90@l300@w90@l280@w-90@l350@w0@C95@   
                     elif count_l == 6 and count_w == 5 and (w1=="90" and w2=="90" and w3=="90" and w4=="-90" and w5=="0" or w1=="90" and w2=="-90" and w3=="-90" and w4=="-90" and w5=="0"):                        
                         img_path = image_list[33]
                         exec(code_string2) 
@@ -2497,7 +2879,7 @@ def main():
                             p.drawString(14.3 * 28.3465, (y1 + 0.65) * 28.3465 , l2) #l4.center(6)                  
                             p.drawString(14.8 * 28.3465, (y1 + 1.15) * 28.3465 , l1) #1.rjust(5)
 
-#TH32   BF2D@Hj@r@i@p1@l1376@n1@e1.37@d13@gSD295@s39@v@a@Gl164@w90@l200@w90@l750@w90@l200@w90@l164@w0@C75@
+    #TH32   BF2D@Hj@r@i@p1@l1376@n1@e1.37@d13@gSD295@s39@v@a@Gl164@w90@l200@w90@l750@w90@l200@w90@l164@w0@C75@
                     elif count_l == 6 and count_w == 5 and w1=="90" and w2=="90" and w3=="90" and w4=="90" and w5=="0":
                         img_path = image_list[32]
                         exec(code_string2) 
@@ -2508,7 +2890,7 @@ def main():
                         p.drawString(14.2 * 28.3465, (y1 + 1.05) * 28.3465 , l3.center(6)) #l4.center(6)
                         p.drawString(15.65 * 28.3465, (y1 + 0.6) * 28.3465 , l4) # 
                         p.drawString(14.95 * 28.3465, (y1 + 0.15) * 28.3465 , l5) #
-#TH31   BF2D@Hj@r@i@p1@l1202@n1@e0.67@d10@gSD295@s30@v@a@Gl100@w135@l210@w90@l630@w90@l210@w135@l100@w0@C86@
+    #TH31   BF2D@Hj@r@i@p1@l1202@n1@e0.67@d10@gSD295@s30@v@a@Gl100@w135@l210@w90@l630@w90@l210@w135@l100@w0@C86@
                     elif count_l == 6 and count_w == 5 and 90 < int(w1) < 180 and w2=="90" and w3=="90" and 90 < int(w4) < 180 and w5=="0":
                         img_path = image_list[31]
                         exec(code_string2) 
@@ -2519,7 +2901,7 @@ def main():
                         p.drawString(15.65 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #
                         p.drawString(14.55 * 28.3465, (y1 + 1.3) * 28.3465 , l5.rjust(5)) #1.rjust(5)
 
-#TH30   BF2D@Hj@r@i@p1@l1140@n1@e0.64@d10@gSD295@s30@v@a@Gl87@w180@l340@w90@l300@w90@l340@w180@l87@w0@C90@
+    #TH30   BF2D@Hj@r@i@p1@l1140@n1@e0.64@d10@gSD295@s30@v@a@Gl87@w180@l340@w90@l300@w90@l340@w180@l87@w0@C90@
                     elif count_l == 6 and count_w == 5 and w1=="180" and w2=="90" and w3=="90" and w4=="180" and w5=="0":
                         img_path = image_list[30]
                         exec(code_string2) 
@@ -2530,7 +2912,7 @@ def main():
                         p.drawString(15.65 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #
                         p.drawString(14.46 * 28.3465, (y1 + 1.06) * 28.3465 , l5.rjust(5)) #1.rjust(5)
                         
-#TH29   BF2D@Hj@r@i@p1@l1369@n1@e1.36@d13@gSD295@s39@v@a@Gl220@w90@l300@w-90@l300@w-90@l300@w90@l350@w0@C84@
+    #TH29   BF2D@Hj@r@i@p1@l1369@n1@e1.36@d13@gSD295@s39@v@a@Gl220@w90@l300@w-90@l300@w-90@l300@w90@l350@w0@C84@
                     elif count_l == 6 and count_w == 5 and w1=="90" and w2=="-90" and w3=="-90" and w4=="90" and w5=="0":
                         img_path = image_list[29]
                         exec(code_string2) 
@@ -2540,7 +2922,7 @@ def main():
                         p.drawString(14.15 * 28.3465, (y1 + 1.52) * 28.3465 , l3.center(6)) #l4.center(6)
                         p.drawString(15.08 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #1.rjust(5)
                         p.drawString(15 * 28.3465, (y1 + 0.15) * 28.3465 , l5) #
-#TH28   BF2D@Hj@r@i@p1@l1181@n1@e0.66@d10@gSD295@s30@v@a@Gl150@w90@l300@w-90@l230@w90@l560@w0@C88@
+    #TH28   BF2D@Hj@r@i@p1@l1181@n1@e0.66@d10@gSD295@s30@v@a@Gl150@w90@l300@w-90@l230@w90@l560@w0@C88@
                     elif count_l == 5 and count_w == 4 and w1 == "90" and w2 == "-90" and w3 == "90" and w4 == "0":
                         img_path = image_list[28]
                         exec(code_string2) 
@@ -2555,7 +2937,7 @@ def main():
                             p.drawString(14.3 * 28.3465, (y1 + 1) * 28.3465 , l3) #l4.center(6)
                             p.drawString(13.25 * 28.3465, (y1 + 0.87) * 28.3465 , l2.rjust(5)) #1.rjust(5)
                             p.drawString(12.68 * 28.3465, (y1 + 0.5) * 28.3465 , l1.rjust(5)) #1.rjust(5)
-#TH27   BF2D@Hj@r@i@p1@l1204@n1@e1.2@d13@gSD295@s39@v@a@Gl350@w90@l300@w90@l280@w-90@l350@w0@C69@
+    #TH27   BF2D@Hj@r@i@p1@l1204@n1@e1.2@d13@gSD295@s39@v@a@Gl350@w90@l300@w90@l280@w-90@l350@w0@C69@
                     elif count_l == 5 and count_w == 4 and (w1=="90" and w2=="90" and w3=="-90" and w4=="0" or w1=="90" and w2=="-90" and w3=="-90" and w4=="0"):
                         img_path = image_list[27]
                         exec(code_string2) 
@@ -2570,7 +2952,7 @@ def main():
                             p.drawString(14.3 * 28.3465, (y1 + 0.8) * 28.3465 , l2) #
                             p.drawString(13.48 * 28.3465, (y1 + 0.15) * 28.3465 , l3.center(6)) #l4.center(6)
                             p.drawString(12.65 * 28.3465, (y1 + 0.8) * 28.3465 , l4.rjust(5) ) #1.rjust(5)
-#TH26   BF2D@Hj@r@i@p1@l1721@n1@e2.68@d16@gSD295@s80@v@a@Gl218@w90@l1070@w90@l300@w90@l250@w0@C66@
+    #TH26   BF2D@Hj@r@i@p1@l1721@n1@e2.68@d16@gSD295@s80@v@a@Gl218@w90@l1070@w90@l300@w90@l250@w0@C66@
                     elif count_l == 5 and count_w == 4 and w1=="90" and w2=="90" and w3=="90" and w4=="0":
                         img_path = image_list[26]
                         exec(code_string2) 
@@ -2585,7 +2967,7 @@ def main():
                             p.drawString(12.65 * 28.3465, (y1 + 0.8) * 28.3465 , l2.rjust(5)) #1.rjust(5)
                             p.drawString(14.1 * 28.3465, (y1 + 0.15) * 28.3465 , l3.center(6)) #l4.center(6)
                             p.drawString(15.65 * 28.3465, (y1 + 0.6) * 28.3465 , l4) #
-#TH25   BF2D@Hj@r@i@p1@l1164@n1@e1.16@d13@gSD295@s39@v@a@Gl112@w135@l950@w-135@l111@w0@C79@
+    #TH25   BF2D@Hj@r@i@p1@l1164@n1@e1.16@d13@gSD295@s39@v@a@Gl112@w135@l950@w-135@l111@w0@C79@
                     elif count_l == 4 and count_w == 3 and 90 < int(w1) < 180 and -180 < int(w2) < -90 and w3=="0":
                         img_path = image_list[25]
                         exec(code_string2) 
@@ -2594,7 +2976,7 @@ def main():
                         p.drawString(14.1 * 28.3465, (y1 + 1.05) * 28.3465 , l2.center(6)) #l4.center(6)
                         p.drawString(15.35 * 28.3465, (y1 + 1.2) * 28.3465 , l3) #
 
-#TH24   BF2D@Hj@r@i@p1@l1987@n1@e6.04@d22@gSD345@s88@v@a@Gl204@w180@l1500@w-180@l204@w0@C83@
+    #TH24   BF2D@Hj@r@i@p1@l1987@n1@e6.04@d22@gSD345@s88@v@a@Gl204@w180@l1500@w-180@l204@w0@C83@
                     elif count_l == 4 and count_w == 3 and w1=="180" and w2=="-180" and w3=="0":
                         img_path = image_list[24]
                         exec(code_string2) 
@@ -2602,7 +2984,7 @@ def main():
                         p.drawString(13.35* 28.3465, (y1 + 1.52) * 28.3465 , l1.rjust(5)) #l1.rjust(5)
                         p.drawString(14.1 * 28.3465, (y1 + 1.05) * 28.3465 , l2.center(6)) #l4.center(6)
                         p.drawString(15 * 28.3465, (y1 + 0.15) * 28.3465 , l3) #
-#TH23   BF2D@Hj@r@i@p1@l1961@n1@e3.06@d16@gSD295@s80@v@a@Gl450@w67@l1050@w-67@l500@w0@C83@
+    #TH23   BF2D@Hj@r@i@p1@l1961@n1@e3.06@d16@gSD295@s80@v@a@Gl450@w67@l1050@w-67@l500@w0@C83@
                     elif count_l == 4 and count_w == 3 and 0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="0":
                         img_path = image_list[23]
                         exec(code_string2) 
@@ -2610,7 +2992,7 @@ def main():
                         p.drawString(13.6 * 28.3465, (y1 + 1.52) * 28.3465 , l1) #l1.rjust(5)
                         p.drawString(14.68 * 28.3465, (y1 + 0.9) * 28.3465 , l2) #l4.center(6)
                         p.drawString(15 * 28.3465, (y1 + 0.15) * 28.3465 , l3) #
-#TH22   BF2D@Hj@r@i@p1@l2458@n1@e3.83@d16@gSD295@s80@v@a@Gl218@w90@l2100@w-90@l218@w0@C79@
+    #TH22   BF2D@Hj@r@i@p1@l2458@n1@e3.83@d16@gSD295@s80@v@a@Gl218@w90@l2100@w-90@l218@w0@C79@
                     elif count_l == 4 and count_w == 3 and w1=="90" and w2=="-90" and w3=="0":
                         img_path = image_list[22]
                         exec(code_string2) 
@@ -2618,7 +3000,7 @@ def main():
                         p.drawString(12.63 * 28.3465, (y1 + 1.11) * 28.3465 , l1.rjust(5)) #1.rjust(5)
                         p.drawString(14.1 * 28.3465, (y1 + 1.05) * 28.3465 , l2.center(6)) #l4.center(6)
                         p.drawString(15.7 * 28.3465, (y1 + 0.55) * 28.3465 , l3) #
-#TH21   BF2D@Hj@r@i@p1@l1644@n1@e2.56@d16@gSD295@s80@v@a@Gl154@w135@l1300@w-45@l200@w0@C77@
+    #TH21   BF2D@Hj@r@i@p1@l1644@n1@e2.56@d16@gSD295@s80@v@a@Gl154@w135@l1300@w-45@l200@w0@C77@
                     elif count_l == 4 and count_w == 3 and (90 < int(w1) < 180 and -90 < int(w2) < 0 and w3=="0" or 0 < int(w1) < 90 and -180 < int(w2) < -90 and w3=="0"):
                         img_path = image_list[21]
                         exec(code_string2) 
@@ -2631,7 +3013,7 @@ def main():
                             p.drawString(15.35 * 28.3465, (y1 + 1.2) * 28.3465 , l3) #
                             p.drawString(14.2 * 28.3465, (y1 + 0.63) * 28.3465 , l2.center(6)) #l4.center(6)
                             p.drawString(12.9 * 28.3465, (y1 + 0.8) * 28.3465 , l1.rjust(5)) #1.rjust(5)
-#TH20   BF2D@Hj@r@i@p1@l1944@n1@e3.03@d16@gSD295@s80@v@a@Gl400@w78@l1000@w102@l600@w0@C67@
+    #TH20   BF2D@Hj@r@i@p1@l1944@n1@e3.03@d16@gSD295@s80@v@a@Gl400@w78@l1000@w102@l600@w0@C67@
                     elif count_l == 4 and count_w == 3 and (0 < int(w1) < 90 and 90 < int(w2) < 180 and w3=="0" or 90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="0"):
                         img_path = image_list[20]
                         exec(code_string2) 
@@ -2644,7 +3026,7 @@ def main():
                             p.drawString(12.65 * 28.3465, (y1 + 0.7) * 28.3465 , l3.rjust(5)) #1.rjust(5)
                             p.drawString(14.1 * 28.3465, (y1 + 1.45) * 28.3465 , l2.center(6)) #l4.center(6)
                             p.drawString(15.7 * 28.3465, (y1 + 0.8) * 28.3465 , l1) #
-#TH19   BF2D@Hj@r@i@p1@l1970@n1@e3.07@d16@gSD295@s80@v@a@Gl122@w180@l1600@w-45@l220@w0@C78@
+    #TH19   BF2D@Hj@r@i@p1@l1970@n1@e3.07@d16@gSD295@s80@v@a@Gl122@w180@l1600@w-45@l220@w0@C78@
                     elif count_l == 4 and count_w == 3 and (w1=="180" and -90 < int(w2) < 0 and w3=="0" or 0 < int(w1) < 90 and w2=="-180" and w3=="0"):
                         img_path = image_list[19]
                         exec(code_string2) 
@@ -2657,7 +3039,7 @@ def main():
                             p.drawString(15 * 28.3465, (y1 + 1.52) * 28.3465 , l3) #
                             p.drawString(14.2 * 28.3465, (y1 + 0.63) * 28.3465 , l2.center(6)) #l4.center(6)
                             p.drawString(12.9 * 28.3465, (y1 + 0.63) * 28.3465 , l1.rjust(5)) #1.rjust(5)
-#TH18   BF2D@Hj@r@i@p1@l2441@n1@e7.42@d22@gSD345@s88@v@a@Gl204@w180@l2000@w45@l210@w0@C66@
+    #TH18   BF2D@Hj@r@i@p1@l2441@n1@e7.42@d22@gSD345@s88@v@a@Gl204@w180@l2000@w45@l210@w0@C66@
                     elif count_l == 4 and count_w == 3 and (w1=="180" and 0 < int(w2) < 90 and w3=="0" or 0 < int(w1) < 90 and w2=="180" and w3=="0"):
                         img_path = image_list[18]
                         exec(code_string2) 
@@ -2670,7 +3052,7 @@ def main():
                             p.drawString(15 * 28.3465, (y1 + 1.52) * 28.3465 , l3) #
                             p.drawString(14.2 * 28.3465, (y1 + 0.63) * 28.3465 , l2.center(6)) #l4.center(6)
                             p.drawString(12.9 * 28.3465, (y1 + 1) * 28.3465 , l1.rjust(5)) #1.rjust(5)
-#TH17   BF2D@Hj@r@i@p1@l1477@n1@e1.47@d13@gSD295@s39@v@a@Gl86@w180@l1200@w135@l180@w0@C76@
+    #TH17   BF2D@Hj@r@i@p1@l1477@n1@e1.47@d13@gSD295@s39@v@a@Gl86@w180@l1200@w135@l180@w0@C76@
                     elif count_l == 4 and count_w == 3 and (w1=="180" and 90 < int(w2) < 180 and w3=="0" or 90 < int(w1) < 180 and w2=="180" and w3=="0"):
                         img_path = image_list[17]
                         exec(code_string2) 
@@ -2683,7 +3065,7 @@ def main():
                             p.drawString(15 * 28.3465, (y1 + 1.52) * 28.3465 , l3) #
                             p.drawString(14.1 * 28.3465, (y1 + 0.63) * 28.3465 , l2.center(6)) #l4.center(6)
                             p.drawString(12.85 * 28.3465, (y1 + 1.16) * 28.3465 , l1.rjust(5)) #1.rjust(5)
-#TH16   BF2D@Hj@r@i@p1@l1267@n1@e1.26@d13@gSD295@s39@v@a@Gl86@w180@l1000@w-135@l170@w0@C72@
+    #TH16   BF2D@Hj@r@i@p1@l1267@n1@e1.26@d13@gSD295@s39@v@a@Gl86@w180@l1000@w-135@l170@w0@C72@
                     elif count_l == 4 and count_w == 3 and (w1=="180" and -180 < int(w2) < -90 and w3=="0" or 90 < int(w1) < 180 and w2=="-180" and w3=="0"):
                         img_path = image_list[16]
                         exec(code_string2) 
@@ -2696,7 +3078,7 @@ def main():
                             p.drawString(15 * 28.3465, (y1 + 1.52) * 28.3465 , l3) #
                             p.drawString(14.1 * 28.3465, (y1 + 1.05) * 28.3465 , l2.center(6)) #l4.center(6)
                             p.drawString(12.9 * 28.3465, (y1 + 0.5) * 28.3465 , l1.rjust(5)) #1.rjust(5)
-#TH15   BF2D@Hj@r@i@p1@l1278@n1@e1.99@d16@gSD295@s80@v@a@Gl218@w90@l900@w-135@l200@w0@C78@
+    #TH15   BF2D@Hj@r@i@p1@l1278@n1@e1.99@d16@gSD295@s80@v@a@Gl218@w90@l900@w-135@l200@w0@C78@
                     elif count_l == 4 and count_w == 3 and (w1=="90" and -180 < int(w2) < -90 and w3=="0" or 90 < int(w1) < 180 and w2=="-90" and w3=="0"):
                         img_path = image_list[15]
                         exec(code_string2) 
@@ -2709,7 +3091,7 @@ def main():
                             p.drawString(12.6 * 28.3465, (y1 + 0.6) * 28.3465 , l3.rjust(5)) #1.rjust(5)
                             p.drawString(14.1 * 28.3465, (y1 + 0.63) * 28.3465 , l2.center(6)) #l4.center(6)
                             p.drawString(15.35 * 28.3465, (y1 + 1.2) * 28.3465 , l1) #
-#TH14   BF2D@Hj@r@i@p1@l2489@n1@e3.88@d16@gSD295@s80@v@a@Gl218@w90@l1860@w-45@l460@w0@C91@
+    #TH14   BF2D@Hj@r@i@p1@l2489@n1@e3.88@d16@gSD295@s80@v@a@Gl218@w90@l1860@w-45@l460@w0@C91@
                     elif count_l == 4 and count_w == 3 and (w1=="90" and -90 < int(w2) < 0 and w3=="0" or 0 < int(w1) < 90 and w2=="-90" and w3=="0"): 
                         img_path = image_list[14]
                         exec(code_string2) 
@@ -2722,7 +3104,7 @@ def main():
                             p.drawString(12.6 * 28.3465, (y1 + 0.6) * 28.3465 , l3.rjust(5)) #1.rjust(5)
                             p.drawString(13.8 * 28.3465, (y1 + 1.05) * 28.3465 , l2.center(6)) #l4.center(6)
                             p.drawString(15.4 * 28.3465, (y1 + 1) * 28.3465 , l1) #
-#TH13   BF2D@Hj@r@i@p1@l2128@n1@e4.79@d19@gSD345@s114@v@a@Gl268@w90@l1700@w-180@l154@w0@C73@
+    #TH13   BF2D@Hj@r@i@p1@l2128@n1@e4.79@d19@gSD345@s114@v@a@Gl268@w90@l1700@w-180@l154@w0@C73@
                     elif count_l == 4 and count_w == 3 and (w1=="90" and w2=="-180" and w3=="0" or w1=="180" and w2=="-90" and w3=="0"):
                         img_path = image_list[13]
                         exec(code_string2) 
@@ -2735,7 +3117,7 @@ def main():
                             p.drawString(12.62 * 28.3465, (y1 + 0.6) * 28.3465 , l3.rjust(5)) #1.rjust(5)
                             p.drawString(14.1 * 28.3465, (y1 + 0.63) * 28.3465 , l2.center(6)) #l4.center(6)
                             p.drawString(14.95 * 28.3465, (y1 + 1.53) * 28.3465 , l1) #
-#TH12   BF2D@Hj@r@i@p1@l2248@n1@e3.51@d16@gSD295@s80@v@a@Gl218@w90@l1800@w135@l270@w0@C80@
+    #TH12   BF2D@Hj@r@i@p1@l2248@n1@e3.51@d16@gSD295@s80@v@a@Gl218@w90@l1800@w135@l270@w0@C80@
                     elif count_l == 4 and count_w == 3 and (w1 == "90" and 90 < int(w2) < 180 and w3 == "0" or 90 < int(w1) < 180 and w2 == "90" and w3 == "0"):
                         img_path = image_list[12]
                         exec(code_string2) 
@@ -2748,7 +3130,7 @@ def main():
                             p.drawString(15.69 * 28.3465, (y1 + 1.15) * 28.3465 , l3) #
                             p.drawString(14.2 * 28.3465, (y1 + 0.63) * 28.3465 , l2.center(6)) #l4.center(6)
                             p.drawString(12.8 * 28.3465, (y1 + 1.15) * 28.3465 , l1.rjust(5) ) #1.rjust(5)         
-#TH11   BF2D@Hj@r@i@p1@l2559@n1@e7.78@d22@gSD345@s88@v@a@Gl311@w90@l2100@w45@l210@w0@C95@
+    #TH11   BF2D@Hj@r@i@p1@l2559@n1@e7.78@d22@gSD345@s88@v@a@Gl311@w90@l2100@w45@l210@w0@C95@
                     elif count_l == 4 and count_w == 3 and (w1 == "90" and 0 < int(w2) < 90 and w3 =="0" or 0 < int(w1) < 90 and w2 =="90"  and w3=="0"):
                         img_path = image_list[11]
                         exec(code_string2) 
@@ -2761,7 +3143,7 @@ def main():
                             p.drawString(12.65 * 28.3465, (y1 + 0.8) * 28.3465 , l3.rjust(5)) #1.rjust(5)
                             p.drawString(13.8 * 28.3465, (y1 + 1.52) * 28.3465 , l2.center(6)) #l4.center(6)
                             p.drawString(15.45 * 28.3465, (y1 + 0.8) * 28.3465 , l1) #
-#TH10   BF2D@Hj@r@i@p1@l2105@n1@e6.4@d22@gSD345@s88@v@a@Gl204@w180@l1600@w90@l311@w0@C81@
+    #TH10   BF2D@Hj@r@i@p1@l2105@n1@e6.4@d22@gSD345@s88@v@a@Gl204@w180@l1600@w90@l311@w0@C81@
                     elif count_l == 4 and count_w == 3 and (w1=="90" and w2=="180" and w3=="0" or w1=="180" and w2=="90" and w3=="0"):
                         img_path = image_list[10]
                         exec(code_string2) 
@@ -2774,7 +3156,7 @@ def main():
                             p.drawString(15 * 28.3465, (y1 + 0.65) * 28.3465 , l3) #
                             p.drawString(14.1 * 28.3465, (y1 + 1.52) * 28.3465 , l2.center(6)) #l4.center(6)
                             p.drawString(12.65 * 28.3465, (y1 + 0.8) * 28.3465 , l1.rjust(5)) #1.rjust(5)
-#TH9    BF2D@Hj@r@i@p1@l1514@n1@e2.36@d16@gSD295@s48@v@a@Gl138@w135@l1250@w135@l138@w0@C92@
+    #TH9    BF2D@Hj@r@i@p1@l1514@n1@e2.36@d16@gSD295@s48@v@a@Gl138@w135@l1250@w135@l138@w0@C92@
                     elif count_l == 4 and count_w == 3 and 90 < int(w1) < 180 and 90 < int(w2) < 180 and w3=="0":
                         img_path = image_list[9]
                         exec(code_string2) 
@@ -2783,7 +3165,7 @@ def main():
                         p.drawString(14.1 * 28.3465, (y1 + 1.05) * 28.3465 , l2.center(6)) #l4.center(6)
                         p.drawString(15.45 * 28.3465, (y1 + 0.5) * 28.3465 , l3) #
 
-#TH8    BF2D@Hj@r@i@p1@l2117@n1@e4.76@d19@gSD345@s114@v@a@Gl398@w85@l1509@w45@l265@w0@C89@
+    #TH8    BF2D@Hj@r@i@p1@l2117@n1@e4.76@d19@gSD345@s114@v@a@Gl398@w85@l1509@w45@l265@w0@C89@
                     elif count_l == 4 and count_w == 3 and 0 < int(w1) < 90 and 0 < int(w2) < 90 and w3=="0":
                         img_path = image_list[8]
                         exec(code_string2) 
@@ -2792,7 +3174,7 @@ def main():
                         p.drawString(14.1 * 28.3465, (y1 + 1.05) * 28.3465 , l2.center(6)) #l4.center(6)
                         p.drawString(15.45 * 28.3465, (y1 + 0.7) * 28.3465 , l3) #
 
-#TH7 BF2D@Hj@r@i@p1@l2300@n1@e1.29@d10@gSD295@s30@v@a@Gl87@w180@l2100@w180@l87@w0@C79@
+    #TH7 BF2D@Hj@r@i@p1@l2300@n1@e1.29@d10@gSD295@s30@v@a@Gl87@w180@l2100@w180@l87@w0@C79@
                     elif count_l == 4 and count_w == 3 and w1=="180" and w2=="180" and w3=="0":
                         img_path = image_list[7]
                         exec(code_string2) 
@@ -2801,7 +3183,7 @@ def main():
                         p.drawString(14.1 * 28.3465, (y1 + 0.63) * 28.3465 , l2.center(6)) #l4.center(6)
                         p.drawString(14.98 * 28.3465, (y1 + 1.52) * 28.3465 , l3) #
 
-#TH6    BF2D@Hj@r@i@p1@l2158@n1@e3.37@d16@gSD295@s80@v@a@Gl218@w90@l1800@w90@l218@w0@C90@ 
+    #TH6    BF2D@Hj@r@i@p1@l2158@n1@e3.37@d16@gSD295@s80@v@a@Gl218@w90@l1800@w90@l218@w0@C90@ 
                     elif count_l == 4 and count_w == 3 and w1=="90" and w2=="90" and w3=="0":
                         img_path = image_list[6]
                         exec(code_string2) 
@@ -2810,7 +3192,7 @@ def main():
                         p.drawString(14.1 * 28.3465, (y1 + 1.05) * 28.3465 , l2.center(6)) #l4.center(6)
                         p.drawString(15.7 * 28.3465, (y1 + 0.6) * 28.3465 , l3) #
 
-#TH5    BF2D@Hj@r@i@p1@l1057@n1@e1.05@d13@gSD295@s39@v@a@Gl111@w135@l950@w0@C77@    
+    #TH5    BF2D@Hj@r@i@p1@l1057@n1@e1.05@d13@gSD295@s39@v@a@Gl111@w135@l950@w0@C77@    
                     elif count_l == 3 and count_w == 2 and 90 < int(w1) < 180 and int(w2) == 0: 
                         img_path = image_list[5]
                         exec(code_string2) 
@@ -2821,7 +3203,7 @@ def main():
                         else:
                             p.drawString(14.1 * 28.3465, (y1 + 0.63) * 28.3465 , l2.center(6)) #l4.center(6)
                             p.drawString(12.8 * 28.3465, (y1 + 1.15) * 28.3465 , l1.rjust(5)) #1.rjust(5)
-#TH4    BF2D@Hj@r@i@p1@l2088@n1@e4.7@d19@gSD345@s114@v@a@Gl600@w45@l1500@w0@C76@    
+    #TH4    BF2D@Hj@r@i@p1@l2088@n1@e4.7@d19@gSD345@s114@v@a@Gl600@w45@l1500@w0@C76@    
                     elif count_l == 3 and count_w == 2 and 0 < int(w1) < 90 and int(w2) == 0 :  
                         img_path = image_list[4]
                         exec(code_string2) 
@@ -2832,7 +3214,7 @@ def main():
                         else:
                             p.drawString(14.4 * 28.3465, (y1 + 1.06) * 28.3465 , l2.center(6) ) #l4.center(6)      
                             p.drawString(12.9 * 28.3465, (y1 + 0.7) * 28.3465 , l1.rjust(5)) #1.rjust(5)
-#TH3    BF2D@Hj@r@i@p1@l1744@n1@e5.3@d22@gSD345@s88@v@a@Gl204@w180@l1500@w0@C77@    
+    #TH3    BF2D@Hj@r@i@p1@l1744@n1@e5.3@d22@gSD345@s88@v@a@Gl204@w180@l1500@w0@C77@    
                     elif count_l == 3 and count_w == 2 and w1=="180" and w2=="0": 
                         img_path = image_list[3]
                         exec(code_string2) 
@@ -2843,7 +3225,7 @@ def main():
                         else:
                             p.drawString(13.35 * 28.3465, (y1 + 1.52) * 28.3465 , l1.rjust(5)) #l1.rjust(5)
                             p.drawString(14.1 * 28.3465, (y1 + 0.63) * 28.3465 , l2.center(6)) #l4.center(6)
-#TH2    BF2D@Hj@r@i@p1@l1979@n1@e3.09@d16@gSD295@s80@v@a@Gl218@w90@l1800@w0@C88@    
+    #TH2    BF2D@Hj@r@i@p1@l1979@n1@e3.09@d16@gSD295@s80@v@a@Gl218@w90@l1800@w0@C88@    
                     elif count_l == 3 and count_w == 2 and w1=="90" and w2=="0": 
                         img_path = image_list[2]
                         exec(code_string2) 
@@ -2854,13 +3236,13 @@ def main():
                         else:
                             p.drawString(14.1 * 28.3465, (y1 + 1.05) * 28.3465 , l2.center(6)) #l4.center(6)
                             p.drawString(12.6 * 28.3465, (y1 + 0.6) * 28.3465 , l1.rjust(5)) #1.rjust(5)
-#TH1    BF2D@Hj@r@i@p1@l2250@n1@e14.02@d32@gSD390@s@v@a@Gl2250@w0@C83@
+    #TH1    BF2D@Hj@r@i@p1@l2250@n1@e14.02@d32@gSD390@s@v@a@Gl2250@w0@C83@
                     elif count_l == 2 and count_w == 1 and w1=="0":                         
                         img_path = image_list[1]
                         exec(code_string2) 
                         p.setFont('MSMINCHO.TTF', 10)
                         p.drawString(14.1 * 28.3465, (y1 + 1.05) * 28.3465 , l1.center(6)) #l4.center(6)
-#TH0
+    #TH0
                     else:
                         for x_cm, y_cm, width_cm, height_cm in rectangles1:
                             # Chèn hình ảnh vào hình chữ nhật tại tọa độ và điều chỉnh kích thước
