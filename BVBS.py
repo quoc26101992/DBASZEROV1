@@ -3360,7 +3360,7 @@ def main():
             text22 = colA2.text_input("協力会社", "株式会社ABC")
             text33 = colA3.text_input("鉄筋メーカー", "某会社")
             text44 = colA4.text_input("使用場所", "Y1-X1 柱")
-            text55 = colA5.text_input("運搬日:", formatted_time1)
+            text55 = colA5.date_input('運搬日')
 
             x1, y1 = 2, 184
             x2, y2 = 2, 164
