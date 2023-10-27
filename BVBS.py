@@ -3348,7 +3348,7 @@ def main():
                 "image/59.png",
             ]
             st.write("""------------------------------------------------------""")
-            st.title("印刷範囲の選択")
+            st.title("情報を入力する")
             colA1, colA2, colA3, colA4, colA5, colA6 = st.columns(6)
             text11 = colA1.text_input("工事名", "某工事名")
             #text11 = st.text_input("工事名", "某工事名")
