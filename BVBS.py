@@ -3347,7 +3347,7 @@ def main():
             ]
             st.write("""------------------------------------------------------""")
             st.title("情報を入力する")
-            colA1, colA2, colA3, colA4, colA5 = st.columns(5)
+            colA1, colA2, colA3, colA4, colA5, colA6 = st.columns(6)
             text11 = colA1.text_input("工事名", "某工事名")
             #text11 = st.text_input("工事名", "某工事名")
             text22 = colA2.text_input("協力会社", "株式会社ABC")
@@ -3360,27 +3360,12 @@ def main():
             x3, y3 = 280, 184
             x4, y4 = 280, 164
 
-            # Trong cột thứ hai (col2), đặt radio buttons
+            selected_option = colA6.radio("", ["AM", "PM"])
             # Hiển thị thông báo dựa trên tùy chọn được chọn
-            tokyo_timezone = pytz.timezone('Asia/Tokyo')
-            # Lấy thời gian hiện tại ở Tokyo
-            tokyo_time = datetime.now(tokyo_timezone)
-            # Lấy giờ hiện tại ở Tokyo
-            current_hour = tokyo_time.hour
-            # Định dạng AM/PM
-            am_pm = "AM" if current_hour < 12 else "PM"
-            # Chuyển đổi giờ sang định dạng 12 giờ
-            if current_hour > 12:
-                current_hour -= 12
-            elif current_hour == 0:
-                current_hour = 12
-            time1 = current_time.strftime("%H:%M:%S")
-            text66 = f'{am_pm}'
-	    
-            st.title("BVBSと加工帳のPDFを作成する")
-            #st.markdown('<h1 style="text-align: center;">BVBSと加工帳のPDFを作成する</h1>', unsafe_allow_html=True)
-            # Tạo hai cột với tỷ lệ chiều rộng 2:1
-            col11, col22, col33, col44 = st.columns([1, 1, 1, 1])
+            if selected_option == "AM":
+                text66 = "AM"
+            else:
+                text66 = "PM"
             
             if len(selected_rows):
                 if col22.button("BVBS.PDFを作成する"):
