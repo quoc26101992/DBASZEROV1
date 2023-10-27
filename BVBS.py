@@ -1138,17 +1138,18 @@ def main():
                         exec(code_string)
 
                         if 0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="-90" and w4=="90" and w5=="0":
-                            c.drawString(rect_x_position + 118, rect_y_position + 105, l1) #phải trên
-                            c.drawString(rect_x_position + 117, rect_y_position + 75, l2) #phải
-                            c.drawCentredString(rect_x_position + 97, rect_y_position + 43, l3) #trên
-                            c.drawRightString(rect_x_position + 66, rect_y_position + 75, l4)  #trái 
-                            c.drawRightString(rect_x_position + 62, rect_y_position + 105, l5) #phải trên
-                        else:
                             c.drawString(rect_x_position + 118, rect_y_position + 105, l5) #phải trên
                             c.drawString(rect_x_position + 117, rect_y_position + 75, l4) #phải
                             c.drawCentredString(rect_x_position + 97, rect_y_position + 43, l3) #trên
                             c.drawRightString(rect_x_position + 66, rect_y_position + 75, l2)  #trái 
                             c.drawRightString(rect_x_position + 62, rect_y_position + 105, l1) #phải trên
+                        else:
+                            c.drawString(rect_x_position + 118, rect_y_position + 105, l1) #phải trên
+                            c.drawString(rect_x_position + 117, rect_y_position + 75, l2) #phải
+                            c.drawCentredString(rect_x_position + 97, rect_y_position + 43, l3) #trên
+                            c.drawRightString(rect_x_position + 66, rect_y_position + 75, l4)  #trái 
+                            c.drawRightString(rect_x_position + 62, rect_y_position + 105, l5) #phải trên
+                            
 
             #TH54   BF2D@Hj@r@i@p1@l2031@n1@e1.14@d10@gSD295@s30@v@a@Gl200@w90@l460@w90@l830@w79@l460@w-79@l150@w0@C75@
                     elif count_l == 6 and count_w == 5 and (0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="-90" and w4=="-90" and w5=="0" or w1=="90" and w2=="90" and 0 < int(w3) < 90 and -90 < int(w4) < 0  and w5=="0"):
@@ -1251,7 +1252,7 @@ def main():
                             c.drawRightString(rect_x_position + 68, rect_y_position + 105, l1) #phải trên
 
             #TH50   BF2D@Hj@r@i@p1@l1740@n3@e2.92@d10@gSD295@s30@v@a@Gl87@w180@l450@w90@l650@w90@l450@w90@l150@w0@C76@
-                    elif count_l == 6 and count_w == 5 and (w1=="180" and w2=="90" and w3=="90" and w4=="90" and w5=="0" or w1=="90" and w2=="-90" and w3=="-90" and w4=="-180" and w5=="0"):
+                    elif count_l == 6 and count_w == 5 and (w1=="180" and w2=="90" and w3=="90" and w4=="90" and w5=="0" or w1=="90" and w2=="90" and w3=="90" and w4=="180" and w5=="0"):
 
                         value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
@@ -1347,7 +1348,7 @@ def main():
                             c.drawCentredString(rect_x_position + 105, rect_y_position + 43, l2) #trên
                             c.drawRightString(rect_x_position + 55, rect_y_position + 70, l1)  #trái 
 
-            #TH46   BF2D@Hj@r@i@p1@l1460@n1@e0.82@d10@gSD295@s30@v@a@Gl87@w180@l400@w90@l600@w90@l400@w0@C67@
+            #TH46    BF2D@Hj@r@i@p1@l1373@n1@e0.77@d10@gSD295@s30@v@a@Gl100@w135@l400@w90@l500@w76@l410@w0@C86@
                     elif count_l == 5 and count_w == 4 and (90 < int(w1) < 180 and w2 =="90" and 0 < int(w3) < 90 and w4 =="0" or 0 < int(w1) < 90 and w2 =="90" and 90 < int(w3) < 180 and w4=="0"):
 
                         value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
@@ -1404,7 +1405,7 @@ def main():
 
                         exec(code_string)
 
-                        if 90 < int(w1) < 180 and w2 =="90" and w3=="90" and w4 =="0" or w1=="90" and w2 =="90":
+                        if 90 < int(w1) < 180 and w2 =="90" and w3=="90" and w4 =="0":
                             c.drawRightString(rect_x_position + 130, rect_y_position + 94, l1) #phải trên
                             c.drawString(rect_x_position + 143, rect_y_position + 75, l2) #phải
                             c.drawCentredString(rect_x_position + 90, rect_y_position + 43, l3) #trên
@@ -1428,7 +1429,7 @@ def main():
 
                         exec(code_string)
 
-                        if 0 < int(w1) < 90 and w2 =="-90" and w3=="-90" and w4 =="0" or w1=="90" and w2 =="90":
+                        if 0 < int(w1) < 90 and w2 =="-90" and w3=="-90" and w4 =="0":
                             c.drawString(rect_x_position + 120, rect_y_position + 62, l1)  
                             c.drawCentredString(rect_x_position + 78, rect_y_position + 52, l2) 
                             c.drawRightString(rect_x_position + 41, rect_y_position + 80, l3) 
@@ -1451,7 +1452,7 @@ def main():
 
                         exec(code_string)
 
-                        if 0 < int(w1) < 90 and w2 =="90" and w3=="90" and w4 =="0" or w1=="90" and w2 =="90":
+                        if 0 < int(w1) < 90 and w2 =="90" and w3=="90" and w4 =="0":
                             c.drawRightString(rect_x_position + 120, rect_y_position + 65, l1)  
                             c.drawString(rect_x_position + 58, rect_y_position + 56, l2) 
                             c.drawRightString(rect_x_position + 41, rect_y_position + 75, l3) 
@@ -1474,7 +1475,7 @@ def main():
 
                         exec(code_string)
 
-                        if 0 < int(w1) < 90 and 0 < int(w2) < 90 and w3=="90" and w4 =="0" or w1=="90":
+                        if 0 < int(w1) < 90 and 0 < int(w2) < 90 and w3=="90" and w4 =="0":
                             c.drawString(rect_x_position + 98, rect_y_position + 43, l1)  
                             c.drawString(rect_x_position + 58, rect_y_position + 64, l2) 
                             c.drawRightString(rect_x_position + 41, rect_y_position + 82, l3) 
@@ -1498,7 +1499,7 @@ def main():
 
                         exec(code_string)
 
-                        if 90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="90" and w4 =="0" or w1=="90":
+                        if 90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="90" and w4 =="0":
                             c.drawString(rect_x_position + 142, rect_y_position + 75, l1) 
                             c.drawRightString(rect_x_position + 100, rect_y_position + 98, l2)  
                             c.drawRightString(rect_x_position + 41, rect_y_position + 69, l3) 
@@ -1521,7 +1522,7 @@ def main():
 
                         exec(code_string)
 
-                        if 90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="-90" and w4 =="0" or w1=="90":
+                        if 90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="-90" and w4 =="0":
                             c.drawString(rect_x_position + 142, rect_y_position + 75, l1) 
                             c.drawRightString(rect_x_position + 117, rect_y_position + 98, l2)  
                             c.drawString(rect_x_position + 84, rect_y_position + 69, l3) 
@@ -1578,7 +1579,7 @@ def main():
                             c.drawCentredString(rect_x_position + 76, rect_y_position + 42, l2) 
                             c.drawRightString(rect_x_position + 47, rect_y_position + 76, l1)  
 
-            #TH36   BF2D@Hj@r@i@p1@l1238@n1@e1.23@d13@gSD295@s39@v@a@Gl400@w66@l300@w-66@l250@w-59@l325@w0@C88@
+            #TH36   BF2D@Hj@r@i@p1@l1187@n1@e1.18@d13@gSD295@s39@v@a@Gl400@w66@l308@w-66@l250@w-90@l280@w0@C78@
                     elif count_l == 5 and count_w == 4 and (0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="-90" and w4 =="0" or w1=="90" and 0 < int(w2) < 90 and -90 < int(w3) < 0 and w4=="0"):
 
                         value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
@@ -2554,17 +2555,18 @@ def main():
                         exec(code_string2)
                         p.setFont('MSMINCHO.TTF', 10)
                         if 90 < int(w1) < 180 and 0 < int(w2) < 90 and 0 < int(w3) < 90 and -90 < int(w4) < 0 and w5=="0":
-                            p.drawRightString(14.15 * 28.3465, (y1 + 1.54) * 28.3465 , l1) #p.drawRightString
-                            p.drawRightString(14.17 * 28.3465, (y1 + 0.8) * 28.3465 , l2) #p.drawCentredString
-                            p.drawCentredString(14.8 * 28.3465, (y1 + 0.15) * 28.3465 , l3)
-                            p.drawString(15.55 * 28.3465, (y1 + 0.84) * 28.3465 , l4) #p.drawCentredString
-                            p.drawString(15 * 28.3465, (y1 + 1.54) * 28.3465 , l5) #p.drawRightString
-                        else:
                             p.drawRightString(14.15 * 28.3465, (y1 + 1.54) * 28.3465 , l5) #p.drawRightString
                             p.drawRightString(14.17 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #p.drawCentredString
                             p.drawCentredString(14.8 * 28.3465, (y1 + 0.15) * 28.3465 , l3)
                             p.drawString(15.55 * 28.3465, (y1 + 0.84) * 28.3465 , l2) #p.drawCentredString
                             p.drawString(15 * 28.3465, (y1 + 1.54) * 28.3465 , l1) #p.drawRightString
+                        else:
+                            p.drawRightString(14.15 * 28.3465, (y1 + 1.54) * 28.3465 , l1) #p.drawRightString
+                            p.drawRightString(14.17 * 28.3465, (y1 + 0.8) * 28.3465 , l2) #p.drawCentredString
+                            p.drawCentredString(14.8 * 28.3465, (y1 + 0.15) * 28.3465 , l3)
+                            p.drawString(15.55 * 28.3465, (y1 + 0.84) * 28.3465 , l4) #p.drawCentredString
+                            p.drawString(15 * 28.3465, (y1 + 1.54) * 28.3465 , l5) #p.drawRightString
+                            
     #TH52   BF2D@Hj@r@i@p1@l1770@n2@e1.98@d10@gSD295@s30@v@a@Gl87@w180@l450@w90@l650@w90@l450@w-90@l180@w0@C85@
                     elif count_l == 6 and count_w == 5 and (w1=="180" and w2=="90" and w3=="90" and w4=="-90" and w5=="0" or w1=="90" and w2=="-90" and w3=="-90" and w4=="-180" and w5=="0"):
                         img_path = image_list[52]
@@ -2600,7 +2602,7 @@ def main():
                             p.drawString(15.65 * 28.3465, (y1 + 0.84) * 28.3465 , l4) #p.drawCentredString
                             p.drawRightString(15.35 * 28.3465, (y1 + 1.25) * 28.3465 , l5) #p.drawRightString
     #TH50   BF2D@Hj@r@i@p1@l1740@n3@e2.92@d10@gSD295@s30@v@a@Gl87@w180@l450@w90@l650@w90@l450@w90@l150@w0@C76@
-                    elif count_l == 6 and count_w == 5 and (w1=="180" and w2=="90" and w3=="90" and w4=="90" and w5=="0" or w1=="90" and w2=="-90" and w3=="-90" and w4=="-180" and w5=="0"):
+                    elif count_l == 6 and count_w == 5 and (w1=="180" and w2=="90" and w3=="90" and w4=="90" and w5=="0" or w1=="90" and w2=="90" and w3=="90" and w4=="180" and w5=="0"):
                         img_path = image_list[50]
                         exec(code_string2)
                         p.setFont('MSMINCHO.TTF', 10)
@@ -2665,7 +2667,7 @@ def main():
                             p.drawCentredString(14.89 * 28.3465, (y1 + 0.14) * 28.3465 , l2)
                             p.drawString(15.65 * 28.3465, (y1 + 0.84) * 28.3465 , l3) #p.drawCentredString
                             p.drawRightString(15.35 * 28.3465, (y1 + 1.1) * 28.3465 , l4) #p.drawRightString
-    #TH46   BF2D@Hj@r@i@p1@l1460@n1@e0.82@d10@gSD295@s30@v@a@Gl87@w180@l400@w90@l600@w90@l400@w0@C67@
+    #TH46   BF2D@Hj@r@i@p1@l1373@n1@e0.77@d10@gSD295@s30@v@a@Gl100@w135@l400@w90@l500@w76@l410@w0@C86@
                     elif count_l == 5 and count_w == 4 and (90 < int(w1) < 180 and w2 =="90" and 0 < int(w3) < 90 and w4 =="0" or 0 < int(w1) < 90 and w2 =="90" and 90 < int(w3) < 180 and w4=="0"):
                         img_path = image_list[46]
                         exec(code_string2)
@@ -2819,7 +2821,7 @@ def main():
                             p.drawString(14.9 * 28.3465, (y1 + 0.8) * 28.3465 , l3) #p.drawCentredString
                             p.drawCentredString(14.3 * 28.3465, (y1 + 0.15) * 28.3465 , l2)
                             p.drawRightString(13.72 * 28.3465, (y1 + 0.73) * 28.3465 , l1) #p.drawCentredString
-    #TH36   BF2D@Hj@r@i@p1@l1238@n1@e1.23@d13@gSD295@s39@v@a@Gl400@w66@l300@w-66@l250@w-59@l325@w0@C88@
+    #TH36    BF2D@Hj@r@i@p1@l1187@n1@e1.18@d13@gSD295@s39@v@a@Gl400@w66@l308@w-66@l250@w-90@l280@w0@C78@
                     elif count_l == 5 and count_w == 4 and (0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="-90" and w4 =="0" or w1=="90" and 0 < int(w2) < 90 and -90 < int(w3) < 0 and w4=="0"):
                         img_path = image_list[36]
                         exec(code_string2)
@@ -3351,7 +3353,7 @@ def main():
             text11 = colA1.text_input("工事名", "某工事名")
             #text11 = st.text_input("工事名", "某工事名")
             text22 = colA2.text_input("協力会社", "株式会社ABC")
-            text33 = colA3.text_input("鉄筋メーカー", "業株式会社")
+            text33 = colA3.text_input("鉄筋メーカー", "某会社")
             text44 = colA4.text_input("使用場所", "Y1-X1 柱")
             text55 = colA5.text_input("運搬日:", formatted_time1)
 
@@ -3373,6 +3375,7 @@ def main():
             #st.markdown('<h1 style="text-align: center;">BVBSと加工帳のPDFを作成する</h1>', unsafe_allow_html=True)
             # Tạo hai cột với tỷ lệ chiều rộng 2:1
             col11, col22, col33, col44 = st.columns([1, 1, 1, 1])
+            
             if len(selected_rows):
                 if col22.button("BVBS.PDFを作成する"):
                     pdf_buffer = create_pdf(df_bvbs, image_list, text11, text22, text33, text44)
