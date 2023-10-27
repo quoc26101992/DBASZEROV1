@@ -873,17 +873,24 @@ def main():
             # Tạo DataFrame mới từ từ điển extracted_numbers và danh sách z_values
             df_extracted = pd.DataFrame(extracted_numbers)
             # Thêm cột mới "z" vào DataFrame với giá trị thứ tự
-            df_extracted.insert(df_extracted.columns.get_loc("l"), "番号", z_values)
+            column_SD = df_extracted['SD']
+            SD = "SD"
+            column_SD_with_prefix = SD + column_SD
+            # Cập nhật cột 'l' trong DataFrame
+            df_extracted['SD'] = column_SD_with_prefix
+
+            df_extracted.insert(df_extracted.columns.get_loc("d"), "番号", z_values)
             
             df_extracted.insert(df_extracted.columns.get_loc('s') + 1, 'BVBS', df)
             
             # Đổi tên các cột
             new_column_names = {
-                'l': '径',
-                'n': '切寸',
-                'e': '数量',
-                'd': '材質',
-                'SD': '重量(kg)',
+            
+                'd': '径',
+                'l': '切寸',
+                'n': '数量',
+                'SD': '材質',
+                'e': '重量(kg)',
                 's': 'ピン'
             }
             df_extracted.rename(columns=new_column_names, inplace=True)
