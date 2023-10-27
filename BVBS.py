@@ -834,7 +834,7 @@ def main():
                     st.markdown('<span style="color: red; font-size: 15px;"> 左右反転後: </span>' + colored_text, unsafe_allow_html=True)
 
             st.write("""------------------------------------------------------""")
-            st.title("選ぶ鉄筋")
+            st.title("印刷範囲の選択")
 #集計表     ############################################################################################
             # Biểu thức chính quy để trích xuất các số
             regex_patterns = {
