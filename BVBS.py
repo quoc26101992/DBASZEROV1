@@ -3366,7 +3366,13 @@ def main():
                 text66 = "AM"
             else:
                 text66 = "PM"
-            
+
+            # Tạo PDF khi người dùng nhấn nút "Tạo PDF"
+            st.write("""------------------------------------------------------""")
+            st.title("BVBSと加工帳のPDFを作成する")
+            #st.markdown('<h1 style="text-align: center;">BVBSと加工帳のPDFを作成する</h1>', unsafe_allow_html=True)
+            # Tạo hai cột với tỷ lệ chiều rộng 2:1
+            col11, col22, col33, col44 = st.columns([1, 1, 1, 1])
             if len(selected_rows):
                 if col22.button("BVBS.PDFを作成する"):
                     pdf_buffer = create_pdf(df_bvbs, image_list, text11, text22, text33, text44)
