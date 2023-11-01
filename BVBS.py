@@ -3420,7 +3420,7 @@ def main():
             
             if len(selected_rows):
                 if col22.button("エフ.PDFを作成"):
-                    pdf_buffer = create_pdf(dfs, df_bvbs, image_list, text11, text22, text33, text44)
+                    pdf_buffer = create_pdf(dfs, image_list, text11, text22, text33, text44)
                     col22.download_button("Download エフ.pdf", pdf_buffer, file_name="エフ.pdf", key="download_pdf")
 
             if len(selected_rows):
