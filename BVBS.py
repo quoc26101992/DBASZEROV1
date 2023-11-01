@@ -194,7 +194,7 @@ for x_cm, y_cm, width_cm, height_cm in rectangles:
     formatted_time = current_time.strftime("%Y/%m/%d")
     #p.drawString(13.2 * 28.3465, 28.9 * 28.3465, f"作成日: {formatted_time}")
 
-    so_hang = len(dfs['BVBS'])
+    so_hang = len(dfsnet['BVBS'])
     KK = so_hang / 14
     if KK % 2 == 0:
         p.drawRightString(20.3 * 28.3465, 28.9 * 28.3465, f"作成日: {formatted_time}" "   " f"ページ: {K}/{int(KK)}")
@@ -776,7 +776,7 @@ def main():
             shif_2= df_2['plus'].shift(periods=-1, fill_value=0)
             df_2.loc[:, 'LENGTH'] = round(df_2_length+shif_1+shif_2)
             df_2.loc[:, 'length'] = round(df_2_length+shif_1+shif_2)
-            
+
             st.subheader(' ', divider='rainbow')
             col1, col2, col3 = st.columns(3)
 
@@ -1046,7 +1046,7 @@ def main():
                 #df = pd.DataFrame(df_bvbs)
                 #selected_column = 'BVBS'
                 
-                for value001 in dfs["BVBS"]:
+                for value001 in dfsnet["BVBS"]:
                     # Sử dụng biểu thức chính quy để tìm số sau "SD" đến ký tự "@"
                     数量 = r'SD(\d+\.\d+|\d+)@'
                     # Tìm tất cả các kết quả phù hợp với biểu thức chính quy
@@ -2471,7 +2471,7 @@ def main():
                     exec(code_string1)
                     
                 # Xét chuỗi BBVS
-                for value001 in dfs["BVBS"]:
+                for value001 in dfsnet["BVBS"]:
                     #st.write(value001)
                     value001_str = str(value001)
                     
