@@ -696,16 +696,11 @@ def main():
     ## Add File uploader
     st.header('モデルのアップロード')
     st.file_uploader("IFCデータを選択してください", type=['ifc'], key="uploaded_file", on_change=callback_upload)
-
-    ## Add File Name and Success Message
-    if "is_file_loaded" in session and session["is_file_loaded"]:
-        st.success(f'✔️ ファイルのアップロードができました!')
-          
     if not "IsDataFrameLoaded" in session:
         initialize_session_state()
     if not session.IsDataFrameLoaded:
         load_data()
-    if session.IsDataFrameLoaded:   
+    if session.IsDataFrameLoaded:  
         
             ## DATAFRAME REVIEW           
 
@@ -737,7 +732,6 @@ def main():
             df_length=DF_length.loc[DF.index.repeat(df_1.CountSegments)].reset_index(drop=True)
             df_dropcol1=df_2.drop(['Id','曲線 Center_x','曲線 Center_y','曲線 Center_z','曲線 半径','曲げ角度w1','曲げ角度w2','w2-w1(1)','w2-w1(2)'], axis=1)
             df_dropcol2=df_2.drop(['Id','直線 Point1_x','直線 Point1_y','直線 Point1_z','直線 Point2_x','直線 Point2_y','直線 Point2_z','曲線 半径','曲げ角度w1','曲げ角度w2','w2-w1(1)','w2-w1(2)'], axis=1)
-            
             df_downrow1=df_dropcol1.shift(periods=1, fill_value=0)
             df_downrow2=df_dropcol2.shift(periods=2, fill_value=0)
             df_downrow3=df_dropcol1.shift(periods=3, fill_value=0)
@@ -780,9 +774,61 @@ def main():
             df_2.loc[df_2_w2w1==00, 'plus'] = 0
             shif_1= df_2['plus'].shift(periods=1, fill_value=0)
             shif_2= df_2['plus'].shift(periods=-1, fill_value=0)
+            df_2.loc[:, 'LENGTH'] = round(df_2_length+shif_1+shif_2)
             df_2.loc[:, 'length'] = round(df_2_length+shif_1+shif_2)
+            
+            st.subheader(' ', divider='rainbow')
+            col1, col2, col3 = st.columns(3)
+
+            with col1:
+                st.header("集計表")
+
+            with col2:
+                with st.expander("丸めの設定"):
+                    marume_ON = st.toggle('丸め ON/OFF')
+                    if marume_ON:
+                        
+                        col2_1, col2_2 = st.columns(2)
+                        with col2_1:
+                            marume_mm = st.radio("丸め単位",["5mm", "10mm"],index=None)
+                        with col2_2:
+                            marume_type = st.radio("丸め種類",["切り捨て", "切り上げ", "四捨五入"],index=None)
+                        if marume_ON and marume_type == "四捨五入" and marume_mm == "5mm":
+                            df_2['length'] = ((df_2['LENGTH']*2).round(-1))/2
+                            st.success('丸め単位 : 5mm , 丸め種類 : 四捨五入 を設定しました。')
+                            st.write('例 :  1823 :arrow_right: 1825')
+                        elif marume_ON and marume_type == "切り捨て" and marume_mm == "5mm":
+                            df_2['length'] = (((df_2['LENGTH']*2)//10)*10)/2
+                            st.success('丸め単位 : 5mm , 丸め種類 : 切り捨て を設定しました。')
+                            st.write('例 :  1823 :arrow_right: 1820')
+                        elif marume_ON and marume_type == "切り上げ" and marume_mm == "5mm":
+                            df_2['length'] = ((((df_2['LENGTH']*2) / 10).apply(np.ceil)) * 10)/2
+                            st.success('丸め単位 : 5mm , 丸め種類 : 切り上げ を設定しました。')
+                            st.write('例 :  1823 :arrow_right: 1825')
+                        elif marume_ON and marume_type == "四捨五入" and marume_mm == "10mm":
+                            df_2['length'] = df_2['LENGTH'].round(-1)
+                            st.success('丸め単位 : 10mm , 丸め種類 : 四捨五入 を設定しました。')
+                            st.write('例 :  1823 :arrow_right: 1820')
+                        elif marume_ON and marume_type == "切り捨て" and marume_mm == "10mm":
+                            df_2['length'] = df_2['LENGTH']//10*10
+                            st.success('丸め単位 : 10mm , 丸め種類 : 切り捨て を設定しました。')
+                            st.write('例 :  1823 :arrow_right: 1820')
+                        elif marume_ON and marume_type == "切り上げ" and marume_mm == "10mm":
+                            df_2['length'] = (df_2['LENGTH'] / 10).apply(np.ceil) * 10
+                            st.success('丸め単位 : 10mm , 丸め種類 : 切り上げ を設定しました。')
+                            st.write('例 :  1823 :arrow_right: 1830')
+
+            with col3:
+                with st.expander("セルの編集モードの設定"):
+                    edit_ON = st.toggle('セルのロックを解除する')
+                    if edit_ON:
+                        st.success('集計表のセールが編集できるようになりました。')
+                    else: 
+                        st.write('デフォルト : セルの編集が不可能の状態になっています。')
             df_2.loc[df_2['length']==0, 'l and w'] = '@w'+df_2['check4'].astype(str).str.replace('.0', '', regex=False)+'@'
             df_2.loc[df_2['length']!=0, 'l and w'] = 'l'+df_2['length'].astype(str).str.replace('.0', '', regex=False)
+            df_2.loc[df_2['LENGTH']==0, 'L AND W'] = '@w'+df_2['check4'].astype(str).str.replace('.0', '', regex=False)+'@'
+            df_2.loc[df_2['LENGTH']!=0, 'L AND W'] = 'l'+df_2['LENGTH'].astype(str).str.replace('.0', '', regex=False)
             shif_s= df_2['曲線 半径'].shift(periods=-2, fill_value=0)
             df_2.loc[:, 'help s'] = shif_s
             df_2.loc[(df_2_w2w1!=0) & (df_2['help s']==0) , 's'] = df_2['DIAMETER'].astype(str).str.replace('.0', '', regex=False)
@@ -794,7 +840,9 @@ def main():
             df_2.loc[:, '直径'] = df_kei
             df_2.loc[:, '切寸'] = df_length
             df_concate=df_2.groupby(['help id','直径','切寸'], sort=False)[['l and w','s']].agg(''.join).reset_index()
+            df_CONCATE=df_2.groupby(['help id','直径','切寸'], sort=False)[['L AND W','s']].agg(''.join).reset_index()
             df_last=df_concate.groupby(['直径','切寸','l and w','s'])['l and w'].size().reset_index(name='数量')
+            df_LAST=df_CONCATE.groupby(['直径','切寸','L AND W','s'])['L AND W'].size().reset_index(name='数量')
             df_last_copy1 = pd.DataFrame({'鉄筋': [6, 10, 13, 16, 19,22,25,29,32,35,38,41,51],
                    'kg per m': [0.249, 0.56, 0.995, 1.56, 2.25, 3.04, 3.98, 5.04, 6.23, 7.51, 8.95, 10.5, 15.9]})
             dictionary1 = dict(zip(df_last_copy1['鉄筋'],df_last_copy1['kg per m']))
@@ -804,118 +852,77 @@ def main():
             dictionary2 = dict(zip(df_last_copy2['鉄筋'],df_last_copy2['材質']))
             df_last['材質'] = df_last['直径'].map(dictionary2)
             df_last['番号'] = (df_last.index + 1)
+            df_last['番号'] = "No." + df_last['番号'].astype(str)
+            
             df_last['private'] = "@w0@C"
             df_last.loc[df_last['l and w'].str.contains('threeD')==True, 'private'] = "@w0@PtSEGOPT;o0;o1;o1;o0;o0@C"
-            df_last['searchIP'] = "BF2D@Hj@r@i@p"+df_last['番号'].astype(str)+"@l"+df_last['切寸'].astype(str)+"@n"+df_last['数量'].astype(str)+"@e"+df_last['重量(kg)'].astype(str)+"@d"+df_last['直径'].astype(str).str.replace('.0', '', regex=False)+"@g"+df_last['材質']+"@s"+df_last['s']+"@v@a@G"+df_last['l and w'].str.replace('threeD', '', regex=False)+df_last['private']
-            df_last['IP'] = [96-(sum([ord(ele) for ele in sub]))%32 for sub in df_last['searchIP']]
-            df_last['BVBS'] = df_last['searchIP'] + df_last['IP'].astype(str) + "@"
+            df_last['count'] = df_last['l and w'].str.count("w")
+            max_count = df_last['count'].max()
+            max_count_plus2 = max_count + 2
+            for i in range(1,max_count_plus2):
+                df_last['l'+str(i)] = df_last['l and w'].str.split("l").str[i]
+                df_last['l'+str(i)] = df_last['l'+str(i)].str.split("@").str[0]
+                df_last['l'+str(i)].fillna(0,inplace=True)
+            df_list_l = df_last.iloc[:,-(max_count+1):]
+            df_list_l = df_list_l.astype(int)
+            df_sum_l = df_list_l.sum(axis = 1)
+
+            for i in range(1,max_count_plus2):
+                df_LAST['L'+str(i)] = df_LAST['L AND W'].str.split("l").str[i]
+                df_LAST['L'+str(i)] = df_LAST['L'+str(i)].str.split("@").str[0]
+                df_LAST['L'+str(i)].fillna(0,inplace=True)
+            df_list_L = df_LAST.iloc[:,-(max_count+1):]
+            df_list_L = df_list_L.astype(int)
+            df_sum_L = df_list_L.sum(axis = 1)
+            df_delta = df_sum_l - df_sum_L
+            df_last['切寸'] = df_last['切寸'].astype(int) +  df_delta.astype(int)
+            if marume_ON and marume_type == "四捨五入" and marume_mm == "5mm":
+                df_last['切寸'] = ((df_last['切寸']*2).round(-1))/2 
+            elif marume_ON and marume_type == "切り捨て" and marume_mm == "5mm":
+                df_last['切寸'] = (((df_last['切寸']*2)//10)*10)/2
+            elif marume_ON and marume_type == "切り上げ" and marume_mm == "5mm":
+                df_last['切寸'] = ((((df_last['切寸']*2) / 10).apply(np.ceil)) * 10)/2
+            elif marume_ON and marume_type == "四捨五入" and marume_mm == "10mm":
+                df_last['切寸'] = df_last['切寸'].round(-1)
+            elif marume_ON and marume_type == "切り捨て" and marume_mm == "10mm":
+                df_last['切寸'] = df_last['切寸']//10*10
+            elif marume_ON and marume_type == "切り上げ" and marume_mm == "10mm":
+                df_last['切寸'] = (df_last['切寸'] / 10).apply(np.ceil) * 10
+            
             df_last['径'] = "D"+df_last['直径'].astype(str).str.replace('.0', '', regex=False)
-            
-            df_last['選択 / 非選択'] = "" #24/10
-            
-            df_bvbs = df_last.loc[:, ["BVBS"]]
-            st.write("""------------------------------------------------------""")
-            st.title("BVBS")
-            st.info('鉄筋を左右反転にしたい場合は、該当箇所のチェックボックスにチェックを入れてください', icon="ℹ️")
-            #st.write(df_last) #09/08      
-            #st.write(df_bvbs)
-####_鉄筋を左右反転_################################################################################
-            df = pd.DataFrame(df_bvbs)
-            selected_column = 'BVBS'
-            zz = 0
 
-            for value000 in df[selected_column]:
-                zz += 1
-                is_checked = st.checkbox(f" No.{zz} : {value000}")
-                if is_checked:
-                    value002 = process_input_string(value000)
-                    df.at[zz - 1, 'BVBS'] = value002
-                    colored_text = change_color(value002)
-                    st.markdown('<span style="color: red; font-size: 15px;"> 左右反転後: </span>' + colored_text, unsafe_allow_html=True)
-
-            st.write("""------------------------------------------------------""")
-            st.title("印刷範囲の選択")
-#集計表     ############################################################################################
-            # Biểu thức chính quy để trích xuất các số
-            regex_patterns = {
-                'd': r'd(\d+(?:\.\d+)?)@',
-                'l': r'l(\d+(?:\.\d+)?)@',
-                'n': r'n(\d+(?:\.\.\d+)?)@',
-                'SD': r'SD(\d+(?:\.\d+)?)@',
-                'e': r'e(\d+(?:\.\d+)?)@',
-                's': r's(\d+(?:\.\d+)?)@'
-            }
-
-            # Tạo từ điển để lưu các số vào các biến tương ứng
-            extracted_numbers = {key: [] for key in regex_patterns}
-
-            # Tạo danh sách để lưu giá trị biến z
-            z_values = []
-            #for value001 in df1[selected_column1]:
-                #st.write(value001)
-                # Tạo từ điển để lưu các số vào các biến tương ứng
-            for line_number, value001 in enumerate(df[selected_column], start=1):
-                z_values.append(f"No.{line_number}")  # Thêm "No." vào biến đếm
-                for key, pattern in regex_patterns.items():
-                    if key == 'l':
-                        matches = re.search(pattern, value001)
-                        if matches:
-                            extracted_numbers[key].append(matches.group(1))
-                        else:
-                            extracted_numbers[key].append('0')  # Thêm giá trị mặc định '0'
-                    else:
-                        matches = re.findall(pattern, value001)
-                        if matches:
-                            extracted_numbers[key].extend(matches)
-                        else:
-                            extracted_numbers[key].append('0')  # Thêm giá trị mặc định '0'
-
-            # Tạo DataFrame mới từ từ điển extracted_numbers và danh sách z_values
-            df_extracted = pd.DataFrame(extracted_numbers)
-            # Thêm cột mới "z" vào DataFrame với giá trị thứ tự
-            df_extracted.insert(df_extracted.columns.get_loc("l") - 1, "番号", z_values)
-            column_SD = df_extracted['SD']
-            SD = "SD"
-            column_SD_with_prefix = SD + column_SD
-            # Cập nhật cột 'l' trong DataFrame
-            df_extracted['SD'] = column_SD_with_prefix
-            df_extracted.insert(df_extracted.columns.get_loc('s') + 1, 'BVBS', df)
+            df_table0 = df_last.loc[:, ["番号","径","切寸","数量","材質","重量(kg)","s","l and w","private"]]
+            left_part = df_table0.iloc[:, :3]
+            right_part = df_table0.iloc[:, 3:]
             
-            # Đổi tên các cột
-            new_column_names = {
-            
-                'd': '径',
-                'l': '切寸',
-                'n': '数量',
-                'SD': '材質',
-                'e': '重量(kg)',
-                's': 'ピン'
-            }
-            df_extracted.rename(columns=new_column_names, inplace=True)
-###################################################################################################
-            
-            
-            ob = GridOptionsBuilder.from_dataframe(df_extracted)
+            df_table1 = pd.concat([left_part, df_list_l, right_part], axis=1)
+
+#############################
+            ob = GridOptionsBuilder.from_dataframe(df_table1)
 
             ob.configure_column("番号", headerCheckboxSelection = True)
 
             #  Update selection.
-            ob.configure_selection(selection_mode="multiple", use_checkbox=True, pre_selected_rows=createList(len(df_extracted)))
+            ob.configure_selection(selection_mode="multiple", use_checkbox=True, pre_selected_rows=createList(len(df_table1)))
 
             #  Update row height.
             ob.configure_grid_options(rowHeight=30)
-
+            if edit_ON:
+                ob.configure_default_column(sorteable=False,groupable=True, value=True, enableRowGroup=True, aggFunc='sum', editable=True)
+            else:   ob.configure_default_column(sorteable=False,groupable=True, value=True, enableRowGroup=True, aggFunc='sum', editable=False)
             #  Build the options.
             grid_options = ob.build()
             column_defs = grid_options["columnDefs"]
-            columns_to_hide = ["BVBS"]
+            columns_to_hide = ["重量(kg)","s","l and w","private"]
+
             # update the column definitions to hide the specified columns
             for col in column_defs:
                 if col["headerName"] in columns_to_hide:
                     col["hide"] = True
+
             # Add custom css to center the values
             grid_return = AgGrid(
-                df_extracted,
+                df_table1,
                 grid_options,
                 allow_unsafe_jscode=True,
                 enable_enterprise_modules=False,
@@ -923,29 +930,55 @@ def main():
                 custom_css={'.ag-row .ag-cell': {'display': 'flex',
                                      'justify-content': 'center',
                                      'align-items': 'center'},
-                            '.ag-header-cell-label': {'justify-content': 'center'}}
-            ) 
-
-            # Return selected data  
+                            '.ag-header-cell-label': {'justify-content': 'center'}
+                            }
+            )
             selected_rows = grid_return["selected_rows"]
-            col111, col222, col333, col444 = st.columns(4)
-
+            dfs = pd.DataFrame(selected_rows)
+            #st.write(dfs)
             if len(selected_rows):
+                
+                dfsnet = dfs.drop(columns=['_selectedRowNodeInfo'])
+
+                dfsnet['径'] = dfsnet['径'].astype(str).str.replace('D', '', regex=False)
+                #dfsnet['番号'] = dfsnet['番号'].astype(str).str.replace('No.', '', regex=False) #
+                
+                dfsnet['searchIP'] = "BF2D@Hj@r@i@p"+ (dfsnet.index+1).astype(str)+"@l"+dfsnet['切寸'].astype(str).str.replace('.0', '', regex=False)+"@n"+dfsnet['数量'].astype(str)+"@e"+dfsnet['重量(kg)'].astype(str)+"@d"+dfsnet['径'].astype(str).str.replace('.0', '', regex=False)+"@g"+dfsnet['材質']+"@s"+dfsnet['s']+"@v@a@G"+dfsnet['l and w'].str.replace('threeD', '', regex=False)+dfsnet['private']
+                dfsnet['IP'] = [96-(sum([ord(ele) for ele in sub]))%32 for sub in dfsnet['searchIP']]
+                dfsnet['BVBS'] = dfsnet['searchIP'] + dfsnet['IP'].astype(str) + "@"
+
+                zz = 0
+                st.info('鉄筋を左右反転にしたい場合は、該当箇所のチェックボックスにチェックを入れてください', icon="ℹ️")
+                for value000 in dfsnet['BVBS']:
+                    zz += 1
+                    is_checked = st.checkbox(f" No.{zz} : {value000}")
+                    if is_checked:
+                        value002 = process_input_string(value000)
+                        dfsnet.at[zz - 1, 'BVBS'] = value002
+                        colored_text = change_color(value002)
+                        st.markdown('<span style="color: red; font-size: 15px;"> 左右反転後: </span>' + colored_text, unsafe_allow_html=True)
+                col111, col222, col333, col444 = st.columns(4)
                 ###_#Download Excel_###
-                dfs = pd.DataFrame(selected_rows)
-                dfsnet = dfs.drop(columns=['_selectedRowNodeInfo','BVBS'])
+                #xx = len(selected_rows)
+                #row_count = 0
+                # Duyệt qua từng hàng và đếm
+
+                
+                dfsnet1 = dfsnet.drop(columns=["重量(kg)","s","l and w","private",'searchIP','IP','BVBS'])
+                dfsnet1['径'] = 'D' + dfsnet1['径']
                 buf = io.BytesIO()
-                dfsnet.to_excel(buf, index=False, header=True)
+                dfsnet1.to_excel(buf, index=False, header=True)
                 file_name_0 = download_excel(session.file_name)
                 col222.download_button("Download Excel",buf.getvalue(),file_name_0,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
                 ###_Download BVBS_###
                 #empty_column = pd.DataFrame(columns=[" "], data=[":"] * len(df))
                 #df_BVBS = pd.concat([dfs['番号'],empty_column,dfs['BVBS']], axis=1)
-                df_BVBS = dfs['BVBS']
+                df_BVBS = dfsnet['BVBS']
                 buf = io.BytesIO()
                 df_BVBS.to_csv(buf, index=False, header=False)
                 file_name_3 = download_bvbs(session.file_name)
                 col333.download_button("Download BVBS",buf.getvalue(),file_name_3)
+            
 #####################################################################                                                        ##########################################################
             # Cài đặt phông chữ hỗ trợ tiếng Nhật
             pdfmetrics.registerFont(TTFont('MSMINCHO.TTF', 'form/MSMINCHO.TTF'))  ###########################################################
@@ -1013,7 +1046,7 @@ def main():
                 #df = pd.DataFrame(df_bvbs)
                 #selected_column = 'BVBS'
                 
-                for value001 in dfs['BVBS']:
+                for value001 in dfs["BVBS"]:
                     # Sử dụng biểu thức chính quy để tìm số sau "SD" đến ký tự "@"
                     数量 = r'SD(\d+\.\d+|\d+)@'
                     # Tìm tất cả các kết quả phù hợp với biểu thức chính quy
@@ -2438,7 +2471,7 @@ def main():
                     exec(code_string1)
                     
                 # Xét chuỗi BBVS
-                for value001 in dfs['BVBS']:
+                for value001 in dfs["BVBS"]:
                     #st.write(value001)
                     value001_str = str(value001)
                     
@@ -3352,7 +3385,7 @@ def main():
                 "image/58.png",
                 "image/59.png",
             ]
-            st.write("""------------------------------------------------------""")
+            st.subheader(' ', divider='rainbow')
             st.title("情報を入力する")
             colA1, colA2, colA3, colA4, colA5, colA6 = st.columns(6)
             text11 = colA1.text_input("工事名", "某工事名")
@@ -3361,6 +3394,10 @@ def main():
             text33 = colA3.text_input("鉄筋メーカー", "某会社")
             text44 = colA4.text_input("使用場所", "Y1-X1 柱")
             text55 = colA5.date_input('運搬日')
+            #text55 = colA5.text_input("運搬日:", formatted_time1)
+
+            #date = st.date_input('Date input')
+
 
             x1, y1 = 2, 184
             x2, y2 = 2, 164
@@ -3375,7 +3412,7 @@ def main():
                 text66 = "PM"
 
             # Tạo PDF khi người dùng nhấn nút "Tạo PDF"
-            st.write("""------------------------------------------------------""")
+            st.subheader(' ', divider='rainbow')
             st.title("エフ・加工帳 PDF出力")
             #st.markdown('<h1 style="text-align: center;">BVBSと加工帳のPDFを作成する</h1>', unsafe_allow_html=True)
             # Tạo hai cột với tỷ lệ chiều rộng 2:1
@@ -3383,14 +3420,14 @@ def main():
             
             if len(selected_rows):
                 if col22.button("エフ.PDFを作成"):
-                    pdf_buffer = create_pdf(df_bvbs, image_list, text11, text22, text33, text44)
+                    pdf_buffer = create_pdf(dfs, df_bvbs, image_list, text11, text22, text33, text44)
                     col22.download_button("Download エフ.pdf", pdf_buffer, file_name="エフ.pdf", key="download_pdf")
 
             if len(selected_rows):
                 if col33.button("加工帳.PDFを作成"):
                     pdf_buffer = create_pdf1(text11, text22, text44, text55, text66)
                     col33.download_button("Download 加工帳.pdf", pdf_buffer, file_name="加工帳.pdf", key="download-pdf-button")
-
+            st.subheader(' ', divider='rainbow')
 if __name__ == "__main__":
     session = st.session_state
     main()
