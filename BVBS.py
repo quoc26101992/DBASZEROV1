@@ -892,10 +892,7 @@ def main():
             df_last['径'] = "D"+df_last['直径'].astype(str).str.replace('.0', '', regex=False)
 
             df_table0 = df_last.loc[:, ["番号","径","切寸","数量","材質","重量(kg)","s","l and w","private"]]
-            left_part = df_table0.iloc[:, :3]
-            right_part = df_table0.iloc[:, 3:]
-            
-            df_table1 = pd.concat([left_part, df_list_l, right_part], axis=1)
+            df_table1 = pd.concat([df_table0, df_list_l], axis=1)
 
 #############################
             ob = GridOptionsBuilder.from_dataframe(df_table1)
