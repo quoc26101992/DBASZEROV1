@@ -776,7 +776,6 @@ def main():
             shif_2= df_2['plus'].shift(periods=-1, fill_value=0)
             df_2.loc[:, 'LENGTH'] = round(df_2_length+shif_1+shif_2)
             df_2.loc[:, 'length'] = round(df_2_length+shif_1+shif_2)
-
             st.subheader(' ', divider='rainbow')
             col1, col2, col3 = st.columns(3)
 
@@ -866,6 +865,8 @@ def main():
             df_list_l = df_last.iloc[:,-(max_count+1):]
             df_list_l = df_list_l.astype(int)
             df_sum_l = df_list_l.sum(axis = 1)
+            df_last.loc[:, 'sum_before'] = df_sum_l.astype(str) ###############
+            df_sum_l1 = df_last['sum_before'] ###############
 
             for i in range(1,max_count_plus2):
                 df_LAST['L'+str(i)] = df_LAST['L AND W'].str.split("l").str[i]
@@ -892,7 +893,10 @@ def main():
             df_last['径'] = "D"+df_last['直径'].astype(str).str.replace('.0', '', regex=False)
 
             df_table0 = df_last.loc[:, ["番号","径","切寸","数量","材質","重量(kg)","s","l and w","private"]]
-            df_table1 = pd.concat([df_table0, df_list_l], axis=1)
+            left_part = df_table0.iloc[:, :3]
+            right_part = df_table0.iloc[:, 3:]
+            
+            df_table1 = pd.concat([left_part,right_part,df_sum_l1,df_list_l], axis=1) ###############
 
 #############################
             ob = GridOptionsBuilder.from_dataframe(df_table1)
@@ -910,7 +914,7 @@ def main():
             #  Build the options.
             grid_options = ob.build()
             column_defs = grid_options["columnDefs"]
-            columns_to_hide = ["重量(kg)","s","l and w","private"]
+            columns_to_hide = ["重量(kg)","s","l and w","private","sum_before"] ###############
 
             # update the column definitions to hide the specified columns
             for col in column_defs:
@@ -939,6 +943,23 @@ def main():
 
                 dfsnet['径'] = dfsnet['径'].astype(str).str.replace('D', '', regex=False)
                 #dfsnet['番号'] = dfsnet['番号'].astype(str).str.replace('No.', '', regex=False) #
+                df_l_after = dfsnet.iloc[:,-(max_count+1):] ###############
+                df_sum_before = dfsnet['sum_before']
+                dfsnet.loc[:, 'sum_after'] = df_l_after.astype(int).sum(axis = 1)
+                df_sum_after = dfsnet.loc[:, 'sum_after']
+                df_DELTA = df_sum_after.astype(int) - df_sum_before.astype(int)            
+                dfsnet['切寸'] = dfsnet['切寸'].astype(int) +  df_DELTA.astype(int)
+                dfsnet['重量(kg)'] = round(dfsnet['数量'].astype(int) * dfsnet['切寸'].astype(int) * dfsnet['径'].astype(int).map(dictionary1) / 1000,2) 
+                for i in range(1,max_count_plus2):
+                    dfsnet['l'+str(i)+'help'] = dfsnet['l and w'].str.split("l").str[i]
+                    dfsnet['l'+str(i)+'help'] = dfsnet['l'+str(i)+'help'].str.split("@").str[1]
+                    dfsnet['l'+str(i)+'help'].fillna("",inplace=True)
+                    dfsnet['l'+str(i)+'help'] = "@" + dfsnet['l'+str(i)+'help'] + "@"
+                    dfsnet['l'+str(i)+'help'] = dfsnet['l'+str(i)+'help'].replace("@@","",regex=False)
+                    dfsnet['l'+str(i)+'help'] = "l" + dfsnet['l'+str(i)].astype(str) + dfsnet['l'+str(i)+'help']
+                    dfsnet['l'+str(i)+'help'] = dfsnet['l'+str(i)+'help'].replace("l0","", regex=False)
+                df_l_help = dfsnet.iloc[:,-(max_count+1):]
+                dfsnet['l and w'] = df_l_help.astype(str).values.sum(axis=1) ###############
                 
                 dfsnet['searchIP'] = "BF2D@Hj@r@i@p"+ (dfsnet.index+1).astype(str)+"@l"+dfsnet['切寸'].astype(str).str.replace('.0', '', regex=False)+"@n"+dfsnet['数量'].astype(str)+"@e"+dfsnet['重量(kg)'].astype(str)+"@d"+dfsnet['径'].astype(str).str.replace('.0', '', regex=False)+"@g"+dfsnet['材質']+"@s"+dfsnet['s']+"@v@a@G"+dfsnet['l and w'].str.replace('threeD', '', regex=False)+dfsnet['private']
                 dfsnet['IP'] = [96-(sum([ord(ele) for ele in sub]))%32 for sub in dfsnet['searchIP']]
@@ -961,7 +982,8 @@ def main():
                 # Duyệt qua từng hàng và đếm
 
                 
-                dfsnet1 = dfsnet.drop(columns=["重量(kg)","s","l and w","private",'searchIP','IP','BVBS'])
+                dfsnet1 = dfsnet.drop(columns=["重量(kg)","s","l and w","private",'searchIP','IP','BVBS','sum_before','sum_after']) ###############
+                dfsnet1 = dfsnet1.iloc[:, :11] ###############
                 dfsnet1['径'] = 'D' + dfsnet1['径']
                 buf = io.BytesIO()
                 dfsnet1.to_excel(buf, index=False, header=True)
