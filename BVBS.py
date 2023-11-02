@@ -951,8 +951,8 @@ def main():
                 dfsnet['切寸'] = dfsnet['切寸'].astype(int) +  df_DELTA.astype(int)
                 dfsnet['重量(kg)'] = round(dfsnet['数量'].astype(int) * dfsnet['切寸'].astype(int) * dfsnet['径'].astype(int).map(dictionary1) / 1000,2) 
                 for i in range(1,max_count_plus2):
-                    dfsnet['l'+str(i)+'help'] = dfsnet['l and w'].str.split("l").str[i]
-                    dfsnet['l'+str(i)+'help'] = dfsnet['l'+str(i)+'help'].str.split("@").str[1]
+                    dfsnet['l'+str(i)+'help'] = dfsnet['l and w'].astype(str).str.split("l").str[i]
+                    dfsnet['l'+str(i)+'help'] = dfsnet['l'+str(i)+'help'].astype(str).str.split("@").str[1]
                     dfsnet['l'+str(i)+'help'].fillna("",inplace=True)
                     dfsnet['l'+str(i)+'help'] = "@" + dfsnet['l'+str(i)+'help'] + "@"
                     dfsnet['l'+str(i)+'help'] = dfsnet['l'+str(i)+'help'].replace("@@","",regex=False)
@@ -964,7 +964,13 @@ def main():
                 dfsnet['searchIP'] = "BF2D@Hj@r@i@p"+ (dfsnet.index+1).astype(str)+"@l"+dfsnet['切寸'].astype(str).str.replace('.0', '', regex=False)+"@n"+dfsnet['数量'].astype(str)+"@e"+dfsnet['重量(kg)'].astype(str)+"@d"+dfsnet['径'].astype(str).str.replace('.0', '', regex=False)+"@g"+dfsnet['材質']+"@s"+dfsnet['s']+"@v@a@G"+dfsnet['l and w'].str.replace('threeD', '', regex=False)+dfsnet['private']
                 dfsnet['IP'] = [96-(sum([ord(ele) for ele in sub]))%32 for sub in dfsnet['searchIP']]
                 dfsnet['BVBS'] = dfsnet['searchIP'] + dfsnet['IP'].astype(str) + "@"
+                df切寸= dfsnet['切寸']
 
+
+######################################################
+                # Hàm để lắp lại chuỗi từ các giá trị "l", "n", "e", "d", "SD", "s", "w", và "C"
+
+############################################################
                 zz = 0
                 st.info('鉄筋を左右反転にしたい場合は、該当箇所のチェックボックスにチェックを入れてください', icon="ℹ️")
                 for value000 in dfsnet['BVBS']:
@@ -983,7 +989,8 @@ def main():
 
                 
                 dfsnet1 = dfsnet.drop(columns=["重量(kg)","s","l and w","private",'searchIP','IP','BVBS','sum_before','sum_after']) ###############
-                dfsnet1 = dfsnet1.iloc[:, :11] ###############
+                dfsnet1['番号'] = "No." + (dfsnet.index+1).astype(str)
+                dfsnet1 = dfsnet1.iloc[:, :(5+max_count+1)] ###############
                 dfsnet1['径'] = 'D' + dfsnet1['径']
                 buf = io.BytesIO()
                 dfsnet1.to_excel(buf, index=False, header=True)
