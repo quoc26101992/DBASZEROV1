@@ -154,7 +154,7 @@ for x_cm, y_cm, width_cm, height_cm in rectangles1:
     p.drawImage(img_path, (12.6 + 0.95) * 28.3465  , (y1 + 0.43) * 28.3465  , new_width, new_height, preserveAspectRatio=True)
     # Vẽ các hình chữ nhật khác
     p.rect(x_cm * 28.3465, y1 * 28.3465, width_cm * 28.3465, height_cm * 28.3465)
-    p.setFont('MSMINCHO.TTF', 16) 
+    p.setFont('msmincho.ttc', 16) 
     # Vẽ văn bản tiếng Nhật và tiếng Anh với kích thước font khác nhau
     p.drawCentredString(1.6 * 28.3465, (y1 + 0.7) * 28.3465 , (f'No.{NO1}'))  #1
     p.drawCentredString(3.6 * 28.3465, (y1 + 0.7) * 28.3465 , ("D" + result['d']))  #2 
@@ -170,15 +170,15 @@ code_string1 = """
 for x_cm, y_cm, width_cm, height_cm in rectangles: 
     p.setLineWidth(border_width1)
     p.rect(x_cm * 28.3465, y_cm * 28.3465, width_cm * 28.3465, height_cm * 28.3465) 
-    p.setFont('MSMINCHO.TTF', 20)
+    p.setFont('msmincho.ttc', 20)
     p.drawString(9.3 * 28.3465, 28.7 * 28.3465, "> 加工帳 <")  # 
     y2 = 27.2
-    p.setFont('MSMINCHO.TTF', 10)
+    p.setFont('msmincho.ttc', 10)
     AM = 'AM'
     PM = 'PM'
     x_text44 = (0.7 * 28.3465)
     y_text44 = (28.1 * 28.3465)
-    p.setFont('MSMINCHO.TTF', 12)
+    p.setFont('msmincho.ttc', 12)
     p.drawString(0.7 * 28.3465, 28.9 * 28.3465, f"工事名: {text11}")    #f"工事名: {text11}"
     p.drawString(x_text44, y_text44, f"使用場所: {text44}    運搬日: {text55} {text66}")  #f"使用場所: {text44}"
     p.drawRightString(20.3 * 28.3465, 28.1 * 28.3465, f"協力会社: {text22}") #ナイトウ建商
@@ -194,7 +194,7 @@ for x_cm, y_cm, width_cm, height_cm in rectangles:
     formatted_time = current_time.strftime("%Y/%m/%d")
     #p.drawString(13.2 * 28.3465, 28.9 * 28.3465, f"作成日: {formatted_time}")
 
-    so_hang = len(dfsnet['BVBS'])
+    so_hang = len(dfs['BVBS'])
     KK = so_hang / 14
     if KK % 2 == 0:
         p.drawRightString(20.3 * 28.3465, 28.9 * 28.3465, f"作成日: {formatted_time}" "   " f"ページ: {K}/{int(KK)}")
@@ -204,7 +204,7 @@ for x_cm, y_cm, width_cm, height_cm in rectangles:
         KK += 1
         p.drawRightString(20.3 * 28.3465, 28.9 * 28.3465, f"作成日: {formatted_time}" "   " f"ページ: {K}/{int(KK)}")
 
-    p.setFont('MSMINCHO.TTF', 16)
+    p.setFont('msmincho.ttc', 16)
     p.drawString(1 * 28.3465, y2 * 28.3465, "番号")     # 1
     p.drawString(3 * 28.3465, y2 * 28.3465, "直径")     # 2
     p.drawString(5 * 28.3465, y2 * 28.3465, "切寸")     # 3
@@ -228,25 +228,25 @@ img_y_position = rect_y_position + rect_height / 2 - img_height / 1.1
 c.drawImage(ImageReader(img), img_x_position, img_y_position, width=img_width, height=img_height)
 
 # Thêm văn bản vào
-c.setFont('MSMINCHO.TTF', 10)
+c.setFont('msmincho.ttc', 10)
 c.drawString(rect_x_position + 110, rect_y_position + 149, 'mm'.rjust(5))
 c.drawString(rect_x_position + 165, rect_y_position + 147, '本'.rjust(5))
 if result['s'] == "":
     c.drawString(rect_x_position + 220, rect_y_position + 147, '')
 else:
     c.drawString(rect_x_position + 220, rect_y_position + 147, 'ピン＝')
-c.setFont('MSMINCHO.TTF', 14)
+c.setFont('msmincho.ttc', 14)
 c.drawString(rect_x_position + 110, rect_y_position + 10, "SD" + str(数量1[0]))
 
-c.setFont('MSMINCHO.TTF', 16)
+c.setFont('msmincho.ttc', 16)
 c.drawString(rect_x_position + 15, rect_y_position + 135, "D" + result['d'])
 c.drawRightString(rect_x_position + 125, rect_y_position + 135, result['l'])
 c.drawRightString(rect_x_position + 187, rect_y_position + 135, result['n'])
 
-c.setFont('MSMINCHO.TTF', 10)
+c.setFont('msmincho.ttc', 10)
 c.drawString(rect_x_position + 255, rect_y_position + 147, result['s'])
 
-c.setFont('MSMINCHO.TTF', 11)
+c.setFont('msmincho.ttc', 11)
 """
 ###############################################################################
 def process_data1(value001_str):
@@ -776,7 +776,7 @@ def main():
             shif_2= df_2['plus'].shift(periods=-1, fill_value=0)
             df_2.loc[:, 'LENGTH'] = round(df_2_length+shif_1+shif_2)
             df_2.loc[:, 'length'] = round(df_2_length+shif_1+shif_2)
-            st.subheader(' ', divider='rainbow')
+            
             col1, col2, col3 = st.columns(3)
 
             with col1:
@@ -862,6 +862,7 @@ def main():
                 df_last['l'+str(i)] = df_last['l and w'].str.split("l").str[i]
                 df_last['l'+str(i)] = df_last['l'+str(i)].str.split("@").str[0]
                 df_last['l'+str(i)].fillna(0,inplace=True)
+
             df_list_l = df_last.iloc[:,-(max_count+1):]
             df_list_l = df_list_l.astype(int)
             df_sum_l = df_list_l.sum(axis = 1)
@@ -895,9 +896,29 @@ def main():
             df_table0 = df_last.loc[:, ["番号","径","切寸","数量","材質","重量(kg)","s","l and w","private"]]
             left_part = df_table0.iloc[:, :3]
             right_part = df_table0.iloc[:, 3:]
-            
-            df_table1 = pd.concat([left_part,right_part,df_sum_l1,df_list_l], axis=1) ###############
 
+            df_table1 = pd.concat([left_part,right_part,df_sum_l1,df_list_l], axis=1) ###############
+            dfs = df_table1.copy()
+            A_text = st.text_input("Nhập giá trị A", value="5")
+            # Chuyển giá trị A_text sang kiểu số nguyên
+            A = int(A_text)
+
+            # Tạo DataFrame `dfs` với dữ liệu từ `df_resultl`
+            dfs = df_table1.copy()
+
+            # Tạo hai khung (frames) cho DataFrame `dfs` và DataFrame `df_resultl`
+
+
+            # Kiểm tra xem A có thay đổi
+            if st.button("Cập nhật giá trị A"):
+                A = int(A_text)
+                df_table1["切寸"] = dfs["切寸"]
+                # Cập nhật cột "SD" của dfs bằng giá trị mới
+                dfs["切寸"] = A
+            st.write("DataFrame `dfs`:")
+            st.write(dfs)
+            st.write("DataFrame `df_resultl`:")
+            st.write(df_table1)
 #############################
             ob = GridOptionsBuilder.from_dataframe(df_table1)
 
@@ -936,7 +957,11 @@ def main():
             )
             selected_rows = grid_return["selected_rows"]
             dfs = pd.DataFrame(selected_rows)
-            #st.write(dfs)
+            column_names = [col for col in dfs.columns if col.startswith('l')]
+            # Trích xuất các cột có tên "l1", "l2",..., "lN"
+            extracted_columns = dfs[column_names]
+            st.write(extracted_columns)
+
             if len(selected_rows):
                 
                 dfsnet = dfs.drop(columns=['_selectedRowNodeInfo'])
@@ -951,8 +976,8 @@ def main():
                 dfsnet['切寸'] = dfsnet['切寸'].astype(int) +  df_DELTA.astype(int)
                 dfsnet['重量(kg)'] = round(dfsnet['数量'].astype(int) * dfsnet['切寸'].astype(int) * dfsnet['径'].astype(int).map(dictionary1) / 1000,2) 
                 for i in range(1,max_count_plus2):
-                    dfsnet['l'+str(i)+'help'] = dfsnet['l and w'].astype(str).str.split("l").str[i]
-                    dfsnet['l'+str(i)+'help'] = dfsnet['l'+str(i)+'help'].astype(str).str.split("@").str[1]
+                    dfsnet['l'+str(i)+'help'] = dfsnet['l and w'].str.split("l").str[i]
+                    dfsnet['l'+str(i)+'help'] = dfsnet['l'+str(i)+'help'].str.split("@").str[1]
                     dfsnet['l'+str(i)+'help'].fillna("",inplace=True)
                     dfsnet['l'+str(i)+'help'] = "@" + dfsnet['l'+str(i)+'help'] + "@"
                     dfsnet['l'+str(i)+'help'] = dfsnet['l'+str(i)+'help'].replace("@@","",regex=False)
@@ -960,19 +985,11 @@ def main():
                     dfsnet['l'+str(i)+'help'] = dfsnet['l'+str(i)+'help'].replace("l0","", regex=False)
                 df_l_help = dfsnet.iloc[:,-(max_count+1):]
                 dfsnet['l and w'] = df_l_help.astype(str).values.sum(axis=1) ###############
-                
                 dfsnet['searchIP'] = "BF2D@Hj@r@i@p"+ (dfsnet.index+1).astype(str)+"@l"+dfsnet['切寸'].astype(str).str.replace('.0', '', regex=False)+"@n"+dfsnet['数量'].astype(str)+"@e"+dfsnet['重量(kg)'].astype(str)+"@d"+dfsnet['径'].astype(str).str.replace('.0', '', regex=False)+"@g"+dfsnet['材質']+"@s"+dfsnet['s']+"@v@a@G"+dfsnet['l and w'].str.replace('threeD', '', regex=False)+dfsnet['private']
                 dfsnet['IP'] = [96-(sum([ord(ele) for ele in sub]))%32 for sub in dfsnet['searchIP']]
                 dfsnet['BVBS'] = dfsnet['searchIP'] + dfsnet['IP'].astype(str) + "@"
-                df切寸= dfsnet['切寸']
 
-
-######################################################
-                # Hàm để lắp lại chuỗi từ các giá trị "l", "n", "e", "d", "SD", "s", "w", và "C"
-
-############################################################
                 zz = 0
-                st.info('鉄筋を左右反転にしたい場合は、該当箇所のチェックボックスにチェックを入れてください', icon="ℹ️")
                 for value000 in dfsnet['BVBS']:
                     zz += 1
                     is_checked = st.checkbox(f" No.{zz} : {value000}")
@@ -983,14 +1000,11 @@ def main():
                         st.markdown('<span style="color: red; font-size: 15px;"> 左右反転後: </span>' + colored_text, unsafe_allow_html=True)
                 col111, col222, col333, col444 = st.columns(4)
                 ###_#Download Excel_###
-                #xx = len(selected_rows)
-                #row_count = 0
+                xx = len(selected_rows)
+                row_count = 0
                 # Duyệt qua từng hàng và đếm
-
-                
                 dfsnet1 = dfsnet.drop(columns=["重量(kg)","s","l and w","private",'searchIP','IP','BVBS','sum_before','sum_after']) ###############
-                dfsnet1['番号'] = "No." + (dfsnet.index+1).astype(str)
-                dfsnet1 = dfsnet1.iloc[:, :(5+max_count+1)] ###############
+                dfsnet1 = dfsnet1.iloc[:, :11] ###############
                 dfsnet1['径'] = 'D' + dfsnet1['径']
                 buf = io.BytesIO()
                 dfsnet1.to_excel(buf, index=False, header=True)
@@ -1007,7 +1021,7 @@ def main():
             
 #####################################################################                                                        ##########################################################
             # Cài đặt phông chữ hỗ trợ tiếng Nhật
-            pdfmetrics.registerFont(TTFont('MSMINCHO.TTF', 'form/MSMINCHO.TTF'))  ###########################################################
+            pdfmetrics.registerFont(TTFont('msmincho.ttc', 'form/MSMINCHO.TTF'))  ###########################################################
                                                                                                                              ###########################################################
             # Hàm để tạo mã QR với kích thước cố định
             def create_qr_code(df_bvbs, size=100):
@@ -1072,7 +1086,7 @@ def main():
                 #df = pd.DataFrame(df_bvbs)
                 #selected_column = 'BVBS'
                 
-                for value001 in dfsnet["BVBS"]:
+                for value001 in dfs["BVBS"]:
                     # Sử dụng biểu thức chính quy để tìm số sau "SD" đến ký tự "@"
                     数量 = r'SD(\d+\.\d+|\d+)@'
                     # Tìm tất cả các kết quả phù hợp với biểu thức chính quy
@@ -1094,7 +1108,7 @@ def main():
                     c.drawImage(ImageReader(qr_image), rect_x_position + qr_x_offset, rect_y_position + qr_y_offset, width=qr_size, height=qr_size)
 
                     # Thêm văn bản "NO" và số thứ tự vào hình chữ nhật
-                    c.setFont('MSMINCHO.TTF', 15)
+                    c.setFont('msmincho.ttc', 15)
                     c.drawString(rect_x_position + 10, rect_y_position + 10, f'No.{no}')
 
             # 59TH có thể xảy ra 
@@ -2385,26 +2399,26 @@ def main():
                         l1, l2, l3, l4, l5 = process_data(value001_str)
 
                         # Thêm văn bản vào
-                        c.setFont('MSMINCHO.TTF', 10)
+                        c.setFont('msmincho.ttc', 10)
                         c.drawString(rect_x_position + 110, rect_y_position + 149, 'mm')
                         c.drawString(rect_x_position + 165, rect_y_position + 147, '本')
                         if result['s'] == "":
                             c.drawString(rect_x_position + 220, rect_y_position + 147, '')
                         else:
                             c.drawString(rect_x_position + 220, rect_y_position + 147, 'ピン＝')
-                        c.setFont('MSMINCHO.TTF', 16)
+                        c.setFont('msmincho.ttc', 16)
                         c.drawString(rect_x_position + 15, rect_y_position + 135, "D" + result['d'])
                         c.drawString(rect_x_position + 80, rect_y_position + 135, result['l'])
                         c.drawString(rect_x_position + 152, rect_y_position + 135, result['n'])
 
-                        c.setFont('MSMINCHO.TTF', 10)
+                        c.setFont('msmincho.ttc', 10)
                         c.drawString(rect_x_position + 255, rect_y_position + 147, result['s'] )
 
-                        c.setFont('MSMINCHO.TTF', 20)
+                        c.setFont('msmincho.ttc', 20)
                         c.drawString(rect_x_position + 70, rect_y_position + 70, "非定型")  #giữa
 #######################################################################################################           
                     # Thêm nội dung văn bản vào hình chữ nhật từ danh sách text_list
-                    c.setFont('MSMINCHO.TTF', 13)
+                    c.setFont('msmincho.ttc', 13)
                     c.drawString(rect_x_position + x1, rect_y_position + y1, text11)
                     c.drawString(rect_x_position + x2, rect_y_position + y2, text22)
                     #Lệnh canh lề phải trong pdf
@@ -2420,7 +2434,7 @@ def main():
                     # Định dạng và hiển thị thời gian
                     formatted_time = current_time.strftime("%Y/%m/%d")
                     time1 = current_time.strftime("%H:%M:%S")
-                    c.setFont('MSMINCHO.TTF', 10)
+                    c.setFont('msmincho.ttc', 10)
                     c.drawString(rect_x_position + 202, rect_y_position + 10, formatted_time)
 
                     # Di chuyển đến vị trí tiếp theo
@@ -2497,7 +2511,7 @@ def main():
                     exec(code_string1)
                     
                 # Xét chuỗi BBVS
-                for value001 in dfsnet["BVBS"]:
+                for value001 in dfs["BVBS"]:
                     #st.write(value001)
                     value001_str = str(value001)
                     
@@ -2522,7 +2536,7 @@ def main():
                     if count_l == 6 and count_w == 5 and (w1=="90" and w2=="90" and w3=="90" and w4=="-90" and w5=="0" and "PtSEGOPT" in value001 or w1=="90" and w2=="-90" and w3=="-90" and w4=="-90" and w5=="0" and "PtSEGOPT" in value001):
                         img_path = image_list[59]
                         exec(code_string2)
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
 
                         p.drawRightString(14.15 * 28.3465, (y1 + 0.2) * 28.3465 , l1)
                         p.drawRightString(14.25 * 28.3465, (y1 + 0.9) * 28.3465 , l2) #p.drawCentredString
@@ -2534,7 +2548,7 @@ def main():
                     elif count_l == 6 and count_w == 5 and w1=="90" and w2=="90" and w3=="90" and w4=="90" and w5=="0" and "PtSEGOPT" in value001:
                         img_path = image_list[58]
                         exec(code_string2)
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         p.drawRightString(14.15 * 28.3465, (y1 + 0.3) * 28.3465 , l1)
                         p.drawRightString(14.3 * 28.3465, (y1 + 0.9) * 28.3465 , l2) #p.drawCentredString
                         p.drawCentredString(14.68 * 28.3465, (y1 + 1.49) * 28.3465 , l3) #p.drawRightString
@@ -2545,7 +2559,7 @@ def main():
                     elif count_l == 6 and count_w == 5 and (90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="90" and w4=="-90" and w5=="0" or w1=="90" and w2=="-90" and -90 < int(w3) < 0 and -180 < int(w4) < -90  and w5=="0"):
                         img_path = image_list[57]
                         exec(code_string2)
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if 90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="90" and w4=="-90" and w5=="0":
                             p.drawRightString(14.2 * 28.3465, (y1 + 1.54) * 28.3465 , l1) #p.drawRightString
                             p.drawRightString(13.8 * 28.3465, (y1 + 0.8) * 28.3465 , l2) #p.drawCentredString
@@ -2563,7 +2577,7 @@ def main():
                     elif count_l == 6 and count_w == 5 and (90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="90" and w4=="90" and w5=="0" or w1=="90" and w2=="90" and 0 < int(w3) < 90 and 90 < int(w4) < 180  and w5=="0"):
                         img_path = image_list[56]
                         exec(code_string2)
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if 90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="90" and w4=="90" and w5=="0":
                             p.drawRightString(14.2 * 28.3465, (y1 + 1.54) * 28.3465 , l1) #p.drawRightString
                             p.drawRightString(13.8 * 28.3465, (y1 + 0.8) * 28.3465 , l2) #p.drawCentredString
@@ -2581,7 +2595,7 @@ def main():
                     elif count_l == 6 and count_w == 5 and (0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="-90" and w4=="90" and w5=="0" or w1=="90" and w2=="-90" and -90 < int(w3) < 0 and 0 < int(w4) < 90  and w5=="0"):
                         img_path = image_list[55]
                         exec(code_string2)
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if 0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="-90" and w4=="90" and w5=="0":
                             p.drawRightString(14 * 28.3465, (y1 + 1.54) * 28.3465 , l1) #p.drawRightString
                             p.drawRightString(14.1 * 28.3465, (y1 + 0.8) * 28.3465 , l2) #p.drawCentredString
@@ -2598,7 +2612,7 @@ def main():
                     elif count_l == 6 and count_w == 5 and (0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="-90" and w4=="-90" and w5=="0" or w1=="90" and w2=="90" and 0 < int(w3) < 90 and -90 < int(w4) < 0  and w5=="0"):
                         img_path = image_list[54]
                         exec(code_string2)
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
 
                         if 0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="-90" and w4=="-90" and w5=="0":
                             p.drawRightString(14 * 28.3465, (y1 + 1.54) * 28.3465 , l1) #p.drawRightString
@@ -2617,7 +2631,7 @@ def main():
                     elif count_l == 6 and count_w == 5 and (90 < int(w1) < 180 and 0 < int(w2) < 90 and 0 < int(w3) < 90 and -90 < int(w4) < 0 and w5=="0" or 0 < int(w1) < 90 and -90 < int(w2) < 0 and -90 < int(w3) < 0 and -180 < int(w4) < -90 and w5=="0"):
                         img_path = image_list[53]
                         exec(code_string2)
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if 90 < int(w1) < 180 and 0 < int(w2) < 90 and 0 < int(w3) < 90 and -90 < int(w4) < 0 and w5=="0":
                             p.drawRightString(14.15 * 28.3465, (y1 + 1.54) * 28.3465 , l5) #p.drawRightString
                             p.drawRightString(14.17 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #p.drawCentredString
@@ -2635,7 +2649,7 @@ def main():
                     elif count_l == 6 and count_w == 5 and (w1=="180" and w2=="90" and w3=="90" and w4=="-90" and w5=="0" or w1=="90" and w2=="-90" and w3=="-90" and w4=="-180" and w5=="0"):
                         img_path = image_list[52]
                         exec(code_string2)
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if w1=="180" and w2=="90" and w3=="90" and w4=="-90" and w5=="0":
                             p.drawRightString(14.15 * 28.3465, (y1 + 1.50) * 28.3465 , l5) #p.drawRightString
                             p.drawRightString(14.15 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #p.drawCentredString
@@ -2652,7 +2666,7 @@ def main():
                     elif count_l == 6 and count_w == 5 and (90 < int(w1) < 180 and w2=="90" and w3=="90" and w4=="-90" and w5=="0" or w1=="90" and w2=="-90" and w3=="-90" and -180 < int(w4) < -90 and w5=="0"):
                         img_path = image_list[51]
                         exec(code_string2)
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if 90 < int(w1) < 180 and w2=="90" and w3=="90" and w4=="-90" and w5=="0":
                             p.drawRightString(14.15 * 28.3465, (y1 + 1.52) * 28.3465 , l5) #p.drawRightString
                             p.drawRightString(14.15 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #p.drawCentredString
@@ -2669,7 +2683,7 @@ def main():
                     elif count_l == 6 and count_w == 5 and (w1=="180" and w2=="90" and w3=="90" and w4=="90" and w5=="0" or w1=="90" and w2=="90" and w3=="90" and w4=="180" and w5=="0"):
                         img_path = image_list[50]
                         exec(code_string2)
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if w1=="180" and w2=="90" and w3=="90" and w4=="90" and w5=="0":
                             p.drawRightString(14.16 * 28.3465, (y1 + 1.51) * 28.3465 , l5) #p.drawRightString
                             p.drawRightString(13.55 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #p.drawCentredString
@@ -2686,7 +2700,7 @@ def main():
                     elif count_l == 6 and count_w == 5 and (90 < int(w1) < 180 and w2=="90" and w3=="90" and w4=="90" and w5=="0" or w1=="90" and w2=="90" and w3=="90" and 90 < int(w4) < 180 and w5=="0"):
                         img_path = image_list[49]
                         exec(code_string2)
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if 90 < int(w1) < 180 and w2=="90" and w3=="90" and w4=="90" and w5=="0":
                             p.drawRightString(14.16 * 28.3465, (y1 + 1.51) * 28.3465 , l5) #p.drawRightString
                             p.drawRightString(13.55 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #p.drawCentredString
@@ -2703,7 +2717,7 @@ def main():
                     elif count_l == 6 and count_w == 5 and (90 < int(w1) < 180 and w2=="90" and w3=="90" and w4=="180" and w5=="0" or w1=="180" and w2=="90" and w3=="90" and 90 < int(w4) < 180 and w5=="0"):
                         img_path = image_list[48]
                         exec(code_string2)
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if 90 < int(w1) < 180 and w2=="90" and w3=="90" and w4=="180" and w5=="0":
                             p.drawString(13.88 * 28.3465, (y1 + 1.16) * 28.3465 , l5) #p.drawRightString
                             p.drawRightString(13.55 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #p.drawCentredString
@@ -2720,7 +2734,7 @@ def main():
                     elif count_l == 5 and count_w == 4 and (w1 =="180" and w2 =="90" and 0 < int(w3) < 90 and w4 =="0" or 0 < int(w1) < 90 and w2 =="90" and w3=="180" and w4=="0"):
                         img_path = image_list[47]
                         exec(code_string2)
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if w1 =="180" and w2 =="90" and 0 < int(w3) < 90 and w4 =="0":
                             p.drawRightString(13.8 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #p.drawCentredString
                             p.drawCentredString(14.89 * 28.3465, (y1 + 0.14) * 28.3465 , l3)
@@ -2735,7 +2749,7 @@ def main():
                     elif count_l == 5 and count_w == 4 and (90 < int(w1) < 180 and w2 =="90" and 0 < int(w3) < 90 and w4 =="0" or 0 < int(w1) < 90 and w2 =="90" and 90 < int(w3) < 180 and w4=="0"):
                         img_path = image_list[46]
                         exec(code_string2)
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if 90 < int(w1) < 180 and w2 =="90" and 0 < int(w3) < 90 and w4 =="0":
                             p.drawRightString(13.8 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #p.drawCentredString
                             p.drawCentredString(14.89 * 28.3465, (y1 + 0.14) * 28.3465 , l3)
@@ -2750,7 +2764,7 @@ def main():
                     elif count_l == 5 and count_w == 4 and (w1=="180" and w2 =="90" and w3=="90" and w4 =="0" or w1=="90" and w2 =="90" and w3=="180" and w4=="0"):
                         img_path = image_list[45]
                         exec(code_string2)
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if w1=="180" and w2 =="90" and w3=="90" and w4 =="0":
                             p.drawRightString(13.55 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #p.drawCentredString
                             p.drawCentredString(14.6 * 28.3465, (y1 + 0.14) * 28.3465 , l3)
@@ -2765,7 +2779,7 @@ def main():
                     elif count_l == 5 and count_w == 4 and (90 < int(w1) < 180 and w2 =="90" and w3=="90" and w4 =="0" or w1=="90" and w2 =="90" and 90 < int(w3) < 180 and w4=="0"):
                         img_path = image_list[44]
                         exec(code_string2)
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if 90 < int(w1) < 180 and w2 =="90" and w3=="90" and w4 =="0":
                             p.drawRightString(13.55 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #p.drawCentredString
                             p.drawCentredString(14.6 * 28.3465, (y1 + 0.14) * 28.3465 , l3)
@@ -2780,7 +2794,7 @@ def main():
                     elif count_l == 5 and count_w == 4 and (0 < int(w1) < 90 and w2 =="-90" and w3=="-90" and w4 =="0" or w1=="90" and w2 =="90" and -90 < int(w3) < 0 and w4=="0"):
                         img_path = image_list[43]
                         exec(code_string2)
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if 0 < int(w1) < 90 and w2 =="-90" and w3=="-90" and w4 =="0":
                             p.drawCentredString(14.3 * 28.3465, (y1 + 1.53) * 28.3465 , l4) #p.drawRightString
                             p.drawRightString(13.55 * 28.3465, (y1 + 0.9) * 28.3465 , l3) #p.drawCentredString
@@ -2796,7 +2810,7 @@ def main():
                     elif count_l == 5 and count_w == 4 and (0 < int(w1) < 90 and w2 =="90" and w3=="90" and w4 =="0" or w1=="90" and w2 =="90" and 0 < int(w3) < 90 and w4=="0"):
                         img_path = image_list[42]
                         exec(code_string2)
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if 0 < int(w1) < 90 and w2 =="90" and w3=="90" and w4 =="0":
                             p.drawCentredString(14.3 * 28.3465, (y1 + 1.51) * 28.3465 , l4) #p.drawRightString
                             p.drawRightString(13.55 * 28.3465, (y1 + 0.9) * 28.3465 , l3) #p.drawCentredString
@@ -2811,7 +2825,7 @@ def main():
                     elif count_l == 5 and count_w == 4 and (0 < int(w1) < 90 and 0 < int(w2) < 90 and w3=="90" and w4 =="0" or w1=="90" and 0 < int(w2) < 90 and 0 < int(w3) < 90 and w4=="0"):
                         img_path = image_list[41]
                         exec(code_string2)
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if 0 < int(w1) < 90 and 0 < int(w2) < 90 and w3=="90" and w4 =="0":
                             p.drawCentredString(14.3 * 28.3465, (y1 + 1.51) * 28.3465 , l4) #p.drawRightString
                             p.drawRightString(13.55 * 28.3465, (y1 + 1) * 28.3465 , l3) #p.drawCentredString
@@ -2826,7 +2840,7 @@ def main():
                     elif count_l == 5 and count_w == 4 and (90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="90" and w4 =="0" or w1=="90" and 0 < int(w2) < 90 and 90 < int(w3) < 180 and w4=="0"):
                         img_path = image_list[40]
                         exec(code_string2)
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if 90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="90" and w4 =="0":
                             p.drawString(15.64 * 28.3465, (y1 + 0.8) * 28.3465 , l1) #p.drawCentredString
                             p.drawRightString(14.85 * 28.3465, (y1 + 1.4) * 28.3465 , l2) #p.drawRightString
@@ -2842,7 +2856,7 @@ def main():
                     elif count_l == 5 and count_w == 4 and (90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="-90" and w4 =="0" or w1=="90" and -90 < int(w2) < 0 and -180 < int(w3) < -90 and w4=="0"):
                         img_path = image_list[39]
                         exec(code_string2)
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if 90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="-90" and w4 =="0":
                             p.drawString(15.64 * 28.3465, (y1 + 0.8) * 28.3465 , l1) #p.drawCentredString
                             p.drawRightString(15.2 * 28.3465, (y1 + 1.4) * 28.3465 , l2) #p.drawRightString
@@ -2857,7 +2871,7 @@ def main():
                     elif count_l == 5 and count_w == 4 and (w1=="90" and -90 < int(w2) < 0 and 0 < int(w3) < 90 and w4 =="0" or 0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="90" and w4=="0"):
                         img_path = image_list[38]
                         exec(code_string2)
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if w1=="90" and -90 < int(w2) < 0 and 0 < int(w3) < 90 and w4 =="0":
                             p.drawRightString(13.55 * 28.3465, (y1 + 1.1) * 28.3465 , l1) #p.drawCentredString
                             p.drawString(13.75 * 28.3465, (y1 + 1) * 28.3465 , l2) #p.drawCentredString
@@ -2873,7 +2887,7 @@ def main():
                     elif count_l == 5 and count_w == 4 and (0 < int(w1) < 90 and -90 < int(w2) < 0 and -90 < int(w3) < 0 and w4 =="0" or 0 < int(w1) < 90 and 0 < int(w2) < 90 and -90 < int(w3) < 0 and w4=="0"):
                         img_path = image_list[37]
                         exec(code_string2)
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if 0 < int(w1) < 90 and -90 < int(w2) < 0 and -90 < int(w3) < 0 and w4 =="0":
                             p.drawString(15 * 28.3465, (y1 + 1.53) * 28.3465 , l1) #p.drawRightString
                             p.drawString(14.9 * 28.3465, (y1 + 0.8) * 28.3465 , l2) #p.drawCentredString
@@ -2889,7 +2903,7 @@ def main():
                     elif count_l == 5 and count_w == 4 and (0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="-90" and w4 =="0" or w1=="90" and 0 < int(w2) < 90 and -90 < int(w3) < 0 and w4=="0"):
                         img_path = image_list[36]
                         exec(code_string2)
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if 0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="-90" and w4 =="0":
                             p.drawString(14.9 * 28.3465, (y1 + 1.53) * 28.3465 , l1) #p.drawRightString
                             p.drawString(14.58 * 28.3465, (y1 + 0.8) * 28.3465 , l2) #p.drawCentredString
@@ -2905,7 +2919,7 @@ def main():
                     elif count_l == 7 and count_w == 6 and w1=="135" and w2=="90" and w3=="90" and w4=="90" and w5=="135" and w6=="0":
                         img_path = image_list[35]
                         exec(code_string2)
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if int(l2) >= int(l3):
                             p.drawString(14.4 * 28.3465, (y1 + 1) * 28.3465 , l1.rjust(5))
 
@@ -2924,7 +2938,7 @@ def main():
                     elif count_l == 6 and count_w == 5 and 0 < int(w1) < 90 and -90 < int(w2) < 0 and -90 < int(w3) < 0 and 0 < int(w4) < 90 and w5=="0":
                         img_path = image_list[34]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         p.drawString(13.3 * 28.3465, (y1 + 1.52) * 28.3465 , l1.rjust(5)) #l1.rjust(5)
                         p.drawString(13.3 * 28.3465, (y1 + 0.9) * 28.3465 , l2.rjust(5)) #
                         p.drawString(14.2 * 28.3465, (y1 + 0.15) * 28.3465 , l3.center(6)) #
@@ -2935,7 +2949,7 @@ def main():
                     elif count_l == 6 and count_w == 5 and (w1=="90" and w2=="90" and w3=="90" and w4=="-90" and w5=="0" or w1=="90" and w2=="-90" and w3=="-90" and w4=="-90" and w5=="0"):                        
                         img_path = image_list[33]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if w1=="90" and w2=="90" and w3=="90" and w4=="-90" and w5=="0":
                             p.drawString(13.8 * 28.3465, (y1 + 1.52) * 28.3465 , l1.center(6)) #l4.center(6)
                             p.drawString(12.68 * 28.3465, (y1 + 0.8) * 28.3465 , l2.rjust(5)) #1.rjust(5)
@@ -2953,7 +2967,7 @@ def main():
                     elif count_l == 6 and count_w == 5 and w1=="90" and w2=="90" and w3=="90" and w4=="90" and w5=="0":
                         img_path = image_list[32]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10)   
+                        p.setFont('msmincho.ttc', 10)   
                         
                         p.drawString(13.35 * 28.3465, (y1 + 0.15) * 28.3465 , l1.rjust(5)) #1.rjust(5)
                         p.drawString(12.68 * 28.3465, (y1 + 0.6) * 28.3465 , l2.rjust(5)) #1.rjust(5)
@@ -2964,7 +2978,7 @@ def main():
                     elif count_l == 6 and count_w == 5 and 90 < int(w1) < 180 and w2=="90" and w3=="90" and 90 < int(w4) < 180 and w5=="0":
                         img_path = image_list[31]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10)    
+                        p.setFont('msmincho.ttc', 10)    
                         p.drawString(13.8 * 28.3465, (y1 + 1.3) * 28.3465 , l1) #1.rjust(5)
                         p.drawString(12.67 * 28.3465, (y1 + 0.8) * 28.3465 , l2.rjust(5)   ) #1.rjust(5)   
                         p.drawString(14.2 * 28.3465, (y1 + 0.15) * 28.3465 , l3.center(6)) #l4.center(6)
@@ -2975,7 +2989,7 @@ def main():
                     elif count_l == 6 and count_w == 5 and w1=="180" and w2=="90" and w3=="90" and w4=="180" and w5=="0":
                         img_path = image_list[30]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         p.drawString(13.87 * 28.3465, (y1 + 1.06) * 28.3465 , l1) #1.rjust(5)
                         p.drawString(12.67 * 28.3465, (y1 + 0.8) * 28.3465 , l2.rjust(5)   ) #1.rjust(5)   
                         p.drawString(14.2 * 28.3465, (y1 + 0.15) * 28.3465 , l3.center(6)) #l4.center(6)
@@ -2986,7 +3000,7 @@ def main():
                     elif count_l == 6 and count_w == 5 and w1=="90" and w2=="-90" and w3=="-90" and w4=="90" and w5=="0":
                         img_path = image_list[29]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10) 
+                        p.setFont('msmincho.ttc', 10) 
                         p.drawString(13.35 * 28.3465, (y1 + 0.15) * 28.3465 , l1.rjust(5)) #1.rjust(5) 
                         p.drawString(13.25 * 28.3465, (y1 + 0.8) * 28.3465 , l2.rjust(5)) #1.rjust(5)  
                         p.drawString(14.15 * 28.3465, (y1 + 1.52) * 28.3465 , l3.center(6)) #l4.center(6)
@@ -2996,7 +3010,7 @@ def main():
                     elif count_l == 5 and count_w == 4 and w1 == "90" and w2 == "-90" and w3 == "90" and w4 == "0":
                         img_path = image_list[28]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10)   
+                        p.setFont('msmincho.ttc', 10)   
                         if int(l1) > int(l4):
                             p.drawString(14.6 * 28.3465, (y1 + 1.52) * 28.3465 , l1) #
                             p.drawString(14.3 * 28.3465, (y1 + 1) * 28.3465 , l2) #l4.center(6)
@@ -3011,7 +3025,7 @@ def main():
                     elif count_l == 5 and count_w == 4 and (w1=="90" and w2=="90" and w3=="-90" and w4=="0" or w1=="90" and w2=="-90" and w3=="-90" and w4=="0"):
                         img_path = image_list[27]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10)  
+                        p.setFont('msmincho.ttc', 10)  
                         if w1=="90" and w2=="90" and w3=="-90" and w4=="0":
                             p.drawString(14.6 * 28.3465, (y1 + 1.52) * 28.3465 , l4) #
                             p.drawString(14.3 * 28.3465, (y1 + 0.8) * 28.3465 , l3) #
@@ -3026,7 +3040,7 @@ def main():
                     elif count_l == 5 and count_w == 4 and w1=="90" and w2=="90" and w3=="90" and w4=="0":
                         img_path = image_list[26]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if int(l2) > int(l3):
                             p.drawString(13.25 * 28.3465, (y1 + 1.52) * 28.3465 , l4.rjust(5)) #l1.rjust(5)
                             p.drawString(12.65 * 28.3465, (y1 + 0.8) * 28.3465 , l3.rjust(5)) #1.rjust(5)
@@ -3041,7 +3055,7 @@ def main():
                     elif count_l == 4 and count_w == 3 and 90 < int(w1) < 180 and -180 < int(w2) < -90 and w3=="0":
                         img_path = image_list[25]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         p.drawString(12.9 * 28.3465, (y1 + 0.5) * 28.3465 , l1.rjust(5)) #1.rjust(5)
                         p.drawString(14.1 * 28.3465, (y1 + 1.05) * 28.3465 , l2.center(6)) #l4.center(6)
                         p.drawString(15.35 * 28.3465, (y1 + 1.2) * 28.3465 , l3) #
@@ -3050,7 +3064,7 @@ def main():
                     elif count_l == 4 and count_w == 3 and w1=="180" and w2=="-180" and w3=="0":
                         img_path = image_list[24]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         p.drawString(13.35* 28.3465, (y1 + 1.52) * 28.3465 , l1.rjust(5)) #l1.rjust(5)
                         p.drawString(14.1 * 28.3465, (y1 + 1.05) * 28.3465 , l2.center(6)) #l4.center(6)
                         p.drawString(15 * 28.3465, (y1 + 0.15) * 28.3465 , l3) #
@@ -3058,7 +3072,7 @@ def main():
                     elif count_l == 4 and count_w == 3 and 0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="0":
                         img_path = image_list[23]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         p.drawString(13.6 * 28.3465, (y1 + 1.52) * 28.3465 , l1) #l1.rjust(5)
                         p.drawString(14.68 * 28.3465, (y1 + 0.9) * 28.3465 , l2) #l4.center(6)
                         p.drawString(15 * 28.3465, (y1 + 0.15) * 28.3465 , l3) #
@@ -3066,7 +3080,7 @@ def main():
                     elif count_l == 4 and count_w == 3 and w1=="90" and w2=="-90" and w3=="0":
                         img_path = image_list[22]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         p.drawString(12.63 * 28.3465, (y1 + 1.11) * 28.3465 , l1.rjust(5)) #1.rjust(5)
                         p.drawString(14.1 * 28.3465, (y1 + 1.05) * 28.3465 , l2.center(6)) #l4.center(6)
                         p.drawString(15.7 * 28.3465, (y1 + 0.55) * 28.3465 , l3) #
@@ -3074,7 +3088,7 @@ def main():
                     elif count_l == 4 and count_w == 3 and (90 < int(w1) < 180 and -90 < int(w2) < 0 and w3=="0" or 0 < int(w1) < 90 and -180 < int(w2) < -90 and w3=="0"):
                         img_path = image_list[21]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if 90 < int(w1) < 180:
                             p.drawString(15.35 * 28.3465, (y1 + 1.2) * 28.3465 , l1) #
                             p.drawString(14.2 * 28.3465, (y1 + 0.63) * 28.3465 , l2.center(6)) #l4.center(6)
@@ -3087,7 +3101,7 @@ def main():
                     elif count_l == 4 and count_w == 3 and (0 < int(w1) < 90 and 90 < int(w2) < 180 and w3=="0" or 90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="0"):
                         img_path = image_list[20]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if 0 < int(w1) < 90:
                             p.drawString(12.65 * 28.3465, (y1 + 0.7) * 28.3465 , l1.rjust(5)) #1.rjust(5)
                             p.drawString(14.1 * 28.3465, (y1 + 1.45) * 28.3465 , l2.center(6)) #l4.center(6)
@@ -3100,7 +3114,7 @@ def main():
                     elif count_l == 4 and count_w == 3 and (w1=="180" and -90 < int(w2) < 0 and w3=="0" or 0 < int(w1) < 90 and w2=="-180" and w3=="0"):
                         img_path = image_list[19]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if w1=="180":
                             p.drawString(15 * 28.3465, (y1 + 1.52) * 28.3465 , l1) #
                             p.drawString(14.2 * 28.3465, (y1 + 0.63) * 28.3465 , l2.center(6)) #l4.center(6)
@@ -3113,7 +3127,7 @@ def main():
                     elif count_l == 4 and count_w == 3 and (w1=="180" and 0 < int(w2) < 90 and w3=="0" or 0 < int(w1) < 90 and w2=="180" and w3=="0"):
                         img_path = image_list[18]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if w1=="180":
                             p.drawString(15 * 28.3465, (y1 + 1.52) * 28.3465 , l1) #
                             p.drawString(14.2 * 28.3465, (y1 + 0.63) * 28.3465 , l2.center(6)) #l4.center(6)
@@ -3126,7 +3140,7 @@ def main():
                     elif count_l == 4 and count_w == 3 and (w1=="180" and 90 < int(w2) < 180 and w3=="0" or 90 < int(w1) < 180 and w2=="180" and w3=="0"):
                         img_path = image_list[17]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if w1=="180":
                             p.drawString(15 * 28.3465, (y1 + 1.52) * 28.3465 , l1) #
                             p.drawString(14.1 * 28.3465, (y1 + 0.63) * 28.3465 , l2.center(6)) #l4.center(6)
@@ -3139,7 +3153,7 @@ def main():
                     elif count_l == 4 and count_w == 3 and (w1=="180" and -180 < int(w2) < -90 and w3=="0" or 90 < int(w1) < 180 and w2=="-180" and w3=="0"):
                         img_path = image_list[16]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if w1=="180":
                             p.drawString(15 * 28.3465, (y1 + 1.52) * 28.3465 , l1) #
                             p.drawString(14.1 * 28.3465, (y1 + 1.05) * 28.3465 , l2.center(6)) #l4.center(6)
@@ -3152,7 +3166,7 @@ def main():
                     elif count_l == 4 and count_w == 3 and (w1=="90" and -180 < int(w2) < -90 and w3=="0" or 90 < int(w1) < 180 and w2=="-90" and w3=="0"):
                         img_path = image_list[15]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if w1=="90":
                             p.drawString(12.6 * 28.3465, (y1 + 0.6) * 28.3465 , l1.rjust(5)) #1.rjust(5)
                             p.drawString(14.1 * 28.3465, (y1 + 0.63) * 28.3465 , l2.center(6)) #l4.center(6)
@@ -3165,7 +3179,7 @@ def main():
                     elif count_l == 4 and count_w == 3 and (w1=="90" and -90 < int(w2) < 0 and w3=="0" or 0 < int(w1) < 90 and w2=="-90" and w3=="0"): 
                         img_path = image_list[14]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if w1=="90":
                             p.drawString(12.6 * 28.3465, (y1 + 0.6) * 28.3465 , l1.rjust(5)) #1.rjust(5)
                             p.drawString(13.8 * 28.3465, (y1 + 1.05) * 28.3465 , l2.center(6)) #l4.center(6)
@@ -3178,7 +3192,7 @@ def main():
                     elif count_l == 4 and count_w == 3 and (w1=="90" and w2=="-180" and w3=="0" or w1=="180" and w2=="-90" and w3=="0"):
                         img_path = image_list[13]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if w1=="90":
                             p.drawString(12.62 * 28.3465, (y1 + 0.6) * 28.3465 , l1.rjust(5)) #1.rjust(5)
                             p.drawString(14.1 * 28.3465, (y1 + 0.63) * 28.3465 , l2.center(6)) #l4.center(6)
@@ -3191,7 +3205,7 @@ def main():
                     elif count_l == 4 and count_w == 3 and (w1 == "90" and 90 < int(w2) < 180 and w3 == "0" or 90 < int(w1) < 180 and w2 == "90" and w3 == "0"):
                         img_path = image_list[12]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if w1 == "90":
                             p.drawString(15.69 * 28.3465, (y1 + 1.15) * 28.3465 , l1) #
                             p.drawString(14.2 * 28.3465, (y1 + 0.63) * 28.3465 , l2.center(6)) #l4.center(6)
@@ -3204,7 +3218,7 @@ def main():
                     elif count_l == 4 and count_w == 3 and (w1 == "90" and 0 < int(w2) < 90 and w3 =="0" or 0 < int(w1) < 90 and w2 =="90"  and w3=="0"):
                         img_path = image_list[11]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if w1=="90":
                             p.drawString(12.65 * 28.3465, (y1 + 0.8) * 28.3465 , l1.rjust(5)) #1.rjust(5)
                             p.drawString(13.8 * 28.3465, (y1 + 1.52) * 28.3465 , l2.center(6)) #l4.center(6)
@@ -3217,7 +3231,7 @@ def main():
                     elif count_l == 4 and count_w == 3 and (w1=="90" and w2=="180" and w3=="0" or w1=="180" and w2=="90" and w3=="0"):
                         img_path = image_list[10]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if w1=="180":
                             p.drawString(15 * 28.3465, (y1 + 0.63) * 28.3465 , l1) #
                             p.drawString(14.1 * 28.3465, (y1 + 1.52) * 28.3465 , l2.center(6)) #l4.center(6)
@@ -3230,7 +3244,7 @@ def main():
                     elif count_l == 4 and count_w == 3 and 90 < int(w1) < 180 and 90 < int(w2) < 180 and w3=="0":
                         img_path = image_list[9]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         p.drawString(12.9 * 28.3465, (y1 + 0.5) * 28.3465 , l1.rjust(5)) #1.rjust(5)
                         p.drawString(14.1 * 28.3465, (y1 + 1.05) * 28.3465 , l2.center(6)) #l4.center(6)
                         p.drawString(15.45 * 28.3465, (y1 + 0.5) * 28.3465 , l3) #
@@ -3239,7 +3253,7 @@ def main():
                     elif count_l == 4 and count_w == 3 and 0 < int(w1) < 90 and 0 < int(w2) < 90 and w3=="0":
                         img_path = image_list[8]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         p.drawString(12.9 * 28.3465, (y1 + 0.7) * 28.3465 , l1.rjust(5)) #1.rjust(5)
                         p.drawString(14.1 * 28.3465, (y1 + 1.05) * 28.3465 , l2.center(6)) #l4.center(6)
                         p.drawString(15.45 * 28.3465, (y1 + 0.7) * 28.3465 , l3) #
@@ -3248,7 +3262,7 @@ def main():
                     elif count_l == 4 and count_w == 3 and w1=="180" and w2=="180" and w3=="0":
                         img_path = image_list[7]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         p.drawString(13.35 * 28.3465, (y1 + 1.52) * 28.3465 , l1.rjust(5)) #l1.rjust(5)
                         p.drawString(14.1 * 28.3465, (y1 + 0.63) * 28.3465 , l2.center(6)) #l4.center(6)
                         p.drawString(14.98 * 28.3465, (y1 + 1.52) * 28.3465 , l3) #
@@ -3257,7 +3271,7 @@ def main():
                     elif count_l == 4 and count_w == 3 and w1=="90" and w2=="90" and w3=="0":
                         img_path = image_list[6]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         p.drawString(12.6 * 28.3465, (y1 + 0.6) * 28.3465 , l1.rjust(5)) #1.rjust(5)
                         p.drawString(14.1 * 28.3465, (y1 + 1.05) * 28.3465 , l2.center(6)) #l4.center(6)
                         p.drawString(15.7 * 28.3465, (y1 + 0.6) * 28.3465 , l3) #
@@ -3266,7 +3280,7 @@ def main():
                     elif count_l == 3 and count_w == 2 and 90 < int(w1) < 180 and int(w2) == 0: 
                         img_path = image_list[5]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if int(l1) > int(l2):
                             p.drawString(14.1 * 28.3465, (y1 + 0.63) * 28.3465 , l1.center(6)) #l4.center(6)
                             p.drawString(12.8 * 28.3465, (y1 + 1.15) * 28.3465 , l2.rjust(5)) #1.rjust(5)
@@ -3277,7 +3291,7 @@ def main():
                     elif count_l == 3 and count_w == 2 and 0 < int(w1) < 90 and int(w2) == 0 :  
                         img_path = image_list[4]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if int(l1) > int(l2):
                             p.drawString(14.4 * 28.3465, (y1 + 1.06) * 28.3465 , l1.center(6)) #l4.center(6)      
                             p.drawString(12.9 * 28.3465, (y1 + 0.7) * 28.3465 , l2.rjust(5)) #1.rjust(5)
@@ -3288,7 +3302,7 @@ def main():
                     elif count_l == 3 and count_w == 2 and w1=="180" and w2=="0": 
                         img_path = image_list[3]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if int(l1) > int(l2):
                             p.drawString(13.35 * 28.3465, (y1 + 1.52) * 28.3465 , l2.rjust(5)) #l1.rjust(5)
                             p.drawString(14.1 * 28.3465, (y1 + 0.63) * 28.3465 , l1.center(6)) #l4.center(6)
@@ -3299,7 +3313,7 @@ def main():
                     elif count_l == 3 and count_w == 2 and w1=="90" and w2=="0": 
                         img_path = image_list[2]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         if int(l1) > int(l2):
                             p.drawString(14.1 * 28.3465, (y1 + 1.05) * 28.3465 , l1.center(6)) #l4.center(6)
                             p.drawString(12.6 * 28.3465, (y1 + 0.6) * 28.3465 , l2.rjust(5)) #1.rjust(5)
@@ -3310,7 +3324,7 @@ def main():
                     elif count_l == 2 and count_w == 1 and w1=="0":                         
                         img_path = image_list[1]
                         exec(code_string2) 
-                        p.setFont('MSMINCHO.TTF', 10)
+                        p.setFont('msmincho.ttc', 10)
                         p.drawString(14.1 * 28.3465, (y1 + 1.05) * 28.3465 , l1.center(6)) #l4.center(6)
     #TH0
                     else:
@@ -3319,7 +3333,7 @@ def main():
                             p.setLineWidth(border_width1)
                             # Vẽ các hình chữ nhật khác
                             p.rect(x_cm * 28.3465, y1 * 28.3465, width_cm * 28.3465, height_cm * 28.3465)
-                            p.setFont('MSMINCHO.TTF', 16) 
+                            p.setFont('msmincho.ttc', 16) 
                             # Vẽ văn bản tiếng Nhật và tiếng Anh với kích thước font khác nhau
                             p.drawString(0.85 * 28.3465, (y1 + 0.7) * 28.3465 , (f'No.{NO1}').center(5))  #1
                             p.drawString(2.9 * 28.3465, (y1 + 0.7) * 28.3465 , ("D" + result['d']).center(5))  #2 
@@ -3329,7 +3343,7 @@ def main():
                             p.drawString(10.9 * 28.3465, (y1 + 0.7) * 28.3465 , ("SD" + 数量1[0]).center(5))  #6 
                             p.drawString(16.65 * 28.3465, (y1 + 0.7) * 28.3465 , (result['s']).center(5))  #8 
                             p.drawString(18.5 * 28.3465, (y1 + 0.7) * 28.3465 , ee1.center(5))   #9 
-                            p.setFont('MSMINCHO.TTF', 15) 
+                            p.setFont('msmincho.ttc', 15) 
                             p.drawString(13.8 * 28.3465, (y1 + 0.8) * 28.3465 , "非定型")
 ###___PDF BẢNG____###################################################################################################################
                     rects_on_page1 += 1
@@ -3446,7 +3460,7 @@ def main():
             
             if len(selected_rows):
                 if col22.button("エフ.PDFを作成"):
-                    pdf_buffer = create_pdf(dfs, image_list, text11, text22, text33, text44)
+                    pdf_buffer = create_pdf(dfs, df_BVBS, image_list, text11, text22, text33, text44)
                     col22.download_button("Download エフ.pdf", pdf_buffer, file_name="エフ.pdf", key="download_pdf")
 
             if len(selected_rows):
