@@ -19,7 +19,7 @@ from reportlab.lib.utils import ImageReader
 from PIL import Image as PILImage
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
-from datetime import datetime  # Thêm thư viện datetime
+from datetime import datetime  #thư viện datetime
 import re
 import pytz
 from st_aggrid import GridOptionsBuilder, AgGrid, JsCode
@@ -31,12 +31,6 @@ def createList(n):
     for i in range(1,n + 1):
         list.append(i)
     return list
-#############################
-code_string4 = """
-image1 = Image.open(image1)
-st.image(image1, width=46)
-st.write("------------------------------------------------------")
-"""
 #################################################################
 # text đổi màu
 def change_color(text):
@@ -259,7 +253,7 @@ def process_data1(value001_str):
     elif index_of_C == -1:
         print("Không tìm thấy ký tự 'C' trong chuỗi sau ký tự 'G'.")
         return (None, None, None, None, None, None)
-
+    
     substring = value001_str[index_of_G + 1:index_of_C]
     w_numbers = []
 
@@ -745,8 +739,10 @@ def main():
             shif_2= df_2['plus'].shift(periods=-1, fill_value=0)
             df_2.loc[:, 'LENGTH'] = round(df_2_length+shif_1+shif_2)
             df_2.loc[:, 'length'] = round(df_2_length+shif_1+shif_2)
+
+            #st.write("------------------------------------------------------")
             st.subheader(' ', divider='rainbow')
-            col1, col2, col3 = st.columns(3)
+            col1, col2, col3, col4 = st.columns(4)
 
             with col1:
                 st.header("集計表")
@@ -858,10 +854,10 @@ def main():
                 df_last['切寸'] = df_last['切寸']//10*10
             elif marume_ON and marume_type == "切り上げ" and marume_mm == "10mm":
                 df_last['切寸'] = (df_last['切寸'] / 10).apply(np.ceil) * 10
-            
+            df_last['切寸helper'] = df_last['切寸']
             df_last['径'] = "D"+df_last['直径'].astype(str).str.replace('.0', '', regex=False)
 
-            df_table0 = df_last.loc[:, ["番号","径","切寸","数量","材質","重量(kg)","s","l and w","private"]]
+            df_table0 = df_last.loc[:, ["番号","径","切寸","切寸helper","数量","材質","重量(kg)","s","l and w","private"]]
             left_part = df_table0.iloc[:, :3]
             right_part = df_table0.iloc[:, 3:]
             
@@ -883,7 +879,7 @@ def main():
             #  Build the options.
             grid_options = ob.build()
             column_defs = grid_options["columnDefs"]
-            columns_to_hide = ["重量(kg)","s","l and w","private","sum_before"] ###############
+            columns_to_hide = ["切寸helper","重量(kg)","s","l and w","private","sum_before"] ###############
 
             # update the column definitions to hide the specified columns
             for col in column_defs:
@@ -917,7 +913,7 @@ def main():
                 dfsnet.loc[:, 'sum_after'] = df_l_after.astype(int).sum(axis = 1)
                 df_sum_after = dfsnet.loc[:, 'sum_after']
                 df_DELTA = df_sum_after.astype(int) - df_sum_before.astype(int)            
-                dfsnet['切寸'] = dfsnet['切寸'].astype(int) +  df_DELTA.astype(int)
+                dfsnet['切寸'] = dfsnet['切寸helper'].astype(int) +  df_DELTA.astype(int)
                 dfsnet['重量(kg)'] = round(dfsnet['数量'].astype(int) * dfsnet['切寸'].astype(int) * dfsnet['径'].astype(int).map(dictionary1) / 1000,2) 
                 for i in range(1,max_count_plus2):
                     dfsnet['l'+str(i)+'help'] = dfsnet['l and w'].astype(str).str.split("l").str[i]
@@ -944,14 +940,9 @@ def main():
                             dfsnet.at[zz - 1, 'BVBS'] = value002
                             colored_text = change_color(value002)
                             st.markdown('<span style="color: red; font-size: 15px;"> 左右反転後: </span>' + colored_text, unsafe_allow_html=True)
-                col111, col222, col333, col444 = st.columns(4)
+                col000, col111, col222, col333, col444, col555 = st.columns(6)
                 ###_#Download Excel_###
-                #xx = len(selected_rows)
-                #row_count = 0
-                # Duyệt qua từng hàng và đếm
-
-                
-                dfsnet1 = dfsnet.drop(columns=["重量(kg)","s","l and w","private",'searchIP','IP','BVBS','sum_before','sum_after']) ###############
+                dfsnet1 = dfsnet.drop(columns=["切寸helper","重量(kg)","s","l and w","private",'searchIP','IP','BVBS','sum_before','sum_after']) ###############
                 dfsnet1['番号'] = "No." + (dfsnet.index+1).astype(str)
                 dfsnet1 = dfsnet1.iloc[:, :(5+max_count+1)] ###############
                 dfsnet1['径'] = 'D' + dfsnet1['径']
@@ -960,8 +951,7 @@ def main():
                 file_name_0 = download_excel(session.file_name)
                 col222.download_button("Download Excel",buf.getvalue(),file_name_0,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
                 ###_Download BVBS_###
-                #empty_column = pd.DataFrame(columns=[" "], data=[":"] * len(df))
-                #df_BVBS = pd.concat([dfs['番号'],empty_column,dfs['BVBS']], axis=1)
+
                 df_BVBS = dfsnet['BVBS']
                 buf = io.BytesIO()
                 df_BVBS.to_csv(buf, index=False, header=False)
@@ -3375,18 +3365,15 @@ def main():
                 "image/59.png",
             ]
             st.subheader(' ', divider='rainbow')
+            #st.write("------------------------------------------------------")
             st.title("情報を入力する")
-            colA1, colA2, colA3, colA4, colA5, colA6 = st.columns(6)
+            colA0, colA1, colA2, colA3, colA4, colA5, colA6 = st.columns(7)
             text11 = colA1.text_input("工事名", "某工事名")
             #text11 = st.text_input("工事名", "某工事名")
             text22 = colA2.text_input("協力会社", "株式会社ABC")
             text33 = colA3.text_input("鉄筋メーカー", "某会社")
             text44 = colA4.text_input("使用場所", "Y1-X1 柱")
             text55 = colA5.date_input('運搬日')
-            #text55 = colA5.text_input("運搬日:", formatted_time1)
-
-            #date = st.date_input('Date input')
-
 
             x1, y1 = 2, 184
             x2, y2 = 2, 164
@@ -3402,20 +3389,21 @@ def main():
 
             # Tạo PDF khi người dùng nhấn nút "Tạo PDF"
             st.subheader(' ', divider='rainbow')
+            #st.write("------------------------------------------------------")
             st.title("エフ・加工帳 PDF出力")
             #st.markdown('<h1 style="text-align: center;">BVBSと加工帳のPDFを作成する</h1>', unsafe_allow_html=True)
             # Tạo hai cột với tỷ lệ chiều rộng 2:1
-            col11, col22, col33, col44 = st.columns([1, 1, 1, 1])
+            col11, col22, col33, col44, col55, col66  = st.columns(6)
             
             if len(selected_rows):
-                if col22.button("エフ.PDFを作成"):
+                if col33.button("エフ.PDFを作成"):
                     pdf_buffer = create_pdf(dfs, image_list, text11, text22, text33, text44)
-                    col22.download_button("Download エフ.pdf", pdf_buffer, file_name="エフ.pdf", key="download_pdf")
+                    col33.download_button("Download エフ.pdf", pdf_buffer, file_name="エフ.pdf", key="download_pdf")
 
             if len(selected_rows):
-                if col33.button("加工帳.PDFを作成"):
+                if col44.button("加工帳.PDFを作成"):
                     pdf_buffer = create_pdf1(text11, text22, text44, text55, text66)
-                    col33.download_button("Download 加工帳.pdf", pdf_buffer, file_name="加工帳.pdf", key="download-pdf-button")
+                    col44.download_button("Download 加工帳.pdf", pdf_buffer, file_name="加工帳.pdf", key="download-pdf-button")
             st.subheader(' ', divider='rainbow')
 if __name__ == "__main__":
     session = st.session_state
