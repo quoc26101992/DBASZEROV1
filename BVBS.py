@@ -194,7 +194,7 @@ for x_cm, y_cm, width_cm, height_cm in rectangles:
     formatted_time = current_time.strftime("%Y/%m/%d")
     #p.drawString(13.2 * 28.3465, 28.9 * 28.3465, f"作成日: {formatted_time}")
 
-    so_hang = len(dfs['BVBS'])
+    so_hang = len(dfsnet['BVBS'])
     KK = so_hang / 14
     if KK % 2 == 0:
         p.drawRightString(20.3 * 28.3465, 28.9 * 28.3465, f"作成日: {formatted_time}" "   " f"ページ: {K}/{int(KK)}")
@@ -655,47 +655,16 @@ def main():
     layout= "wide",
     page_title="DBAS ZERO v1.0",
     page_icon="🌐",
-    initial_sidebar_state="expanded",
+    #initial_sidebar_state="expanded",
     ) 
-    st.title("DBAS ZERO ➡ BIM データ IFCファイル連携")
-    st.markdown(
-    """ 
-    ###  📝 IFC ➡ BVBS 変換
-    """
-    )
-    st.text('IFCデータをアップロードされた後、BVBSデータをダウンロードすることができます。')
-
-
-    # Thiết lập múi giờ
-    desired_timezone = 'Asia/Tokyo'
-    # Tạo đối tượng múi giờ
-    desired_tz = pytz.timezone(desired_timezone)
-    # Lấy thời gian hiện tại theo múi giờ đã thiết lập
-    current_time = datetime.now(desired_tz)
-    # Định dạng và hiển thị thời gian
-    formatted_time = current_time.strftime("%Y/%m/%d")
-    formatted_time1 = current_time.strftime("%m/%d")
-    st.sidebar.write(f"更新日: {formatted_time}")
-    
-    st.sidebar.write("""
-
-    DBS Co.,Ltd
-    
-    ホームページ :  [dbhead.com](https://dbhead.com)
-    
-    --------------
-    作成 : グエン ヴァン クオック
-
-    Email: dbs.tekkin37@gmail.com
-
-    """)
-##############################################################################################
-    
+    #st.title("DBAS ZERO ➡ BIM データ IFCファイル連携")
+    st.markdown("<h1 style='text-align: center;'>DBAS ZERO ➡ BIM データ IFCファイル連携</h1>", unsafe_allow_html=True)
     st.write("")
-    st.sidebar.write("")
+    #st.sidebar.write("")
     ## Add File uploader
     st.header('モデルのアップロード')
     st.file_uploader("IFCデータを選択してください", type=['ifc'], key="uploaded_file", on_change=callback_upload)
+##############################################################################################
     if not "IsDataFrameLoaded" in session:
         initialize_session_state()
     if not session.IsDataFrameLoaded:
@@ -776,7 +745,7 @@ def main():
             shif_2= df_2['plus'].shift(periods=-1, fill_value=0)
             df_2.loc[:, 'LENGTH'] = round(df_2_length+shif_1+shif_2)
             df_2.loc[:, 'length'] = round(df_2_length+shif_1+shif_2)
-            
+            st.subheader(' ', divider='rainbow')
             col1, col2, col3 = st.columns(3)
 
             with col1:
@@ -862,7 +831,6 @@ def main():
                 df_last['l'+str(i)] = df_last['l and w'].str.split("l").str[i]
                 df_last['l'+str(i)] = df_last['l'+str(i)].str.split("@").str[0]
                 df_last['l'+str(i)].fillna(0,inplace=True)
-
             df_list_l = df_last.iloc[:,-(max_count+1):]
             df_list_l = df_list_l.astype(int)
             df_sum_l = df_list_l.sum(axis = 1)
@@ -896,29 +864,9 @@ def main():
             df_table0 = df_last.loc[:, ["番号","径","切寸","数量","材質","重量(kg)","s","l and w","private"]]
             left_part = df_table0.iloc[:, :3]
             right_part = df_table0.iloc[:, 3:]
-
+            
             df_table1 = pd.concat([left_part,right_part,df_sum_l1,df_list_l], axis=1) ###############
-            dfs = df_table1.copy()
-            A_text = st.text_input("Nhập giá trị A", value="5")
-            # Chuyển giá trị A_text sang kiểu số nguyên
-            A = int(A_text)
 
-            # Tạo DataFrame `dfs` với dữ liệu từ `df_resultl`
-            dfs = df_table1.copy()
-
-            # Tạo hai khung (frames) cho DataFrame `dfs` và DataFrame `df_resultl`
-
-
-            # Kiểm tra xem A có thay đổi
-            if st.button("Cập nhật giá trị A"):
-                A = int(A_text)
-                df_table1["切寸"] = dfs["切寸"]
-                # Cập nhật cột "SD" của dfs bằng giá trị mới
-                dfs["切寸"] = A
-            st.write("DataFrame `dfs`:")
-            st.write(dfs)
-            st.write("DataFrame `df_resultl`:")
-            st.write(df_table1)
 #############################
             ob = GridOptionsBuilder.from_dataframe(df_table1)
 
@@ -957,11 +905,7 @@ def main():
             )
             selected_rows = grid_return["selected_rows"]
             dfs = pd.DataFrame(selected_rows)
-            column_names = [col for col in dfs.columns if col.startswith('l')]
-            # Trích xuất các cột có tên "l1", "l2",..., "lN"
-            extracted_columns = dfs[column_names]
-            st.write(extracted_columns)
-
+            #st.write(dfs)
             if len(selected_rows):
                 
                 dfsnet = dfs.drop(columns=['_selectedRowNodeInfo'])
@@ -976,8 +920,8 @@ def main():
                 dfsnet['切寸'] = dfsnet['切寸'].astype(int) +  df_DELTA.astype(int)
                 dfsnet['重量(kg)'] = round(dfsnet['数量'].astype(int) * dfsnet['切寸'].astype(int) * dfsnet['径'].astype(int).map(dictionary1) / 1000,2) 
                 for i in range(1,max_count_plus2):
-                    dfsnet['l'+str(i)+'help'] = dfsnet['l and w'].str.split("l").str[i]
-                    dfsnet['l'+str(i)+'help'] = dfsnet['l'+str(i)+'help'].str.split("@").str[1]
+                    dfsnet['l'+str(i)+'help'] = dfsnet['l and w'].astype(str).str.split("l").str[i]
+                    dfsnet['l'+str(i)+'help'] = dfsnet['l'+str(i)+'help'].astype(str).str.split("@").str[1]
                     dfsnet['l'+str(i)+'help'].fillna("",inplace=True)
                     dfsnet['l'+str(i)+'help'] = "@" + dfsnet['l'+str(i)+'help'] + "@"
                     dfsnet['l'+str(i)+'help'] = dfsnet['l'+str(i)+'help'].replace("@@","",regex=False)
@@ -985,26 +929,31 @@ def main():
                     dfsnet['l'+str(i)+'help'] = dfsnet['l'+str(i)+'help'].replace("l0","", regex=False)
                 df_l_help = dfsnet.iloc[:,-(max_count+1):]
                 dfsnet['l and w'] = df_l_help.astype(str).values.sum(axis=1) ###############
+                
                 dfsnet['searchIP'] = "BF2D@Hj@r@i@p"+ (dfsnet.index+1).astype(str)+"@l"+dfsnet['切寸'].astype(str).str.replace('.0', '', regex=False)+"@n"+dfsnet['数量'].astype(str)+"@e"+dfsnet['重量(kg)'].astype(str)+"@d"+dfsnet['径'].astype(str).str.replace('.0', '', regex=False)+"@g"+dfsnet['材質']+"@s"+dfsnet['s']+"@v@a@G"+dfsnet['l and w'].str.replace('threeD', '', regex=False)+dfsnet['private']
                 dfsnet['IP'] = [96-(sum([ord(ele) for ele in sub]))%32 for sub in dfsnet['searchIP']]
                 dfsnet['BVBS'] = dfsnet['searchIP'] + dfsnet['IP'].astype(str) + "@"
 
                 zz = 0
-                for value000 in dfsnet['BVBS']:
-                    zz += 1
-                    is_checked = st.checkbox(f" No.{zz} : {value000}")
-                    if is_checked:
-                        value002 = process_input_string(value000)
-                        dfsnet.at[zz - 1, 'BVBS'] = value002
-                        colored_text = change_color(value002)
-                        st.markdown('<span style="color: red; font-size: 15px;"> 左右反転後: </span>' + colored_text, unsafe_allow_html=True)
+                with st.expander("鉄筋を左右反転にしたい場合は、該当箇所のチェックボックスにチェックを入れてください"):
+                    for value000 in dfsnet['BVBS']:
+                        zz += 1
+                        is_checked = st.checkbox(f" No.{zz} : {value000}")
+                        if is_checked:
+                            value002 = process_input_string(value000)
+                            dfsnet.at[zz - 1, 'BVBS'] = value002
+                            colored_text = change_color(value002)
+                            st.markdown('<span style="color: red; font-size: 15px;"> 左右反転後: </span>' + colored_text, unsafe_allow_html=True)
                 col111, col222, col333, col444 = st.columns(4)
                 ###_#Download Excel_###
-                xx = len(selected_rows)
-                row_count = 0
+                #xx = len(selected_rows)
+                #row_count = 0
                 # Duyệt qua từng hàng và đếm
+
+                
                 dfsnet1 = dfsnet.drop(columns=["重量(kg)","s","l and w","private",'searchIP','IP','BVBS','sum_before','sum_after']) ###############
-                dfsnet1 = dfsnet1.iloc[:, :11] ###############
+                dfsnet1['番号'] = "No." + (dfsnet.index+1).astype(str)
+                dfsnet1 = dfsnet1.iloc[:, :(5+max_count+1)] ###############
                 dfsnet1['径'] = 'D' + dfsnet1['径']
                 buf = io.BytesIO()
                 dfsnet1.to_excel(buf, index=False, header=True)
@@ -1086,7 +1035,7 @@ def main():
                 #df = pd.DataFrame(df_bvbs)
                 #selected_column = 'BVBS'
                 
-                for value001 in dfs["BVBS"]:
+                for value001 in dfsnet["BVBS"]:
                     # Sử dụng biểu thức chính quy để tìm số sau "SD" đến ký tự "@"
                     数量 = r'SD(\d+\.\d+|\d+)@'
                     # Tìm tất cả các kết quả phù hợp với biểu thức chính quy
@@ -2511,7 +2460,7 @@ def main():
                     exec(code_string1)
                     
                 # Xét chuỗi BBVS
-                for value001 in dfs["BVBS"]:
+                for value001 in dfsnet["BVBS"]:
                     #st.write(value001)
                     value001_str = str(value001)
                     
@@ -3460,7 +3409,7 @@ def main():
             
             if len(selected_rows):
                 if col22.button("エフ.PDFを作成"):
-                    pdf_buffer = create_pdf(dfs, df_BVBS, image_list, text11, text22, text33, text44)
+                    pdf_buffer = create_pdf(dfs, image_list, text11, text22, text33, text44)
                     col22.download_button("Download エフ.pdf", pdf_buffer, file_name="エフ.pdf", key="download_pdf")
 
             if len(selected_rows):
