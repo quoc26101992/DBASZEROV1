@@ -652,7 +652,7 @@ def main():
     #initial_sidebar_state="expanded",
     ) 
     #st.title("DBAS ZERO ➡ BIM データ IFCファイル連携")
-    st.markdown("<h1 style='text-align: center;'>DBAS ZERO ➡ BIM データ IFCファイル連携</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center;'>鉄筋BIMモデルを自動加工機へデータ連携</h1>", unsafe_allow_html=True)
     st.write("")
     #st.sidebar.write("")
     ## Add File uploader
