@@ -275,8 +275,8 @@ def process_data1(value001_str):
     if current_w_number:
         w_numbers.append(current_w_number)
 
-    w_numbers.extend([None] * (6 - len(w_numbers)))
-    return tuple(w_numbers[:6])
+    w_numbers.extend([None] * (7 - len(w_numbers)))
+    return tuple(w_numbers[:7])
 
 ########################################################################
 def process_data(value001_str):
@@ -305,6 +305,9 @@ def process_data(value001_str):
     l3 = None
     l4 = None
     l5 = None
+    l6 = None
+    l7 = None
+    l8 = None
     # Khởi tạo danh sách để lưu các số sau khi gặp 'l'
     l_numbers = []
 
@@ -341,8 +344,12 @@ def process_data(value001_str):
         l4 = l_numbers[3]
     if len(l_numbers) >= 5:
         l5 = l_numbers[4]
+    if len(l_numbers) >= 6:
+        l6 = l_numbers[5]
+    if len(l_numbers) >= 7:
+        l7 = l_numbers[6]
 
-    return l1, l2, l3, l4, l5
+    return l1, l2, l3, l4, l5, l6, l7
 ########################################################
 def extract_numbers(value001_str):
     # Tìm vị trí của ký tự 'G' trong chuỗi
@@ -1054,9 +1061,32 @@ def main():
                     value001_str = str(value001)
                     count_l = value001.count('l')
                     count_w = value001.count('w')
-                    w1, w2, w3, w4, w5, w6 = process_data1(value001_str)
+                    w1, w2, w3, w4, w5, w6, w7 = process_data1(value001_str)    
+                    l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str) 
+            #TH60   BF2D@Hj@r@i@p1@l11680@n5@e58.11@d13@gSD295@s52@v@a@Gl1500@w90@l1300@w76@l2250@w14@l1680@w14@l2250@w76@l1300@w90@l1500@w0@C82@
+                    if count_l == 8 and count_w == 7 and w1=="90" and 0 < int(w2) < 90 and 0 < int(w3) < 90 and 0 < int(w4) < 90 and 0 < int(w5) < 90 and w6=="90" and w7=="0":
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)          
+                        img_path = image_list[60]
+
+                        exec(code_string)
+
+                        c.drawString(rect_x_position + 125, rect_y_position + 43, l1) #phải trên
+                        c.drawString(rect_x_position + 142, rect_y_position + 68, l2) #phải
+                        c.drawString(rect_x_position + 125, rect_y_position + 97, l3) #trên
+
+                        c.drawCentredString(rect_x_position + 93, rect_y_position + 105, l4)  #trái 
+
+                        c.drawRightString(rect_x_position + 60, rect_y_position + 97, l5) #phải trên
+                        c.drawRightString(rect_x_position + 41, rect_y_position + 68, l6) #phải trên
+                        c.drawRightString(rect_x_position + 58, rect_y_position + 43, l7) #phải trên
+                        
             #TH59   BF2D@Hj@r@i@p1@l1480@n1@e2.31@d16@gSD295@s80@v@a@Gl218@w90@l400@w90@l400@w90@l400@w-90@l218@w0@PtSEGOPT;o0;o1;o1;o0;o0@C82@
-                    if count_l == 6 and count_w == 5 and (w1=="90" and w2=="90" and w3=="90" and w4=="-90" and w5=="0" and "PtSEGOPT" in value001 or w1=="90" and w2=="-90" and w3=="-90" and w4=="-90" and w5=="0" and "PtSEGOPT" in value001):
+                    elif count_l == 6 and count_w == 5 and (w1=="90" and w2=="90" and w3=="90" and w4=="-90" and w5=="0" and "PtSEGOPT" in value001 or w1=="90" and w2=="-90" and w3=="-90" and w4=="-90" and w5=="0" and "PtSEGOPT" in value001):
 
                         value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
@@ -2467,12 +2497,28 @@ def main():
                     
                     count_l = value001.count('l')
                     count_w = value001.count('w')
-                    w1, w2, w3, w4, w5, w6 = process_data1(value001_str)
+                    w1, w2, w3, w4, w5, w6, w7 = process_data1(value001_str)
 
                     result = extract_numbers(value001_str)
-                    l1, l2, l3, l4, l5 = process_data(value001_str)
+                    l1, l2, l3, l4, l5, l6 , l7 = process_data(value001_str)
+    #TH60   BF2D@Hj@r@i@p1@l11680@n5@e58.11@d13@gSD295@s52@v@a@Gl1500@w90@l1300@w76@l2250@w14@l1680@w14@l2250@w76@l1300@w90@l1500@w0@C82@
+                    if count_l == 8 and count_w == 7 and w1=="90" and 0 < int(w2) < 90 and 0 < int(w3) < 90 and 0 < int(w4) < 90 and 0 < int(w5) < 90 and w6=="90" and w7=="0":
+                        img_path = image_list[60]
+                        exec(code_string2)
+                        p.setFont('msmincho.ttc', 10)
+                        
+                        p.drawRightString(13.9 * 28.3465, (y1 + 1.36) * 28.3465 , l1) #p.drawRightString
+                        p.drawRightString(13.55 * 28.3465, (y1 + 0.75) * 28.3465 , l2) #p.drawCentredString
+                        p.drawRightString(13.96 * 28.3465, (y1 + 0.15) * 28.3465 , l3)
+
+                        p.drawCentredString(14.6 * 28.3465, (y1 + 1.51) * 28.3465 , l4) #p.drawRightString
+
+                        p.drawString(15.26 * 28.3465, (y1 + 1.36) * 28.3465 , l5) #p.drawRightString
+                        p.drawString(15.65 * 28.3465, (y1 + 0.75) * 28.3465 , l6) #p.drawCentredString
+                        p.drawString(15.28 * 28.3465, (y1 + 0.15) * 28.3465 , l7)
+
     #TH59   BF2D@Hj@r@i@p1@l1480@n1@e2.31@d16@gSD295@s80@v@a@Gl218@w90@l400@w90@l400@w90@l400@w-90@l218@w0@PtSEGOPT;o0;o1;o1;o0;o0@C82@            
-                    if count_l == 6 and count_w == 5 and (w1=="90" and w2=="90" and w3=="90" and w4=="-90" and w5=="0" and "PtSEGOPT" in value001 or w1=="90" and w2=="-90" and w3=="-90" and w4=="-90" and w5=="0" and "PtSEGOPT" in value001):
+                    elif count_l == 6 and count_w == 5 and (w1=="90" and w2=="90" and w3=="90" and w4=="-90" and w5=="0" and "PtSEGOPT" in value001 or w1=="90" and w2=="-90" and w3=="-90" and w4=="-90" and w5=="0" and "PtSEGOPT" in value001):
                         img_path = image_list[59]
                         exec(code_string2)
                         p.setFont('msmincho.ttc', 10)
@@ -3363,6 +3409,7 @@ def main():
                 "image/57.png",
                 "image/58.png",
                 "image/59.png",
+                "image/60.png",
             ]
             st.subheader(' ', divider='rainbow')
             #st.write("------------------------------------------------------")
