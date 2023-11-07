@@ -2506,10 +2506,9 @@ def main():
                         img_path = image_list[60]
                         exec(code_string2)
                         p.setFont('msmincho.ttc', 10)
-                        
-                        p.drawRightString(13.9 * 28.3465, (y1 + 1.36) * 28.3465 , l1) #p.drawRightString
-                        p.drawRightString(13.55 * 28.3465, (y1 + 0.75) * 28.3465 , l2) #p.drawCentredString
-                        p.drawRightString(13.95 * 28.3465, (y1 + 0.15) * 28.3465 , l3)
+                        p.drawRightString(13.95 * 28.3465, (y1 + 0.15) * 28.3465 , l1)
+			p.drawRightString(13.55 * 28.3465, (y1 + 0.75) * 28.3465 , l2) #p.drawCentredString
+                        p.drawRightString(13.9 * 28.3465, (y1 + 1.36) * 28.3465 , l3) #p.drawRightString
 
                         p.drawCentredString(14.6 * 28.3465, (y1 + 1.51) * 28.3465 , l4) #p.drawRightString
 
