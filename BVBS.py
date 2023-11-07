@@ -282,74 +282,39 @@ def process_data1(value001_str):
 def process_data(value001_str):
     # Tìm vị trí của 'G' trong chuỗi
     index_of_G = value001_str.find('G')
-
-    # Tìm vị trí của 'C' trong chuỗi, bắt đầu tìm từ vị trí của 'G'
     index_of_C = value001_str.find('C', index_of_G)
 
-    # Kiểm tra nếu không tìm thấy 'G' hoặc 'C' trong chuỗi
     if index_of_G == -1:
-        print("Không tìm thấy ký tự 'G' trong chuỗi.")
-        return
+        print("Không tìm thấy ký tự 'l' trong chuỗi.")
+        return (None, None, None, None, None, None)
     elif index_of_C == -1:
-        print("Không tìm thấy ký tự 'C' trong chuỗi sau ký tự 'G'.")
-        return
-    else:
-        # Lấy nội dung giữa 'G' và 'C'
-        substring = value001_str[index_of_G + 1:index_of_C]
-
-        #print("Nội dung giữa 'G' và 'C':", substring)
-
-    # Khai báo biến l1, l2, l3, l4 và khởi tạo giá trị ban đầu là None
-    l1 = None
-    l2 = None
-    l3 = None
-    l4 = None
-    l5 = None
-    l6 = None
-    l7 = None
-
-    # Khởi tạo danh sách để lưu các số sau khi gặp 'l'
+        print("Không tìm thấy ký tự 'l' trong chuỗi sau ký tự 'l'.")
+        return (None, None, None, None, None, None)
+    
+    substring = value001_str[index_of_G + 1:index_of_C]
     l_numbers = []
 
-    # Biến để xác định khi nào ta gặp các ký tự 'l'
+    current_l_number = ""
     found_l = False
 
-    # Biến để lưu số sau khi gặp 'l'
-    current_l_number = ""
-
-    # Duyệt qua chuỗi để tìm và lấy số sau khi gặp các ký tự 'l'
     for char in substring:
         if char == 'l':
             found_l = True
-        elif char.isdigit() and found_l:
-            current_l_number += char
-        elif found_l and not char.isdigit():
-            if current_l_number:
-                l_numbers.append(current_l_number)
-                current_l_number = ""
-            found_l = False
+        elif found_l:
+            if char.isdigit() or char == '-':
+                current_l_number += char
+            else:
+                if current_l_number:
+                    l_numbers.append(current_l_number)
+                    current_l_number = ""
+                found_l = False
 
-    # Nếu có số cuối cùng sau ký tự 'l', thêm nó vào danh sách
     if current_l_number:
         l_numbers.append(current_l_number)
 
-    # Gán các giá trị từ danh sách l_numbers vào các biến l1, l2, l3, l4, l5
-    if len(l_numbers) >= 1:
-        l1 = l_numbers[0]
-    if len(l_numbers) >= 2:
-        l2 = l_numbers[1]
-    if len(l_numbers) >= 3:
-        l3 = l_numbers[2]
-    if len(l_numbers) >= 4:
-        l4 = l_numbers[3]
-    if len(l_numbers) >= 5:
-        l5 = l_numbers[4]
-    if len(l_numbers) >= 6:
-        l6 = l_numbers[5]
-    if len(l_numbers) >= 7:
-        l7 = l_numbers[6]
-
-    return l1, l2, l3, l4, l5, l6, l7
+    l_numbers.extend([None] * (7 - len(l_numbers)))
+    return tuple(l_numbers[:7])
+   
 ########################################################
 def extract_numbers(value001_str):
     # Tìm vị trí của ký tự 'G' trong chuỗi
@@ -1061,8 +1026,8 @@ def main():
                     value001_str = str(value001)
                     count_l = value001.count('l')
                     count_w = value001.count('w')
-                    w1, w2, w3, w4, w5, w6, w7 = process_data1(value001_str)    
-
+                    w1, w2, w3, w4, w5, w6, w7 = process_data1(value001_str)
+                    l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)    
             #TH60   BF2D@Hj@r@i@p1@l11680@n5@e58.11@d13@gSD295@s52@v@a@Gl1500@w90@l1300@w76@l2250@w14@l1680@w14@l2250@w76@l1300@w90@l1500@w0@C82@
                     if count_l == 8 and count_w == 7 and w1=="90" and 0 < int(w2) < 90 and 0 < int(w3) < 90 and 0 < int(w4) < 90 and 0 < int(w5) < 90 and w6=="90" and w7=="0":
 
@@ -1070,7 +1035,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)          
+                                  
                         img_path = image_list[60]
 
                         exec(code_string)
@@ -1092,7 +1057,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)          
+                                  
                         img_path = image_list[59]
 
                         exec(code_string)
@@ -1110,7 +1075,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)          
+                                  
                         img_path = image_list[58]
 
                         exec(code_string)
@@ -1129,7 +1094,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)          
+                                  
                         img_path = image_list[57]
 
                         exec(code_string)
@@ -1154,7 +1119,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)          
+                                  
                         img_path = image_list[56]
 
                         exec(code_string)
@@ -1179,7 +1144,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)          
+                                  
                         img_path = image_list[55]
 
                         exec(code_string)
@@ -1205,7 +1170,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)          
+                                  
                         img_path = image_list[54]
 
                         exec(code_string)
@@ -1230,7 +1195,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)          
+                                  
                         img_path = image_list[53]
 
                         exec(code_string)
@@ -1255,7 +1220,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)          
+                                  
                         img_path = image_list[52]
 
                         exec(code_string)
@@ -1280,7 +1245,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)          
+                                  
                         img_path = image_list[51]
 
                         exec(code_string)
@@ -1305,7 +1270,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)          
+                                  
                         img_path = image_list[50]
 
                         exec(code_string)
@@ -1330,7 +1295,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)          
+                                  
                         img_path = image_list[49]
 
                         exec(code_string)
@@ -1355,7 +1320,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)          
+                                  
                         img_path = image_list[48]
 
                         exec(code_string)
@@ -1379,7 +1344,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)          
+                                  
                         img_path = image_list[47]
 
                         exec(code_string)
@@ -1402,7 +1367,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)          
+                                  
                         img_path = image_list[46]
 
                         exec(code_string)
@@ -1424,7 +1389,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)          
+                                  
                         img_path = image_list[45]
 
                         exec(code_string)
@@ -1447,7 +1412,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)          
+                                  
                         img_path = image_list[44]
 
                         exec(code_string)
@@ -1471,7 +1436,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)          
+                                  
                         img_path = image_list[43]
 
                         exec(code_string)
@@ -1494,7 +1459,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)          
+                                  
                         img_path = image_list[42]
 
                         exec(code_string)
@@ -1517,7 +1482,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)          
+                                  
                         img_path = image_list[41]
 
                         exec(code_string)
@@ -1541,7 +1506,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)          
+                                  
                         img_path = image_list[40]
 
                         exec(code_string)
@@ -1564,7 +1529,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)          
+                                  
                         img_path = image_list[39]
 
                         exec(code_string)
@@ -1587,7 +1552,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)          
+                                  
                         img_path = image_list[38]
 
                         exec(code_string)
@@ -1610,7 +1575,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)          
+                                  
                         img_path = image_list[37]
 
                         exec(code_string)
@@ -1633,7 +1598,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)          
+                                  
                         img_path = image_list[36]
 
                         exec(code_string)
@@ -1655,7 +1620,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)          
+                                  
                         img_path = image_list[35]
 
                         exec(code_string)
@@ -1680,7 +1645,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
 
                         img_path = image_list[34]
 
@@ -1699,7 +1664,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
                                     
                         img_path = image_list[33]
 
@@ -1724,7 +1689,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
 
                         img_path = image_list[32]
 
@@ -1743,7 +1708,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
 
                         img_path = image_list[31]
 
@@ -1762,7 +1727,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
 
                         img_path = image_list[30]
 
@@ -1780,7 +1745,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
 
                         img_path = image_list[29]
 
@@ -1799,7 +1764,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
 
                         img_path = image_list[28]
 
@@ -1823,8 +1788,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
-
+                        
                         img_path = image_list[27]
 
                         exec(code_string)
@@ -1847,7 +1811,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
 
                         img_path = image_list[26]
 
@@ -1871,7 +1835,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
 
                         img_path = image_list[25]
 
@@ -1888,7 +1852,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
 
                         img_path = image_list[24]
 
@@ -1905,7 +1869,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
 
                         img_path = image_list[23]
 
@@ -1922,7 +1886,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
 
                         img_path = image_list[22]
 
@@ -1939,7 +1903,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
 
                         img_path = image_list[21]
 
@@ -1961,7 +1925,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
 
                         img_path = image_list[20]  
                                
@@ -1983,7 +1947,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
 
                         img_path = image_list[19]
 
@@ -2006,7 +1970,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
 
                         img_path = image_list[18]
 
@@ -2028,7 +1992,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
 
                         img_path = image_list[17]
 
@@ -2050,7 +2014,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
 
                         img_path = image_list[16]
 
@@ -2072,7 +2036,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
 
                         img_path = image_list[15]
 
@@ -2094,7 +2058,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
 
                         img_path = image_list[14]
 
@@ -2116,7 +2080,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
 
                         img_path = image_list[13]
                     
@@ -2138,7 +2102,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
                         
                         img_path = image_list[12]
                     
@@ -2160,7 +2124,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
 
                         img_path = image_list[11]  #Thay hình
                     
@@ -2182,7 +2146,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
 
                         img_path = image_list[10]
                     
@@ -2204,7 +2168,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
 
                         img_path = image_list[9]
                     
@@ -2221,7 +2185,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
 
                         img_path = image_list[8]
                     
@@ -2238,7 +2202,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
 
                         img_path = image_list[7]
                     
@@ -2255,7 +2219,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
 
                         img_path = image_list[6]
                     
@@ -2272,7 +2236,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
 
                         img_path = image_list[5]
                     
@@ -2292,7 +2256,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
 
                         img_path = image_list[4]
                     
@@ -2312,7 +2276,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
 
                         img_path = image_list[3]
                     
@@ -2332,7 +2296,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
                         
                         img_path = image_list[2]
                     
@@ -2352,7 +2316,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
 
                         img_path = image_list[1]
                     
@@ -2365,7 +2329,7 @@ def main():
                         # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
                         # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
+                        
 
                         # Thêm văn bản vào
                         c.setFont('msmincho.ttc', 10)
@@ -2498,7 +2462,6 @@ def main():
                     count_l = value001.count('l')
                     count_w = value001.count('w')
                     w1, w2, w3, w4, w5, w6, w7 = process_data1(value001_str)
-
                     result = extract_numbers(value001_str)
                     l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)
     #TH60   BF2D@Hj@r@i@p1@l11680@n5@e58.11@d13@gSD295@s52@v@a@Gl1500@w90@l1300@w76@l2250@w14@l1680@w14@l2250@w76@l1300@w90@l1500@w0@C82@
