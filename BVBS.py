@@ -964,20 +964,20 @@ def main():
                 right_margin = 50
                 # Kích thước cố định cho mã QR code và hình chữ nhật
                 qr_size = 95
-                rect_width = 268  # Chiều dài 10cm chuyển thành pixel (1 cm = 28.35 pixel)
-                rect_height = 180.5  # Chiều rộng 7cm chuyển thành pixel
+                rect_width = 269.3  # Chiều dài 10cm chuyển thành pixel (1 cm = 28.35 pixel)
+                rect_height = 181.9  # Chiều rộng 7cm chuyển thành pixel
 
                 # Vị trí ban đầu của mã QR code trên hình chữ nhật
                 qr_x_offset = 165
                 qr_y_offset = 25
 
                 # Vị trí ban đầu của hình chữ nhật
-                initial_rect_x_position = 16
-                initial_rect_y_position = page_height - rect_height - 13.7
+                initial_rect_x_position = 14.175
+                initial_rect_y_position = page_height - rect_height - 14.175
 
                 # Khoảng cách giữa các hình
-                x_spacing = 28.2
-                y_spacing = 28.2
+                x_spacing = 28.45
+                y_spacing = 28.45
                 
                 # Đặt độ dày cho đường kẻ và đường viền (thay đổi giá trị tùy ý)
                 line_width = 0.5  # Độ dày của đường kẻ
@@ -2387,7 +2387,7 @@ def main():
                         c.showPage()  # Thêm trang mới
                         
                         rect_x_position = initial_rect_x_position
-                        rect_y_position = page_height - rect_height - 10
+                        rect_y_position = initial_rect_y_position
                         rects_on_page = 0
                         
                         #no = 1  # Đặt lại biến đếm NO
