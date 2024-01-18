@@ -25,6 +25,7 @@ import pytz
 from st_aggrid import GridOptionsBuilder, AgGrid, JsCode
 from st_aggrid.shared import ColumnsAutoSizeMode
 
+
 def createList(n):
     list = []
     for i in range(1,n + 1):
@@ -45,10 +46,12 @@ def change_color(text):
         return new_text
     else:
         return text
-##################################################################
+####################################################################
 def process_input_string(input_string):
     # Tìm tất cả các chuỗi từ "G" đến "w0" trong input_string
     matches = re.findall(r'G(.*?)w0', input_string)
+    
+    # Lấy cả dấu trừ (nếu có), và các số phía sau "w" và "l" trong các chuỗi tìm được
     l_values = []
     w_values = []
     w_values_after_change = []
@@ -74,22 +77,29 @@ def process_input_string(input_string):
         w_values_after_change = [-w for w in w_values_after_change]
     # Đảo ngược giá trị của các số "l"
     reversed_l_values = list(reversed(l_values))
+
     # Đảo ngược giá trị của các số "w" và in ra sau khi đã đổi dấu
     reversed_w_values = list(reversed(w_values_after_change))
+
     new_matches = []
+
     for match in matches:
         match = re.sub(r'l(\d+)', lambda x: f'l{reversed_l_values.pop(0)}', match)
         match = re.sub(r'w(-?\d+)', lambda x: f'w{reversed_w_values.pop(0)}', match)
         new_matches.append(match)
+
     # In ra chuỗi mới
     if "PtSEGOPT;o0;o1;o1;o0;o0@" in input_string:
         new_input_string = 'G' + 'w0'.join(new_matches) + 'w0@PtSEGOPT;o0;o1;o1;o0;o0'
     else:
         new_input_string = 'G' + 'w0'.join(new_matches) + 'w0'
+        
     start_index = input_string.find('G')
     end_index = input_string.find('@C')  # Để bao gồm cả '@C'
+
     # Tạo chuỗi mới bằng cách kết hợp các phần của input_string và new_code
     new_input_string1 = input_string[:start_index] + new_input_string + input_string[end_index:]
+
     # Tìm vị trí của ký tự "C" trong chuỗi
     index_of_c = new_input_string1.index('C')
     # Lấy chuỗi từ trái sang phải đến ký tự "C" bằng cách sử dụng cắt chuỗi
@@ -97,10 +107,13 @@ def process_input_string(input_string):
     # Tính tổng giá trị ASCII của từng ký tự trong chuỗi
     ascii_sum = sum(ord(char) for char in substring)
     IP = 96 - (ascii_sum % 32)
+    
     start_index = new_input_string1.find('C')
     end_index = new_input_string1.find(r'C(\d+)')  # Để bao gồm cả '@C'
+
     # Tạo chuỗi mới bằng cách kết hợp các phần của input_string và new_code
     new_input_string2 = new_input_string1[:start_index] + "C" + str(IP) + new_input_string1[end_index:]
+
     return new_input_string2
 ###########################################################################################
 code_string3 = """
@@ -371,7 +384,7 @@ def get_objects_data_by_class(file, class_type):
             {
                 "Id": object.id(),
                 "クラス": object.is_a(),
-                "タイプ": object.Name,
+                "タイプ": object.ObjectType,
                 "直径": object.NominalDiameter,
                 "切寸": round(object.BarLength),
             }
@@ -711,6 +724,7 @@ def main():
                 with st.expander("丸めの設定"):
                     marume_ON = st.toggle('丸め ON/OFF')
                     if marume_ON:
+                        
                         col2_1, col2_2 = st.columns(2)
                         with col2_1:
                             marume_mm = st.radio("丸め単位",["5mm", "10mm"],index=None)
@@ -818,6 +832,7 @@ def main():
             df_last['径'] = "D"+df_last['直径'].astype(str).str.replace('.0', '', regex=False)
             df_last['タイプ'] = df_last['タイプ'].str.replace('Rebar Bar:', '', regex=False) #memno
             df_table0 = df_last.loc[:, ["番号","タイプ","径","切寸","切寸helper","数量","材質","重量(kg)","s","l and w","private"]] #memno
+            
             left_part = df_table0.iloc[:, :3]
             right_part = df_table0.iloc[:, 3:]
             df_table1 = pd.concat([left_part,right_part,df_sum_l1,df_list_l], axis=1) ###############
@@ -1001,8 +1016,8 @@ def main():
                     # Thêm văn bản "NO" và số thứ tự vào hình chữ nhật
                     c.setFont('msmincho.ttc', 15)
                     c.drawString(rect_x_position + 10, rect_y_position + 8, f'No.{no}')
-                    c.setFont('msmincho.ttc', 10)
-                    c.drawCentredString(rect_x_position + 95, rect_y_position + 23, タイプ)
+                    c.setFont('msmincho.ttc', 12)
+                    c.drawCentredString(rect_x_position + 94, rect_y_position + 23, タイプ)
                     
                     value001_str = str(value001)
                     count_l = value001.count('l')
