@@ -25,7 +25,6 @@ import pytz
 from st_aggrid import GridOptionsBuilder, AgGrid, JsCode
 from st_aggrid.shared import ColumnsAutoSizeMode
 
-
 def createList(n):
     list = []
     for i in range(1,n + 1):
@@ -46,12 +45,10 @@ def change_color(text):
         return new_text
     else:
         return text
-####################################################################
+##################################################################
 def process_input_string(input_string):
     # Tìm tất cả các chuỗi từ "G" đến "w0" trong input_string
     matches = re.findall(r'G(.*?)w0', input_string)
-    
-    # Lấy cả dấu trừ (nếu có), và các số phía sau "w" và "l" trong các chuỗi tìm được
     l_values = []
     w_values = []
     w_values_after_change = []
@@ -77,29 +74,22 @@ def process_input_string(input_string):
         w_values_after_change = [-w for w in w_values_after_change]
     # Đảo ngược giá trị của các số "l"
     reversed_l_values = list(reversed(l_values))
-
     # Đảo ngược giá trị của các số "w" và in ra sau khi đã đổi dấu
     reversed_w_values = list(reversed(w_values_after_change))
-
     new_matches = []
-
     for match in matches:
         match = re.sub(r'l(\d+)', lambda x: f'l{reversed_l_values.pop(0)}', match)
         match = re.sub(r'w(-?\d+)', lambda x: f'w{reversed_w_values.pop(0)}', match)
         new_matches.append(match)
-
     # In ra chuỗi mới
     if "PtSEGOPT;o0;o1;o1;o0;o0@" in input_string:
         new_input_string = 'G' + 'w0'.join(new_matches) + 'w0@PtSEGOPT;o0;o1;o1;o0;o0'
     else:
         new_input_string = 'G' + 'w0'.join(new_matches) + 'w0'
-        
     start_index = input_string.find('G')
     end_index = input_string.find('@C')  # Để bao gồm cả '@C'
-
     # Tạo chuỗi mới bằng cách kết hợp các phần của input_string và new_code
     new_input_string1 = input_string[:start_index] + new_input_string + input_string[end_index:]
-
     # Tìm vị trí của ký tự "C" trong chuỗi
     index_of_c = new_input_string1.index('C')
     # Lấy chuỗi từ trái sang phải đến ký tự "C" bằng cách sử dụng cắt chuỗi
@@ -107,13 +97,10 @@ def process_input_string(input_string):
     # Tính tổng giá trị ASCII của từng ký tự trong chuỗi
     ascii_sum = sum(ord(char) for char in substring)
     IP = 96 - (ascii_sum % 32)
-    
     start_index = new_input_string1.find('C')
     end_index = new_input_string1.find(r'C(\d+)')  # Để bao gồm cả '@C'
-
     # Tạo chuỗi mới bằng cách kết hợp các phần của input_string và new_code
     new_input_string2 = new_input_string1[:start_index] + "C" + str(IP) + new_input_string1[end_index:]
-
     return new_input_string2
 ###########################################################################################
 code_string3 = """
@@ -230,7 +217,7 @@ if result['s'] == "":
 else:
     c.drawString(rect_x_position + 210, rect_y_position + 128, 'ピン＝')
 c.setFont('msmincho.ttc', 14)
-c.drawString(rect_x_position + 110, rect_y_position + 10, "SD" + str(数量1[0]))
+c.drawString(rect_x_position + 110, rect_y_position + 8, "SD" + str(数量1[0]))
 
 c.setFont('msmincho.ttc', 16)
 c.drawString(rect_x_position + 15, rect_y_position + 120, "D" + result['d'])
@@ -239,7 +226,6 @@ c.drawRightString(rect_x_position + 187, rect_y_position + 120, result['n'])
 
 c.setFont('msmincho.ttc', 10)
 c.drawString(rect_x_position + 243, rect_y_position + 128, result['s'])
-
 c.setFont('msmincho.ttc', 11)
 """
 ###############################################################################
@@ -656,6 +642,7 @@ def main():
             DF=df_sort['Model Bar Radius']
             DF_kei=df_sort['直径']
             DF_length=df_sort['切寸']
+            DF_type=df_sort['タイプ'] #memno
             df_r=DF.loc[DF.index.repeat(df_1.CountSegments)].reset_index(drop=True)
             df_2.loc[:, 'INDEX'] = df_2.index
             df_2.reset_index(inplace = True, drop = True)
@@ -665,6 +652,7 @@ def main():
             df_2 = df_2.set_index('INDEX')
             df_kei=DF_kei.loc[DF.index.repeat(df_1.CountSegments)].reset_index(drop=True)
             df_length=DF_length.loc[DF.index.repeat(df_1.CountSegments)].reset_index(drop=True)
+            df_type=DF_type.loc[DF.index.repeat(df_1.CountSegments)].reset_index(drop=True) #memno
             df_dropcol1=df_2.drop(['Id','曲線 Center_x','曲線 Center_y','曲線 Center_z','曲線 半径','曲げ角度w1','曲げ角度w2','w2-w1(1)','w2-w1(2)'], axis=1)
             df_dropcol2=df_2.drop(['Id','直線 Point1_x','直線 Point1_y','直線 Point1_z','直線 Point2_x','直線 Point2_y','直線 Point2_z','曲線 半径','曲げ角度w1','曲げ角度w2','w2-w1(1)','w2-w1(2)'], axis=1)
             df_downrow1=df_dropcol1.shift(periods=1, fill_value=0)
@@ -723,7 +711,6 @@ def main():
                 with st.expander("丸めの設定"):
                     marume_ON = st.toggle('丸め ON/OFF')
                     if marume_ON:
-                        
                         col2_1, col2_2 = st.columns(2)
                         with col2_1:
                             marume_mm = st.radio("丸め単位",["5mm", "10mm"],index=None)
@@ -775,10 +762,11 @@ def main():
             df_2.loc[:, 'help id'] = df_help['Id']
             df_2.loc[:, '直径'] = df_kei
             df_2.loc[:, '切寸'] = df_length
-            df_concate=df_2.groupby(['help id','直径','切寸'], sort=False)[['l and w','s']].agg(''.join).reset_index()
-            df_CONCATE=df_2.groupby(['help id','直径','切寸'], sort=False)[['L AND W','s']].agg(''.join).reset_index()
-            df_last=df_concate.groupby(['直径','切寸','l and w','s'])['l and w'].size().reset_index(name='数量')
-            df_LAST=df_CONCATE.groupby(['直径','切寸','L AND W','s'])['L AND W'].size().reset_index(name='数量')
+            df_2.loc[:, 'タイプ'] = df_type #memno
+            df_concate=df_2.groupby(['help id','直径','切寸','タイプ'], sort=False)[['l and w','s']].agg(''.join).reset_index() #memno
+            df_CONCATE=df_2.groupby(['help id','直径','切寸','タイプ'], sort=False)[['L AND W','s']].agg(''.join).reset_index() #memno
+            df_last=df_concate.groupby(['直径','切寸','タイプ','l and w','s'])['l and w'].size().reset_index(name='数量') #memno
+            df_LAST=df_CONCATE.groupby(['直径','切寸','タイプ','L AND W','s'])['L AND W'].size().reset_index(name='数量') #memno
             df_last_copy1 = pd.DataFrame({'鉄筋': [6, 10, 13, 16, 19,22,25,29,32,35,38,41,51],
                    'kg per m': [0.249, 0.56, 0.995, 1.56, 2.25, 3.04, 3.98, 5.04, 6.23, 7.51, 8.95, 10.5, 15.9]})
             dictionary1 = dict(zip(df_last_copy1['鉄筋'],df_last_copy1['kg per m']))
@@ -828,13 +816,11 @@ def main():
                 df_last['切寸'] = (df_last['切寸'] / 10).apply(np.ceil) * 10
             df_last['切寸helper'] = df_last['切寸']
             df_last['径'] = "D"+df_last['直径'].astype(str).str.replace('.0', '', regex=False)
-
-            df_table0 = df_last.loc[:, ["番号","径","切寸","切寸helper","数量","材質","重量(kg)","s","l and w","private"]]
+            df_last['タイプ'] = df_last['タイプ'].str.replace('Rebar Bar:', '', regex=False) #memno
+            df_table0 = df_last.loc[:, ["番号","タイプ","径","切寸","切寸helper","数量","材質","重量(kg)","s","l and w","private"]] #memno
             left_part = df_table0.iloc[:, :3]
             right_part = df_table0.iloc[:, 3:]
-            
             df_table1 = pd.concat([left_part,right_part,df_sum_l1,df_list_l], axis=1) ###############
-
 #############################
             ob = GridOptionsBuilder.from_dataframe(df_table1)
 
@@ -950,10 +936,9 @@ def main():
                 # Chuyển đổi ảnh QR thành đối tượng PIL
                 img_pil = PILImage.new("RGB", img.size, "white")
                 img_pil.paste(img)
-
+                
                 return img_pil
 
-            # Hàm để tạo tệp PDF chứa danh sách BBVS, văn bản và hình ảnh
             def create_pdf(bbvs_list, image_list,text11,text22,text33,text44):
                 buffer = BytesIO()
                 c = canvas.Canvas(buffer, pagesize = A4)  # Sử dụng trang giấy A4
@@ -969,7 +954,7 @@ def main():
 
                 # Vị trí ban đầu của mã QR code trên hình chữ nhật
                 qr_x_offset = 165
-                qr_y_offset = 25
+                qr_y_offset = 27
 
                 # Vị trí ban đầu của hình chữ nhật
                 initial_rect_x_position = 14.175
@@ -992,12 +977,11 @@ def main():
 
                 # Tạo biến NO ban đầu
                 no = 1
-################################################################
-
-                #df = pd.DataFrame(df_bvbs)
-                #selected_column = 'BVBS'
-                
-                for value001 in dfsnet["BVBS"]:
+###############################################################
+                for index, row in dfsnet.iterrows():
+                    value001 = row["BVBS"]
+                    タイプ = row["タイプ"]
+                    #st.write(value001)
                     # Sử dụng biểu thức chính quy để tìm số sau "SD" đến ký tự "@"
                     数量 = r'SD(\d+\.\d+|\d+)@'
                     # Tìm tất cả các kết quả phù hợp với biểu thức chính quy
@@ -1007,21 +991,19 @@ def main():
                     # Vẽ hình chữ nhật trắng với đường viền đen
                     c.setLineWidth(border_width)
                     c.rect(rect_x_position, rect_y_position, rect_width, rect_height, stroke=1, fill=0)
-
                     # Thêm đường gạch ngang 0.5 cm từ đường viền phía trên của hình chữ nhật
                     c.setLineWidth(line_width)
                     c.line(rect_x_position, rect_y_position + rect_height - (20), rect_x_position + rect_width, rect_y_position + rect_height - (20))
-
                     # Thêm đường gạch ngang 1 cm từ đường viền phía trên của hình chữ nhật
                     c.line(rect_x_position, rect_y_position + rect_height - (40), rect_x_position + rect_width, rect_y_position + rect_height - (40))
-
                     # Đặt hình QR lên trang PDF với tọa độ đã điều chỉnh
                     c.drawImage(ImageReader(qr_image), rect_x_position + qr_x_offset, rect_y_position + qr_y_offset, width=qr_size, height=qr_size)
-
                     # Thêm văn bản "NO" và số thứ tự vào hình chữ nhật
                     c.setFont('msmincho.ttc', 15)
-                    c.drawString(rect_x_position + 10, rect_y_position + 10, f'No.{no}')
-
+                    c.drawString(rect_x_position + 10, rect_y_position + 8, f'No.{no}')
+                    c.setFont('msmincho.ttc', 10)
+                    c.drawCentredString(rect_x_position + 95, rect_y_position + 23, タイプ)
+                    
                     value001_str = str(value001)
                     count_l = value001.count('l')
                     count_w = value001.count('w')
@@ -1030,12 +1012,8 @@ def main():
                     ERROR = - 5  
             #TH60   BF2D@Hj@r@i@p1@l11680@n5@e58.11@d13@gSD295@s52@v@a@Gl1500@w90@l1300@w76@l2250@w14@l1680@w14@l2250@w76@l1300@w90@l1500@w0@C82@
                     if count_l == 8 and count_w == 7 and w1=="90" and 0 < int(w2) < 90 and 0 < int(w3) < 90 and 0 < int(w4) < 90 and 0 < int(w5) < 90 and w6=="90" and w7=="0":
-
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
-                        result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                                  
+                        value001_str = str(value001)  
+                        result = extract_numbers(value001_str)      
                         img_path = image_list[60]
 
                         exec(code_string)
@@ -1043,25 +1021,17 @@ def main():
                         c.drawString(rect_x_position + 126, rect_y_position + 42 + ERROR, l1) #phải trên
                         c.drawString(rect_x_position + 144, rect_y_position + 68 + ERROR, l2) #phải
                         c.drawString(rect_x_position + 125, rect_y_position + 97 + ERROR, l3) #trên
-
                         c.drawCentredString(rect_x_position + 93, rect_y_position + 105 + ERROR, l4)  #trái 
-
                         c.drawRightString(rect_x_position + 60, rect_y_position + 97 + ERROR, l5) #phải trên
                         c.drawRightString(rect_x_position + 42, rect_y_position + 68 + ERROR, l6) #phải trên
                         c.drawRightString(rect_x_position + 60, rect_y_position + 43 + ERROR, l7) #phải trên
                         
             #TH59   BF2D@Hj@r@i@p1@l1480@n1@e2.31@d16@gSD295@s80@v@a@Gl218@w90@l400@w90@l400@w90@l400@w-90@l218@w0@PtSEGOPT;o0;o1;o1;o0;o0@C82@
                     elif count_l == 6 and count_w == 5 and (w1=="90" and w2=="90" and w3=="90" and w4=="-90" and w5=="0" and "PtSEGOPT" in value001 or w1=="90" and w2=="-90" and w3=="-90" and w4=="-90" and w5=="0" and "PtSEGOPT" in value001):
-
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
-                        result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                                  
+                        value001_str = str(value001)  
+                        result = extract_numbers(value001_str) 
                         img_path = image_list[59]
-
                         exec(code_string)
-
                         c.drawString(rect_x_position + 115, rect_y_position + 50 + ERROR, l1) #phải trên
                         c.drawString(rect_x_position + 110, rect_y_position + 75 + ERROR, l2) #phải
                         c.drawCentredString(rect_x_position + 96, rect_y_position + 99 + ERROR, l3) #trên
@@ -1070,35 +1040,22 @@ def main():
                             
             #TH58   BF2D@Hj@r@i@p1@l1480@n1@e2.31@d16@gSD295@s80@v@a@Gl218@w90@l400@w90@l400@w90@l400@w90@l218@w0@PtSEGOPT;o0;o1;o1;o0;o0@C95@
                     elif count_l == 6 and count_w == 5 and w1=="90" and w2=="90" and w3=="90" and w4=="90" and w5=="0" and "PtSEGOPT" in value001:
-
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
-                        result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                                  
+                        value001_str = str(value001)  
+                        result = extract_numbers(value001_str) 
                         img_path = image_list[58]
-
                         exec(code_string)
-                        
                         c.drawString(rect_x_position + 98, rect_y_position + 45 + ERROR, l1) #phải trên
                         c.drawString(rect_x_position + 113, rect_y_position + 75 + ERROR, l2) #phải
                         c.drawCentredString(rect_x_position + 100, rect_y_position + 101 + ERROR, l3) #trên
                         c.drawRightString(rect_x_position + 77, rect_y_position + 81 + ERROR, l4)  #trái 
                         c.drawRightString(rect_x_position + 66, rect_y_position + 60 + ERROR, l5) #phải trên
       
-
             #TH57   BF2D@Hj@r@i@p1@l1825@n1@e1.02@d10@gSD295@s30@v@a@Gl140@w101@l455@w79@l640@w90@l460@w-90@l200@w0@C96@
                     elif count_l == 6 and count_w == 5 and (90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="90" and w4=="-90" and w5=="0" or w1=="90" and w2=="-90" and -90 < int(w3) < 0 and -180 < int(w4) < -90  and w5=="0"):
-
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
-                        result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                                  
+                        value001_str = str(value001)  
+                        result = extract_numbers(value001_str) 
                         img_path = image_list[57]
-
                         exec(code_string)
-
                         if 90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="90" and w4=="-90" and w5=="0":
                             c.drawRightString(rect_x_position + 138, rect_y_position + 105 + ERROR, l5) #phải trên
                             c.drawString(rect_x_position + 117, rect_y_position + 75 + ERROR, l4) #phải
@@ -1115,10 +1072,10 @@ def main():
             #TH56   BF2D@Hj@r@i@p1@l1865@n5@e5.22@d10@gSD295@s30@v@a@Gl140@w101@l455@w79@l640@w90@l460@w90@l240@w0@C91@
                     elif count_l == 6 and count_w == 5 and (90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="90" and w4=="90" and w5=="0" or w1=="90" and w2=="90" and 0 < int(w3) < 90 and 90 < int(w4) < 180  and w5=="0"):
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                                   
                         img_path = image_list[56]
 
@@ -1140,10 +1097,10 @@ def main():
             #TH55   BF2D@Hj@r@i@p1@l1841@n1@e1.03@d10@gSD295@s30@v@a@Gl150@w79@l460@w-79@l640@w-90@l460@w90@l200@w0@C89@
                     elif count_l == 6 and count_w == 5 and (0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="-90" and w4=="90" and w5=="0" or w1=="90" and w2=="-90" and -90 < int(w3) < 0 and 0 < int(w4) < 90  and w5=="0"):
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                                   
                         img_path = image_list[55]
 
@@ -1166,10 +1123,10 @@ def main():
             #TH54   BF2D@Hj@r@i@p1@l2031@n1@e1.14@d10@gSD295@s30@v@a@Gl200@w90@l460@w90@l830@w79@l460@w-79@l150@w0@C75@
                     elif count_l == 6 and count_w == 5 and (0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="-90" and w4=="-90" and w5=="0" or w1=="90" and w2=="90" and 0 < int(w3) < 90 and -90 < int(w4) < 0  and w5=="0"):
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                                   
                         img_path = image_list[54]
 
@@ -1191,10 +1148,10 @@ def main():
             #TH53   BF2D@Hj@r@i@p1@l1924@n1@e1.08@d10@gSD295@s30@v@a@Gl200@w106@l470@w74@l700@w79@l460@w-79@l150@w0@C81@
                     elif count_l == 6 and count_w == 5 and (90 < int(w1) < 180 and 0 < int(w2) < 90 and 0 < int(w3) < 90 and -90 < int(w4) < 0 and w5=="0" or 0 < int(w1) < 90 and -90 < int(w2) < 0 and -90 < int(w3) < 0 and -180 < int(w4) < -90 and w5=="0"):
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                                   
                         img_path = image_list[53]
 
@@ -1216,10 +1173,10 @@ def main():
             #TH52   BF2D@Hj@r@i@p1@l1770@n2@e1.98@d10@gSD295@s30@v@a@Gl87@w180@l450@w90@l650@w90@l450@w-90@l180@w0@C85@
                     elif count_l == 6 and count_w == 5 and (w1=="180" and w2=="90" and w3=="90" and w4=="-90" and w5=="0" or w1=="90" and w2=="-90" and w3=="-90" and w4=="-180" and w5=="0"):
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                                   
                         img_path = image_list[52]
 
@@ -1241,10 +1198,10 @@ def main():
             #TH51   BF2D@Hj@r@i@p1@l1766@n3@e2.97@d10@gSD295@s30@v@a@Gl100@w135@l450@w90@l650@w90@l450@w-90@l180@w0@C77@
                     elif count_l == 6 and count_w == 5 and (90 < int(w1) < 180 and w2=="90" and w3=="90" and w4=="-90" and w5=="0" or w1=="90" and w2=="-90" and w3=="-90" and -180 < int(w4) < -90 and w5=="0"):
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                                   
                         img_path = image_list[51]
 
@@ -1266,10 +1223,10 @@ def main():
             #TH50   BF2D@Hj@r@i@p1@l1740@n3@e2.92@d10@gSD295@s30@v@a@Gl87@w180@l450@w90@l650@w90@l450@w90@l150@w0@C76@
                     elif count_l == 6 and count_w == 5 and (w1=="180" and w2=="90" and w3=="90" and w4=="90" and w5=="0" or w1=="90" and w2=="90" and w3=="90" and w4=="180" and w5=="0"):
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                                   
                         img_path = image_list[50]
 
@@ -1291,10 +1248,10 @@ def main():
             #TH49   BF2D@Hj@r@i@p1@l1736@n1@e0.97@d10@gSD295@s30@v@a@Gl100@w135@l450@w90@l650@w90@l450@w90@l150@w0@C68@
                     elif count_l == 6 and count_w == 5 and (90 < int(w1) < 180 and w2=="90" and w3=="90" and w4=="90" and w5=="0" or w1=="90" and w2=="90" and w3=="90" and 90 < int(w4) < 180 and w5=="0"):
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                                   
                         img_path = image_list[49]
 
@@ -1316,10 +1273,10 @@ def main():
             #TH48   BF2D@Hj@r@i@p1@l1706@n1@e0.96@d10@gSD295@s30@v@a@Gl100@w135@l450@w90@l650@w90@l450@w180@l87@w0@C95@
                     elif count_l == 6 and count_w == 5 and (90 < int(w1) < 180 and w2=="90" and w3=="90" and w4=="180" and w5=="0" or w1=="180" and w2=="90" and w3=="90" and 90 < int(w4) < 180 and w5=="0"):
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                                   
                         img_path = image_list[48]
 
@@ -1340,10 +1297,10 @@ def main():
             #TH47   BF2D@Hj@r@i@p1@l1377@n1@e0.77@d10@gSD295@s30@v@a@Gl87@w180@l400@w90@l500@w76@l410@w0@C84@
                     elif count_l == 5 and count_w == 4 and (w1 =="180" and w2 =="90" and 0 < int(w3) < 90 and w4 =="0" or 0 < int(w1) < 90 and w2 =="90" and w3=="180" and w4=="0"):
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                                   
                         img_path = image_list[47]
 
@@ -1363,10 +1320,10 @@ def main():
             #TH46    BF2D@Hj@r@i@p1@l1373@n1@e0.77@d10@gSD295@s30@v@a@Gl100@w135@l400@w90@l500@w76@l410@w0@C86@
                     elif count_l == 5 and count_w == 4 and (90 < int(w1) < 180 and w2 =="90" and 0 < int(w3) < 90 and w4 =="0" or 0 < int(w1) < 90 and w2 =="90" and 90 < int(w3) < 180 and w4=="0"):
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                                   
                         img_path = image_list[46]
 
@@ -1385,10 +1342,10 @@ def main():
             #TH45   BF2D@Hj@r@i@p1@l1460@n1@e0.82@d10@gSD295@s30@v@a@Gl87@w180@l400@w90@l600@w90@l400@w0@C67@
                     elif count_l == 5 and count_w == 4 and (w1=="180" and w2 =="90" and w3=="90" and w4 =="0" or w1=="90" and w2 =="90" and w3=="180" and w4=="0"):
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                                   
                         img_path = image_list[45]
 
@@ -1408,10 +1365,10 @@ def main():
             #TH44   BF2D@Hj@r@i@p1@l1456@n1@e0.82@d10@gSD295@s30@v@a@Gl100@w135@l400@w90@l600@w90@l400@w0@C92@
                     elif count_l == 5 and count_w == 4 and (90 < int(w1) < 180 and w2 =="90" and w3=="90" and w4 =="0" or w1=="90" and w2 =="90" and 90 < int(w3) < 180 and w4=="0"):
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                                   
                         img_path = image_list[44]
 
@@ -1432,10 +1389,10 @@ def main():
             #TH43   BF2D@Hj@r@i@p1@l1539@n1@e0.86@d10@gSD295@s30@v@a@Gl231@w25@l500@w-90@l350@w-90@l500@w0@C69@
                     elif count_l == 5 and count_w == 4 and (0 < int(w1) < 90 and w2 =="-90" and w3=="-90" and w4 =="0" or w1=="90" and w2 =="90" and -90 < int(w3) < 0 and w4=="0"):
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                                   
                         img_path = image_list[43]
 
@@ -1455,10 +1412,10 @@ def main():
             #TH42   BF2D@Hj@r@i@p1@l1508@n1@e0.84@d10@gSD295@s30@v@a@Gl200@w23@l500@w90@l350@w90@l500@w0@C75@
                     elif count_l == 5 and count_w == 4 and (0 < int(w1) < 90 and w2 =="90" and w3=="90" and w4 =="0" or w1=="90" and w2 =="90" and 0 < int(w3) < 90 and w4=="0"):
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                                   
                         img_path = image_list[42]
 
@@ -1478,10 +1435,10 @@ def main():
             #TH41   BF2D@Hj@r@i@p1@l1268@n1@e0.71@d10@gSD295@s30@v@a@Gl450@w65@l150@w25@l200@w90@l500@w0@C70@
                     elif count_l == 5 and count_w == 4 and (0 < int(w1) < 90 and 0 < int(w2) < 90 and w3=="90" and w4 =="0" or w1=="90" and 0 < int(w2) < 90 and 0 < int(w3) < 90 and w4=="0"):
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                                   
                         img_path = image_list[41]
 
@@ -1502,10 +1459,10 @@ def main():
             #TH40   BF2D@Hj@r@i@p1@l1180@n1@e0.66@d10@gSD295@s30@v@a@Gl400@w106@l394@w74@l302@w90@l130@w0@C82@
                     elif count_l == 5 and count_w == 4 and (90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="90" and w4 =="0" or w1=="90" and 0 < int(w2) < 90 and 90 < int(w3) < 180 and w4=="0"):
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                                   
                         img_path = image_list[40]
 
@@ -1525,10 +1482,10 @@ def main():
             #TH39   BF2D@Hj@r@i@p1@l1058@n1@e0.59@d10@gSD295@s30@v@a@Gl400@w113@l250@w67@l300@w-90@l150@w0@C72@
                     elif count_l == 5 and count_w == 4 and (90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="-90" and w4 =="0" or w1=="90" and -90 < int(w2) < 0 and -180 < int(w3) < -90 and w4=="0"):
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                                   
                         img_path = image_list[39]
 
@@ -1548,10 +1505,10 @@ def main():
             #TH38   BF2D@Hj@r@i@p1@l1210@n1@e1.2@d13@gSD295@s39@v@a@Gl200@w90@l300@w-45@l250@w45@l500@w0@C84@
                     elif count_l == 5 and count_w == 4 and (w1=="90" and -90 < int(w2) < 0 and 0 < int(w3) < 90 and w4 =="0" or 0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="90" and w4=="0"):
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                                   
                         img_path = image_list[38]
 
@@ -1571,10 +1528,10 @@ def main():
             #TH37   BF2D@Hj@r@i@p1@l1238@n1@e1.23@d13@gSD295@s39@v@a@Gl400@w66@l300@w-66@l250@w-59@l325@w0@C88@
                     elif count_l == 5 and count_w == 4 and (0 < int(w1) < 90 and -90 < int(w2) < 0 and -90 < int(w3) < 0 and w4 =="0" or 0 < int(w1) < 90 and 0 < int(w2) < 90 and -90 < int(w3) < 0 and w4=="0"):
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                                   
                         img_path = image_list[37]
 
@@ -1594,10 +1551,10 @@ def main():
             #TH36   BF2D@Hj@r@i@p1@l1187@n1@e1.18@d13@gSD295@s39@v@a@Gl400@w66@l308@w-66@l250@w-90@l280@w0@C78@
                     elif count_l == 5 and count_w == 4 and (0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="-90" and w4 =="0" or w1=="90" and 0 < int(w2) < 90 and -90 < int(w3) < 0 and w4=="0"):
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                                   
                         img_path = image_list[36]
 
@@ -1616,10 +1573,10 @@ def main():
             #TH35   BF2D@Hj@r@i@p1@l2738@n1@e2.72@d13@gSD295@s39@v@a@Gl112@w135@l650@w90@l650@w90@l650@w90@l650@w135@l111@w0@C95@
                     elif count_l == 7 and count_w == 6 and w1=="135" and w2=="90" and w3=="90" and w4=="90" and w5=="135" and w6=="0":
  
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                                   
                         img_path = image_list[35]
 
@@ -1641,10 +1598,10 @@ def main():
             #TH34   BF2D@Hj@r@i@p1@l1151@n1@e1.15@d13@gSD295@s39@v@a@Gl190@w64@l310@w-64@l220@w-75@l290@w75@l200@w0@C93@
                     elif count_l == 6 and count_w == 5 and 0 < int(w1) < 90 and -90 < int(w2) < 0 and -90 < int(w3) < 0 and 0 < int(w4) < 90 and w5=="0":
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                         
 
                         img_path = image_list[34]
@@ -1660,10 +1617,10 @@ def main():
             #TH33   BF2D@Hj@r@i@p1@l1719@n1@e1.71@d13@gSD295@s39@v@a@Gl530@w90@l360@w90@l300@w90@l280@w-90@l350@w0@C95@   
                     elif count_l == 6 and count_w == 5 and (w1=="90" and w2=="90" and w3=="90" and w4=="-90" and w5=="0" or w1=="90" and w2=="-90" and w3=="-90" and w4=="-90" and w5=="0"):
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                         
                                     
                         img_path = image_list[33]
@@ -1685,10 +1642,10 @@ def main():
              #TH32  BF2D@Hj@r@i@p1@l1376@n1@e1.37@d13@gSD295@s39@v@a@Gl164@w90@l200@w90@l750@w90@l200@w90@l164@w0@C75@
                     elif count_l == 6 and count_w == 5 and w1=="90" and w2=="90" and w3=="90" and w4=="90" and w5=="0":
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                         
 
                         img_path = image_list[32]
@@ -1704,10 +1661,10 @@ def main():
             #TH31   BF2D@Hj@r@i@p1@l1202@n1@e0.67@d10@gSD295@s30@v@a@Gl100@w135@l210@w90@l630@w90@l210@w135@l100@w0@C86@
                     elif count_l == 6 and count_w == 5 and 90 < int(w1) < 180 and w2=="90" and w3=="90" and 90 < int(w4) < 180 and w5=="0":
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                         
 
                         img_path = image_list[31]
@@ -1723,10 +1680,10 @@ def main():
             #TH30   BF2D@Hj@r@i@p1@l1140@n1@e0.64@d10@gSD295@s30@v@a@Gl87@w180@l340@w90@l300@w90@l340@w180@l87@w0@C90@
                     elif count_l == 6 and count_w == 5 and w1=="180" and w2=="90" and w3=="90" and w4=="180" and w5=="0":
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                         
 
                         img_path = image_list[30]
@@ -1741,10 +1698,10 @@ def main():
 
             #TH29   BF2D@Hj@r@i@p1@l1369@n1@e1.36@d13@gSD295@s39@v@a@Gl220@w90@l300@w-90@l300@w-90@l300@w90@l350@w0@C84@
                     elif count_l == 6 and count_w == 5 and w1=="90" and w2=="-90" and w3=="-90" and w4=="90" and w5=="0":
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                         
 
                         img_path = image_list[29]
@@ -1760,10 +1717,10 @@ def main():
             #TH28   BF2D@Hj@r@i@p1@l1181@n1@e0.66@d10@gSD295@s30@v@a@Gl150@w90@l300@w-90@l230@w90@l560@w0@C88@
                     elif count_l == 5 and count_w == 4 and w1 == "90" and w2 == "-90" and w3 == "90" and w4 == "0":
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                         
 
                         img_path = image_list[28]
@@ -1784,10 +1741,10 @@ def main():
             #TH27   BF2D@Hj@r@i@p1@l1204@n1@e1.2@d13@gSD295@s39@v@a@Gl350@w90@l300@w90@l280@w-90@l350@w0@C69@
                     elif count_l == 5 and count_w == 4 and (w1=="90" and w2=="90" and w3=="-90" and w4=="0" or w1=="90" and w2=="-90" and w3=="-90" and w4=="0"):
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                         
                         img_path = image_list[27]
 
@@ -1807,10 +1764,10 @@ def main():
             #TH26   BF2D@Hj@r@i@p1@l1721@n1@e2.68@d16@gSD295@s80@v@a@Gl218@w90@l1070@w90@l300@w90@l250@w0@C66@
                     elif count_l == 5 and count_w == 4 and w1=="90" and w2=="90" and w3=="90" and w4=="0":
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                         
 
                         img_path = image_list[26]
@@ -1831,10 +1788,10 @@ def main():
             #TH25   BF2D@Hj@r@i@p1@l1164@n1@e1.16@d13@gSD295@s39@v@a@Gl112@w135@l950@w-135@l111@w0@C79@
                     elif count_l == 4 and count_w == 3 and 90 < int(w1) < 180 and -180 < int(w2) < -90 and w3=="0":
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                         
 
                         img_path = image_list[25]
@@ -1848,10 +1805,10 @@ def main():
             #TH24   BF2D@Hj@r@i@p1@l1987@n1@e6.04@d22@gSD345@s88@v@a@Gl204@w180@l1500@w-180@l204@w0@C83@
                     elif count_l == 4 and count_w == 3 and w1=="180" and w2=="-180" and w3=="0":
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                         
 
                         img_path = image_list[24]
@@ -1865,10 +1822,10 @@ def main():
             #TH23   BF2D@Hj@r@i@p1@l1961@n1@e3.06@d16@gSD295@s80@v@a@Gl450@w67@l1050@w-67@l500@w0@C83@
                     elif count_l == 4 and count_w == 3 and 0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="0":
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                         
 
                         img_path = image_list[23]
@@ -1882,10 +1839,10 @@ def main():
             #TH22   BF2D@Hj@r@i@p1@l2458@n1@e3.83@d16@gSD295@s80@v@a@Gl218@w90@l2100@w-90@l218@w0@C79@
                     elif count_l == 4 and count_w == 3 and w1=="90" and w2=="-90" and w3=="0":
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                         
 
                         img_path = image_list[22]
@@ -1899,10 +1856,10 @@ def main():
             #TH21   BF2D@Hj@r@i@p1@l1644@n1@e2.56@d16@gSD295@s80@v@a@Gl154@w135@l1300@w-45@l200@w0@C77@
                     elif count_l == 4 and count_w == 3 and (90 < int(w1) < 180 and -90 < int(w2) < 0 and w3=="0" or 0 < int(w1) < 90 and -180 < int(w2) < -90 and w3=="0"):
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                         
 
                         img_path = image_list[21]
@@ -1921,10 +1878,10 @@ def main():
             #TH20   BF2D@Hj@r@i@p1@l1944@n1@e3.03@d16@gSD295@s80@v@a@Gl400@w78@l1000@w102@l600@w0@C67@
                     elif count_l == 4 and count_w == 3 and (0 < int(w1) < 90 and 90 < int(w2) < 180 and w3=="0" or 90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="0"):
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                         
 
                         img_path = image_list[20]  
@@ -1943,10 +1900,10 @@ def main():
             #TH19   BF2D@Hj@r@i@p1@l1970@n1@e3.07@d16@gSD295@s80@v@a@Gl122@w180@l1600@w-45@l220@w0@C78@
                     elif count_l == 4 and count_w == 3 and (w1=="180" and -90 < int(w2) < 0 and w3=="0" or 0 < int(w1) < 90 and w2=="-180" and w3=="0"):
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                         
 
                         img_path = image_list[19]
@@ -1966,10 +1923,10 @@ def main():
             #TH18   BF2D@Hj@r@i@p1@l2441@n1@e7.42@d22@gSD345@s88@v@a@Gl204@w180@l2000@w45@l210@w0@C66@
                     elif count_l == 4 and count_w == 3 and (w1=="180" and 0 < int(w2) < 90 and w3=="0" or 0 < int(w1) < 90 and w2=="180" and w3=="0"):
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                         
 
                         img_path = image_list[18]
@@ -1988,10 +1945,10 @@ def main():
             #TH17   BF2D@Hj@r@i@p1@l1477@n1@e1.47@d13@gSD295@s39@v@a@Gl86@w180@l1200@w135@l180@w0@C76@
                     elif count_l == 4 and count_w == 3 and (w1=="180" and 90 < int(w2) < 180 and w3=="0" or 90 < int(w1) < 180 and w2=="180" and w3=="0"):
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                         
 
                         img_path = image_list[17]
@@ -2010,10 +1967,10 @@ def main():
             #TH16   BF2D@Hj@r@i@p1@l1267@n1@e1.26@d13@gSD295@s39@v@a@Gl86@w180@l1000@w-135@l170@w0@C72@
                     elif count_l == 4 and count_w == 3 and (w1=="180" and -180 < int(w2) < -90 and w3=="0" or 90 < int(w1) < 180 and w2=="-180" and w3=="0"):
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                         
 
                         img_path = image_list[16]
@@ -2032,10 +1989,10 @@ def main():
             #TH15   BF2D@Hj@r@i@p1@l1278@n1@e1.99@d16@gSD295@s80@v@a@Gl218@w90@l900@w-135@l200@w0@C78@
                     elif count_l == 4 and count_w == 3 and (w1=="90" and -180 < int(w2) < -90 and w3=="0" or 90 < int(w1) < 180 and w2=="-90" and w3=="0"):
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                         
 
                         img_path = image_list[15]
@@ -2054,10 +2011,10 @@ def main():
             #TH14   BF2D@Hj@r@i@p1@l2489@n1@e3.88@d16@gSD295@s80@v@a@Gl218@w90@l1860@w-45@l460@w0@C91@
                     elif count_l == 4 and count_w == 3 and (w1=="90" and -90 < int(w2) < 0 and w3=="0" or 0 < int(w1) < 90 and w2=="-90" and w3=="0"):
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                         
 
                         img_path = image_list[14]
@@ -2076,10 +2033,10 @@ def main():
             #TH13   BF2D@Hj@r@i@p1@l2128@n1@e4.79@d19@gSD345@s114@v@a@Gl268@w90@l1700@w-180@l154@w0@C73@
                     elif count_l == 4 and count_w == 3 and (w1=="90" and w2=="-180" and w3=="0" or w1=="180" and w2=="-90" and w3=="0"):
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                         
 
                         img_path = image_list[13]
@@ -2098,10 +2055,10 @@ def main():
             #TH12   BF2D@Hj@r@i@p1@l2248@n1@e3.51@d16@gSD295@s80@v@a@Gl218@w90@l1800@w135@l270@w0@C80@
                     elif count_l == 4 and count_w == 3 and (w1 == "90" and 90 < int(w2) < 180 and w3 == "0" or 90 < int(w1) < 180 and w2 == "90" and w3 == "0"):
                         
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                         
                         
                         img_path = image_list[12]
@@ -2120,10 +2077,10 @@ def main():
                         #c.drawString(rect_x_position + 75, rect_y_position + 40, l5)  #dưới
             #TH11   BF2D@Hj@r@i@p1@l2559@n1@e7.78@d22@gSD345@s88@v@a@Gl311@w90@l2100@w45@l210@w0@C95@
                     elif count_l == 4 and count_w == 3 and (w1 == "90" and 0 < int(w2) < 90 and w3 =="0" or 0 < int(w1) < 90 and w2 =="90"  and w3 =="0"):
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                         
 
                         img_path = image_list[11]  #Thay hình
@@ -2142,10 +2099,10 @@ def main():
             #TH10   BF2D@Hj@r@i@p1@l2105@n1@e6.4@d22@gSD345@s88@v@a@Gl204@w180@l1600@w90@l311@w0@C81@
                     elif count_l == 4 and count_w == 3 and (w1=="90" and w2=="180" and w3=="0" or w1=="180" and w2=="90" and w3=="0"):
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                         
 
                         img_path = image_list[10]
@@ -2164,10 +2121,10 @@ def main():
             #TH9    BF2D@Hj@r@i@p1@l1514@n1@e2.36@d16@gSD295@s48@v@a@Gl138@w135@l1250@w135@l138@w0@C92@
                     elif count_l == 4 and count_w == 3 and 90 < int(w1) < 180 and 90 < int(w2) < 180 and w3=="0":
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                         
 
                         img_path = image_list[9]
@@ -2181,10 +2138,10 @@ def main():
             #TH8    BF2D@Hj@r@i@p1@l2117@n1@e4.76@d19@gSD345@s114@v@a@Gl398@w85@l1509@w45@l265@w0@C89@
                     elif count_l == 4 and count_w == 3 and 0 < int(w1) < 90 and 0 < int(w2) < 90 and w3=="0":
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                         
 
                         img_path = image_list[8]
@@ -2198,10 +2155,10 @@ def main():
             #TH7 BF2D@Hj@r@i@p1@l2300@n1@e1.29@d10@gSD295@s30@v@a@Gl87@w180@l2100@w180@l87@w0@C79@
                     elif count_l == 4 and count_w == 3 and w1=="180" and w2=="180" and w3=="0":
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                         
 
                         img_path = image_list[7]
@@ -2215,10 +2172,10 @@ def main():
         #TH6    BF2D@Hj@r@i@p1@l2158@n1@e3.37@d16@gSD295@s80@v@a@Gl218@w90@l1800@w90@l218@w0@C90@ 
                     elif count_l == 4 and count_w == 3 and w1=="90" and w2=="90" and w3=="0":
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                         
 
                         img_path = image_list[6]
@@ -2232,10 +2189,10 @@ def main():
             #TH5    BF2D@Hj@r@i@p1@l1057@n1@e1.05@d13@gSD295@s39@v@a@Gl111@w135@l950@w0@C77@    
                     elif count_l == 3 and count_w == 2 and 90 < int(w1) < 180 and int(w2) == 0: 
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                         
 
                         img_path = image_list[5]
@@ -2252,10 +2209,10 @@ def main():
             #TH4    BF2D@Hj@r@i@p1@l2088@n1@e4.7@d19@gSD345@s114@v@a@Gl600@w45@l1500@w0@C76@    
                     elif count_l == 3 and count_w == 2 and 0 < int(w1) < 90 and int(w2) == 0 :  
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                         
 
                         img_path = image_list[4]
@@ -2272,10 +2229,10 @@ def main():
             #TH3    BF2D@Hj@r@i@p1@l1744@n1@e5.3@d22@gSD345@s88@v@a@Gl204@w180@l1500@w0@C77@    
                     elif count_l == 3 and count_w == 2 and w1=="180" and w2=="0": 
 
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                         
 
                         img_path = image_list[3]
@@ -2292,16 +2249,15 @@ def main():
             #TH2    BF2D@Hj@r@i@p1@l1979@n1@e3.09@d16@gSD295@s80@v@a@Gl218@w90@l1800@w0@C88@    
                     elif count_l == 3 and count_w == 2 and w1=="90" and w2=="0": 
                         
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001)  
+
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+
                         
                         
                         img_path = image_list[2]
                     
                         exec(code_string)
-                    
                         if int(l1) > int(l2):
                             c.drawString(rect_x_position + 8, rect_y_position + 62 + ERROR, l2.rjust(6))
                             c.drawString(rect_x_position + 79, rect_y_position + 81 + ERROR, l1.center(6))
@@ -2311,27 +2267,17 @@ def main():
 
             #TH1    BF2D@Hj@r@i@p1@l2250@n1@e14.02@d32@gSD390@s@v@a@Gl2250@w0@C83@
                     elif count_l == 2 and count_w == 1 and w1=="0":                         
-                        # Chuyển đổi aaaa thành chuỗi
-                        value001_str = str(value001)
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
-                        result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        
 
+                        value001_str = str(value001)
+
+                        result = extract_numbers(value001_str)
                         img_path = image_list[1]
-                    
                         exec(code_string)
-                    
                         c.drawString(rect_x_position + 79, rect_y_position + 81 + ERROR, l1.center(6))
             #TH0
                     else:
-                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
-                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        value001_str = str(value001) 
                         result = extract_numbers(value001_str)
-                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
-                        
-
-                        # Thêm văn bản vào
                         c.setFont('msmincho.ttc', 10)
                         c.drawString(rect_x_position + 110, rect_y_position + 134, 'mm') #
                         c.drawString(rect_x_position + 165, rect_y_position + 132, '本')
@@ -2345,8 +2291,8 @@ def main():
                         c.drawString(rect_x_position + 152, rect_y_position + 120, result['n'])
 
                         c.setFont('msmincho.ttc', 10)
-                        c.drawString(rect_x_position + 243, rect_y_position + 128, result['s'] )
-
+                        c.drawString(rect_x_position + 243, rect_y_position + 128, result['s'])
+                        c.drawString(rect_x_position + 243, rect_y_position + 128, a)
                         c.setFont('msmincho.ttc', 20)
                         c.drawString(rect_x_position + 70, rect_y_position + 70, "非定型")  #giữa
 #######################################################################################################           
@@ -2358,6 +2304,7 @@ def main():
                     c.drawRightString(rect_x_position + x3, rect_y_position + y3, text33)
                     c.drawRightString(rect_x_position + x4, rect_y_position + y4, text44)
                     
+
                     # Thiết lập múi giờ
                     desired_timezone = 'Asia/Tokyo'
                     # Tạo đối tượng múi giờ
@@ -2368,7 +2315,7 @@ def main():
                     formatted_time = current_time.strftime("%Y/%m/%d")
                     time1 = current_time.strftime("%H:%M:%S")
                     c.setFont('msmincho.ttc', 10)
-                    c.drawString(rect_x_position + 202, rect_y_position + 10, formatted_time)
+                    c.drawString(rect_x_position + 202, rect_y_position + 8, formatted_time)
 
                     # Di chuyển đến vị trí tiếp theo
                     rect_x_position += rect_width + x_spacing
@@ -2445,7 +2392,6 @@ def main():
                     
                 # Xét chuỗi BBVS
                 for value001 in dfsnet["BVBS"]:
-                    #st.write(value001)
                     value001_str = str(value001)
                     
                     # Sử dụng biểu thức chính quy để tìm số sau "SD" đến ký tự "@"
@@ -3385,10 +3331,10 @@ def main():
             text44 = colA4.text_input("使用場所", "Y1-X1 柱")
             text55 = colA5.date_input('運搬日')
 
-            x1, y1 = 3, 165 #
-            x2, y2 = 3, 145
-            x3, y3 = 266, 165
-            x4, y4 = 266, 145
+            x1, y1 = 3, 167 #
+            x2, y2 = 3, 147
+            x3, y3 = 266, 167
+            x4, y4 = 266, 147
 
             selected_option = colA6.radio("", ["AM", "PM"])
             # Hiển thị thông báo dựa trên tùy chọn được chọn
@@ -3404,17 +3350,17 @@ def main():
             #st.markdown('<h1 style="text-align: center;">BVBSと加工帳のPDFを作成する</h1>', unsafe_allow_html=True)
             # Tạo hai cột với tỷ lệ chiều rộng 2:1
             col11, col22, col33, col44, col55, col66  = st.columns(6)
-            
+
             if len(selected_rows):
                 if col33.button("エフ.PDFを作成"):
                     pdf_buffer = create_pdf(dfs, image_list, text11, text22, text33, text44)
                     col33.download_button("Download エフ.pdf", pdf_buffer, file_name="エフ.pdf", key="download_pdf")
-
             if len(selected_rows):
                 if col44.button("加工帳.PDFを作成"):
                     pdf_buffer = create_pdf1(text11, text22, text44, text55, text66)
                     col44.download_button("Download 加工帳.pdf", pdf_buffer, file_name="加工帳.pdf", key="download-pdf-button")
             st.subheader(' ', divider='rainbow')
+
 if __name__ == "__main__":
     session = st.session_state
     main()
