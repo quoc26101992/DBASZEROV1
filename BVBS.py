@@ -2307,7 +2307,6 @@ def main():
 
                         c.setFont('msmincho.ttc', 10)
                         c.drawString(rect_x_position + 243, rect_y_position + 128, result['s'])
-                        c.drawString(rect_x_position + 243, rect_y_position + 128, a)
                         c.setFont('msmincho.ttc', 20)
                         c.drawString(rect_x_position + 70, rect_y_position + 70, "非定型")  #giữa
 #######################################################################################################           
