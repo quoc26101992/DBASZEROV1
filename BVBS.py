@@ -881,7 +881,7 @@ def main():
             dfs = pd.DataFrame(selected_rows)
             #st.write(dfs)
             if len(selected_rows):
-                
+                result径 = 1
                 dfsnet = dfs.drop(columns=['_selectedRowNodeInfo'])
                 def process_value(径):
                     if 径[0] != 'D' or (径[0] == 'D' and (径[1:].isalpha() or not 径[1:].isdigit())):
@@ -895,6 +895,7 @@ def main():
 
                 if 'D0' in condition_result.values:
                     dfsnet['径'] = 'D0'
+                    result径 = 0
                     st.warning('文法エラー : 最初に d を入力し、数字のみを入力します。 例 : (D16)', icon= "⚠️")
 
                 dfsnet['径'] = dfsnet['径'].astype(str).str.replace('D', '', regex=False)
@@ -942,15 +943,19 @@ def main():
                 buf = io.BytesIO()
                 dfsnet1.to_excel(buf, index=False, header=True)
                 file_name_0 = download_excel(session.file_name)
-                col222.download_button("Download Excel",buf.getvalue(),file_name_0,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                if result径 == 1: 
+                    col222.download_button("Download Excel",buf.getvalue(),file_name_0,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                else: 
+                    st.write("")
                 ###_Download BVBS_###
-
                 df_BVBS = dfsnet['BVBS']
                 buf = io.BytesIO()
                 df_BVBS.to_csv(buf, index=False, header=False)
                 file_name_3 = download_bvbs(session.file_name)
-                col333.download_button("Download BVBS",buf.getvalue(),file_name_3)
-            
+                if result径 == 1: 
+                    col333.download_button("Download BVBS",buf.getvalue(),file_name_3)
+                else: 
+                    st.write("")
 ###############################################################################################################################
             # Cài đặt phông chữ tiếng Nhật
             pdfmetrics.registerFont(TTFont('msmincho.ttc', 'form/MSMINCHO.TTF'))  ###########################################################
@@ -2916,13 +2921,19 @@ def main():
             col11, col22, col33, col44, col55, col66  = st.columns(6)
 
             if len(selected_rows):
-                if col33.button("エフ.PDFを作成"):
-                    pdf_buffer = create_pdf(dfs, image_list, text11, text22, text33, text44)
-                    col33.download_button("Download エフ.pdf", pdf_buffer, file_name="エフ.pdf", key="download_pdf")
+                    if result径 == 1: 
+                        if col33.button("エフ.PDFを作成"):
+                            pdf_buffer = create_pdf(dfs, image_list, text11, text22, text33, text44)
+                            col33.download_button("Download エフ.pdf", pdf_buffer, file_name="エフ.pdf", key="download_pdf")
+                    else:
+                        st.write("")
             if len(selected_rows):
-                if col44.button("加工帳.PDFを作成"):
-                    pdf_buffer = create_pdf1(text11, text22, text44, text55, text66)
-                    col44.download_button("Download 加工帳.pdf", pdf_buffer, file_name="加工帳.pdf", key="download-pdf-button")
+                if result径 == 1:
+                    if col44.button("加工帳.PDFを作成"):
+                        pdf_buffer = create_pdf1(text11, text22, text44, text55, text66)
+                        col44.download_button("Download 加工帳.pdf", pdf_buffer, file_name="加工帳.pdf", key="download-pdf-button")
+                    else:
+                        st.write("")
             st.subheader(' ', divider='rainbow')
 
 if __name__ == "__main__":
