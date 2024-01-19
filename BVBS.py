@@ -883,18 +883,19 @@ def main():
             if len(selected_rows):
                 
                 dfsnet = dfs.drop(columns=['_selectedRowNodeInfo'])
-                def process_value(x):
-                    if x[0] != 'D' or (x[0] == 'D' and (x[1:].isalpha() or not x[1:].isdigit())):
+                def process_value(径):
+                    if 径[0] != 'D' or (径[0] == 'D' and (径[1:].isalpha() or not 径[1:].isdigit())):
                         return 'D0'
-                    return x
+                    return 径
                 
                 column_to_check = dfsnet['径']
+
                 condition_result = column_to_check.apply(process_value)
                 dfsnet['径'] = condition_result
 
                 if 'D0' in condition_result.values:
                     dfsnet['径'] = 'D0'
-                    st.warning('This is a warning', icon= "⚠️")
+                    st.warning('文法エラー : 最初に d を入力し、数字のみを入力します。 例 : (D16)', icon= "⚠️")
 
                 dfsnet['径'] = dfsnet['径'].astype(str).str.replace('D', '', regex=False)
                 #dfsnet['番号'] = dfsnet['番号'].astype(str).str.replace('No.', '', regex=False) #
