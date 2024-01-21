@@ -759,12 +759,12 @@ def main():
                         st.write('デフォルト : セルの編集が不可能の状態になっています。')
             
             with col4:
-                with st.expander("エフにタイプを表示する"):
-                    タイプ_OFF = st.toggle('タイプ 表示/非表示', value=True)
+                with st.expander("表示の設定"):
+                    タイプ_OFF = st.toggle('タイプ 表示/非表示', value = False)
                     if タイプ_OFF:
-                        st.success('表示')
+                        st.success('エフを出力する時にタイプが表示されます。')
                     else: 
-                        st.write('非表示')
+                        st.write('エフを出力する時にタイプが非表示されます。')
 
             df_2.loc[df_2['length']==0, 'l and w'] = '@w'+df_2['check4'].astype(str).str.replace('.0', '', regex=False)+'@'
             df_2.loc[df_2['length']!=0, 'l and w'] = 'l'+df_2['length'].astype(str).str.replace('.0', '', regex=False)
@@ -891,7 +891,7 @@ def main():
                 if 'D0' in condition_result.values:
                     dfsnet['径'] = 'D0'
                     result径 = 0
-                    st.warning('文法エラー : 最初に D を入力し、数字を入力します。 例 : (D16)', icon= "⚠️")
+                    st.warning('先頭に D を入力してください。 例 : (D16)', icon= "⚠️")
 
                 dfsnet['径'] = dfsnet['径'].astype(str).str.replace('D', '', regex=False)
                 #dfsnet['番号'] = dfsnet['番号'].astype(str).str.replace('No.', '', regex=False) #
@@ -920,15 +920,18 @@ def main():
                 dfsnet['BVBS'] = dfsnet['searchIP'] + dfsnet['IP'].astype(str) + "@"
 
                 zz = 0
-                with st.expander("鉄筋を左右反転にしたい場合は、該当箇所のチェックボックスにチェックを入れてください"):
-                    for value000 in dfsnet['BVBS']:
-                        zz += 1
-                        is_checked = st.checkbox(f" No.{zz} : {value000}")
-                        if is_checked:
-                            value002 = process_input_string(value000)
-                            dfsnet.at[zz - 1, 'BVBS'] = value002
-                            colored_text = change_color(value002)
-                            st.markdown('<span style="color: red; font-size: 15px;"> 左右反転後: </span>' + colored_text, unsafe_allow_html=True)
+                if result径 == 1:
+                    with st.expander("鉄筋を左右反転にしたい場合は、該当箇所のチェックボックスにチェックを入れてください"):
+                        for value000 in dfsnet['BVBS']:
+                            zz += 1
+                            is_checked = st.checkbox(f" No.{zz} : {value000}")
+                            if is_checked:
+                                value002 = process_input_string(value000)
+                                dfsnet.at[zz - 1, 'BVBS'] = value002
+                                colored_text = change_color(value002)
+                                st.markdown('<span style="color: red; font-size: 15px;"> 左右反転後: </span>' + colored_text, unsafe_allow_html=True)
+                else: 
+                    st.write("")
                 col000, col111, col222, col333, col444, col555 = st.columns(6)
                 ###_#Download Excel_###
                 dfsnet1 = dfsnet.drop(columns=["切寸helper","重量(kg)","s","l and w","private",'searchIP','IP','BVBS','sum_before','sum_after']) ###############
