@@ -843,12 +843,9 @@ def main():
 
 #############################
             ob = GridOptionsBuilder.from_dataframe(df_table1)
-
             ob.configure_column("番号", headerCheckboxSelection = True)
-
             #  Update selection.
             ob.configure_selection(selection_mode="multiple", use_checkbox=True, pre_selected_rows=createList(len(df_table1)))
-
             #  Update row height.
             ob.configure_grid_options(rowHeight=30)
             if edit_ON:
@@ -858,12 +855,10 @@ def main():
             grid_options = ob.build()
             column_defs = grid_options["columnDefs"]
             columns_to_hide = ["切寸helper","重量(kg)","s","l and w","private","sum_before"] ###############
-
             # update the column definitions to hide the specified columns
             for col in column_defs:
                 if col["headerName"] in columns_to_hide:
                     col["hide"] = True
-
             # Add custom css to center the values
             grid_return = AgGrid(
                 df_table1,
@@ -896,7 +891,7 @@ def main():
                 if 'D0' in condition_result.values:
                     dfsnet['径'] = 'D0'
                     result径 = 0
-                    st.warning('文法エラー : 最初に d を入力し、数字のみを入力します。 例 : (D16)', icon= "⚠️")
+                    st.warning('文法エラー : 最初に D を入力し、数字を入力します。 例 : (D16)', icon= "⚠️")
 
                 dfsnet['径'] = dfsnet['径'].astype(str).str.replace('D', '', regex=False)
                 #dfsnet['番号'] = dfsnet['番号'].astype(str).str.replace('No.', '', regex=False) #
@@ -2921,12 +2916,12 @@ def main():
             col11, col22, col33, col44, col55, col66  = st.columns(6)
 
             if len(selected_rows):
-                    if result径 == 1: 
-                        if col33.button("エフ.PDFを作成"):
-                            pdf_buffer = create_pdf(dfs, image_list, text11, text22, text33, text44)
-                            col33.download_button("Download エフ.pdf", pdf_buffer, file_name="エフ.pdf", key="download_pdf")
-                    else:
-                        st.write("")
+                if result径 == 1: 
+                    if col33.button("エフ.PDFを作成"):
+                        pdf_buffer = create_pdf(dfs, image_list, text11, text22, text33, text44)
+                        col33.download_button("Download エフ.pdf", pdf_buffer, file_name="エフ.pdf", key="download_pdf")
+                else:
+                    st.write("")
             if len(selected_rows):
                 if result径 == 1:
                     if col44.button("加工帳.PDFを作成"):
