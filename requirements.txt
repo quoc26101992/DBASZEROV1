@@ -12,3 +12,4 @@ fpdf
 pytz
 streamlit-aggrid
 lark
+mathutils
