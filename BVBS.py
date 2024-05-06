@@ -2921,14 +2921,14 @@ def main():
             #st.markdown('<h1 style="text-align: center;">BVBSと加工帳のPDFを作成する</h1>', unsafe_allow_html=True)
             col11, col22, col33, col44, col55, col66  = st.columns(6)
 
-            if len(selected_rows):
+            if selected_rows:
                 if result径 == 1: 
                     if col33.button("エフ.PDFを作成"):
                         pdf_buffer = create_pdf(dfs, image_list, text11, text22, text33, text44)
                         col33.download_button("Download エフ.pdf", pdf_buffer, file_name="エフ.pdf", key="download_pdf")
                 else:
                     st.write("")
-            if len(selected_rows):
+            if selected_rows:
                 if result径 == 1:
                     if col44.button("加工帳.PDFを作成"):
                         pdf_buffer = create_pdf1(text11, text22, text44, text55, text66)
