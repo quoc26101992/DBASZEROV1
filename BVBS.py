@@ -1,5 +1,4 @@
 import ifcopenshell
-import mathutils
 import ifcopenshell.util.element as Element
 import ifcopenshell.api
 import streamlit as st
