@@ -876,7 +876,7 @@ def main():
             dfs = pd.DataFrame(selected_rows)
             #st.write(selected_rows)
 ################################################
-            if selected_rows:
+            if dfs:
                 st.write(selected_rows)
                 result径 = 1
                 dfsnet = dfs.drop(columns=['_selectedRowNodeInfo'])
