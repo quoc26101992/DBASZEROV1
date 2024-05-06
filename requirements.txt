@@ -1,17 +1,2 @@
 streamlit
 
-matplotlib
-plotly
-pandas
-xlsxwriter
-reportlab
-qrcode
-Pillow
-datetime
-fpdf
-pytz
-streamlit-aggrid
-PyMuPDF
-setuptools
-mathutils
-lark
