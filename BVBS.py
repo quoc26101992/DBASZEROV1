@@ -1,6 +1,5 @@
+
 import ifcopenshell
-import ifcopenshell.util.element as Element
-import ifcopenshell.api
 import streamlit as st
 import pandas as pd
 import math
@@ -24,6 +23,7 @@ import re
 import pytz
 from st_aggrid import GridOptionsBuilder, AgGrid, JsCode
 from st_aggrid.shared import ColumnsAutoSizeMode
+
 
 def createList(n):
     list = []
@@ -150,11 +150,11 @@ for x_cm, y_cm, width_cm, height_cm in rectangles1:
     p.setFont('msmincho.ttc', 16) 
     # Vẽ văn bản tiếng Nhật và tiếng Anh với kích thước font khác nhau
     p.drawCentredString(1.6 * 28.3465, (y1 + 0.7) * 28.3465 , (f'No.{NO1}'))  #1
-    p.drawCentredString(3.6 * 28.3465, (y1 + 0.7) * 28.3465 , (result['d']))  #2 
+    p.drawCentredString(3.6 * 28.3465, (y1 + 0.7) * 28.3465 , ("D" + result['d']))  #2 
     p.drawCentredString(5.6 * 28.3465, (y1 + 0.7) * 28.3465 , (result['l']))  #3 
     p.drawCentredString(7.6 * 28.3465, (y1 + 0.7) * 28.3465 , (result['n']))  #4 
     p.drawCentredString(9.65 * 28.3465, (y1 + 0.7) * 28.3465 , "")  #5 
-    p.drawCentredString(11.65 * 28.3465, (y1 + 0.7) * 28.3465 , 数量1)  #6 
+    p.drawCentredString(11.65 * 28.3465, (y1 + 0.7) * 28.3465 , ("SD" + 数量1[0]))  #6 
     p.drawCentredString(17.47 * 28.3465, (y1 + 0.7) * 28.3465 , (result['s']))  #8 
     p.drawCentredString(19.35 * 28.3465, (y1 + 0.7) * 28.3465 , ee1)   #9 
 """
@@ -216,28 +216,29 @@ img_width, img_height = img.size
 aspect_ratio = img_height / img_width
 img_width = 100  # Chiều rộng hình ảnh trong hình chữ nhật (chỉnh sửa tùy ý)
 img_height = img_width * aspect_ratio
-img_x_position = rect_x_position + rect_width / 2 - img_width / 1.09
-img_y_position = rect_y_position + rect_height / 1.92 - img_height / 1.1
+img_x_position = rect_x_position + rect_width / 2 - img_width / 1
+img_y_position = rect_y_position + rect_height / 2 - img_height / 1.1
 c.drawImage(ImageReader(img), img_x_position, img_y_position, width=img_width, height=img_height)
 
 # Thêm văn bản vào
 c.setFont('msmincho.ttc', 10)
-c.drawString(rect_x_position + 110, rect_y_position + 134, 'mm'.rjust(5))
-c.drawString(rect_x_position + 165, rect_y_position + 132, '本'.rjust(5))
+c.drawString(rect_x_position + 110, rect_y_position + 149, 'mm'.rjust(5))
+c.drawString(rect_x_position + 165, rect_y_position + 147, '本'.rjust(5))
 if result['s'] == "":
-    c.drawString(rect_x_position + 210, rect_y_position + 128, '')
+    c.drawString(rect_x_position + 220, rect_y_position + 147, '')
 else:
-    c.drawString(rect_x_position + 210, rect_y_position + 128, 'ピン＝')
+    c.drawString(rect_x_position + 220, rect_y_position + 147, 'ピン＝')
 c.setFont('msmincho.ttc', 14)
-c.drawString(rect_x_position + 110, rect_y_position + 8, str(数量1))
+c.drawString(rect_x_position + 110, rect_y_position + 10, "SD" + str(数量1[0]))
 
 c.setFont('msmincho.ttc', 16)
-c.drawString(rect_x_position + 15, rect_y_position + 120, result['d'])
-c.drawRightString(rect_x_position + 125, rect_y_position + 120, result['l'])
-c.drawRightString(rect_x_position + 187, rect_y_position + 120, result['n'])
+c.drawString(rect_x_position + 15, rect_y_position + 135, "D" + result['d'])
+c.drawRightString(rect_x_position + 125, rect_y_position + 135, result['l'])
+c.drawRightString(rect_x_position + 187, rect_y_position + 135, result['n'])
 
 c.setFont('msmincho.ttc', 10)
-c.drawString(rect_x_position + 243, rect_y_position + 128, result['s'])
+c.drawString(rect_x_position + 255, rect_y_position + 147, result['s'])
+
 c.setFont('msmincho.ttc', 11)
 """
 ###############################################################################
@@ -315,24 +316,30 @@ def process_data(value001_str):
    
 ########################################################
 def extract_numbers(value001_str):
+    # Tìm vị trí của ký tự 'G' trong chuỗi
     index_of_G = value001_str.find('G')
 
+    # Kiểm tra nếu 'G' không tồn tại trong chuỗi
     if index_of_G == -1:
         print("Không tìm thấy ký tự 'G' trong chuỗi.")
         return None
 
+    # Lấy chuỗi từ đầu đến 'G'
     substring = value001_str[:index_of_G]
 
+    # Khởi tạo các biến để lưu số sau khi gặp 'l', 'n', 'd', 's'
     l_number = ""
     n_number = ""
-    d_characters = ""  # Thay đổi tên biến để phản ánh là lấy chuỗi sau khi gặp 'd'
+    d_number = ""
     s_number = ""
 
+    # Biến để xác định khi nào ta gặp các ký tự 'l', 'n', 'd', 's'
     found_l = False
     found_n = False
     found_d = False
     found_s = False
 
+    # Duyệt qua chuỗi từ đầu đến 'G' để tìm các số sau khi gặp 'l', 'n', 'd', 's'
     for char in substring:
         if char == 'l':
             found_l = True
@@ -340,7 +347,6 @@ def extract_numbers(value001_str):
             found_n = True
         elif char == 'd':
             found_d = True
-            d_characters += char  # Bắt đầu chuỗi sau khi gặp 'd'
         elif char == 's':
             found_s = True
         elif char.isdigit():
@@ -349,22 +355,20 @@ def extract_numbers(value001_str):
             elif found_n:
                 n_number += char
             elif found_d:
-                d_characters += char
+                d_number += char
             elif found_s:
                 s_number += char
         else:
+            # Nếu gặp ký tự khác, đặt lại biến found_ để bắt đầu lấy số mới
             found_l = False
             found_n = False
             found_d = False
             found_s = False
 
-    # Thay thế 'd' thành 'D' nếu chuỗi 'd_characters' không rỗng
-    d_characters = d_characters.replace('d', 'D')
-
     return {
         'l': l_number,
         'n': n_number,
-        'd': d_characters,
+        'd': d_number,
         's': s_number
     }
 
@@ -549,6 +553,7 @@ def create_pandas_dataframe_2(data, pset_attributes):
         df2 = pd.DataFrame.from_records(pandas_data, columns=attributes)
         DF_sort2 =  df2.sort_values(by=['Id'])
     return DF_sort2
+
 
 def callback_upload():
     if st.session_state.uploaded_file is not None:
@@ -757,15 +762,6 @@ def main():
                         st.success('集計表のセールが編集できるようになりました。')
                     else: 
                         st.write('デフォルト : セルの編集が不可能の状態になっています。')
-            
-            with col4:
-                with st.expander("表示の設定"):
-                    タイプ_OFF = st.toggle('タイプ 表示/非表示', value = False)
-                    if タイプ_OFF:
-                        st.success('エフを出力する時にタイプが表示されます。')
-                    else: 
-                        st.write('エフを出力する時にタイプが非表示されます。')
-
             df_2.loc[df_2['length']==0, 'l and w'] = '@w'+df_2['check4'].astype(str).str.replace('.0', '', regex=False)+'@'
             df_2.loc[df_2['length']!=0, 'l and w'] = 'l'+df_2['length'].astype(str).str.replace('.0', '', regex=False)
             df_2.loc[df_2['LENGTH']==0, 'L AND W'] = '@w'+df_2['check4'].astype(str).str.replace('.0', '', regex=False)+'@'
@@ -836,16 +832,17 @@ def main():
             df_last['径'] = "D"+df_last['直径'].astype(str).str.replace('.0', '', regex=False)
             df_last['タイプ'] = df_last['タイプ'].str.replace('Rebar Bar:', '', regex=False) #memno
             df_table0 = df_last.loc[:, ["番号","タイプ","径","切寸","切寸helper","数量","材質","重量(kg)","s","l and w","private"]] #memno
-            
             left_part = df_table0.iloc[:, :3]
             right_part = df_table0.iloc[:, 3:]
             df_table1 = pd.concat([left_part,right_part,df_sum_l1,df_list_l], axis=1) ###############
-
 #############################
             ob = GridOptionsBuilder.from_dataframe(df_table1)
+
             ob.configure_column("番号", headerCheckboxSelection = True)
+
             #  Update selection.
             ob.configure_selection(selection_mode="multiple", use_checkbox=True, pre_selected_rows=createList(len(df_table1)))
+
             #  Update row height.
             ob.configure_grid_options(rowHeight=30)
             if edit_ON:
@@ -855,10 +852,12 @@ def main():
             grid_options = ob.build()
             column_defs = grid_options["columnDefs"]
             columns_to_hide = ["切寸helper","重量(kg)","s","l and w","private","sum_before"] ###############
+
             # update the column definitions to hide the specified columns
             for col in column_defs:
                 if col["headerName"] in columns_to_hide:
                     col["hide"] = True
+
             # Add custom css to center the values
             grid_return = AgGrid(
                 df_table1,
@@ -875,34 +874,18 @@ def main():
             selected_rows = grid_return["selected_rows"]
             dfs = pd.DataFrame(selected_rows)
             #st.write(dfs)
-            if len(selected_rows)==1:
-                result径 = 1
-                dfsnet = dfs.drop(columns=['_selectedRowNodeInfo'])
-                def process_value(径):
-                    if 径[0] != 'D' or (径[0] == 'D' and (径[1:].isalpha() or not 径[1:].isdigit())):
-                        return 'D0'
-                    return 径
+            if len(selected_rows):
                 
-                column_to_check = dfsnet['径']
-
-                condition_result = column_to_check.apply(process_value)
-                dfsnet['径'] = condition_result
-
-                if 'D0' in condition_result.values:
-                    dfsnet['径'] = 'D0'
-                    result径 = 0
-                    st.warning('先頭に D を入力してください。 例 : (D16)', icon= "⚠️")
+                dfsnet = dfs.drop(columns=['_selectedRowNodeInfo'])
 
                 dfsnet['径'] = dfsnet['径'].astype(str).str.replace('D', '', regex=False)
                 #dfsnet['番号'] = dfsnet['番号'].astype(str).str.replace('No.', '', regex=False) #
-
                 df_l_after = dfsnet.iloc[:,-(max_count+1):] ###############
                 df_sum_before = dfsnet['sum_before']
                 dfsnet.loc[:, 'sum_after'] = df_l_after.astype(int).sum(axis = 1)
                 df_sum_after = dfsnet.loc[:, 'sum_after']
                 df_DELTA = df_sum_after.astype(int) - df_sum_before.astype(int)            
                 dfsnet['切寸'] = dfsnet['切寸helper'].astype(int) +  df_DELTA.astype(int)
-                
                 dfsnet['重量(kg)'] = round(dfsnet['数量'].astype(int) * dfsnet['切寸'].astype(int) * dfsnet['径'].astype(int).map(dictionary1) / 1000,2) 
                 for i in range(1,max_count_plus2):
                     dfsnet['l'+str(i)+'help'] = dfsnet['l and w'].astype(str).str.split("l").str[i]
@@ -920,18 +903,15 @@ def main():
                 dfsnet['BVBS'] = dfsnet['searchIP'] + dfsnet['IP'].astype(str) + "@"
 
                 zz = 0
-                if result径 == 1:
-                    with st.expander("鉄筋を左右反転にしたい場合は、該当箇所のチェックボックスにチェックを入れてください"):
-                        for value000 in dfsnet['BVBS']:
-                            zz += 1
-                            is_checked = st.checkbox(f" No.{zz} : {value000}")
-                            if is_checked:
-                                value002 = process_input_string(value000)
-                                dfsnet.at[zz - 1, 'BVBS'] = value002
-                                colored_text = change_color(value002)
-                                st.markdown('<span style="color: red; font-size: 15px;"> 左右反転後: </span>' + colored_text, unsafe_allow_html=True)
-                else: 
-                    st.write("")
+                with st.expander("鉄筋を左右反転にしたい場合は、該当箇所のチェックボックスにチェックを入れてください"):
+                    for value000 in dfsnet['BVBS']:
+                        zz += 1
+                        is_checked = st.checkbox(f" No.{zz} : {value000}")
+                        if is_checked:
+                            value002 = process_input_string(value000)
+                            dfsnet.at[zz - 1, 'BVBS'] = value002
+                            colored_text = change_color(value002)
+                            st.markdown('<span style="color: red; font-size: 15px;"> 左右反転後: </span>' + colored_text, unsafe_allow_html=True)
                 col000, col111, col222, col333, col444, col555 = st.columns(6)
                 ###_#Download Excel_###
                 dfsnet1 = dfsnet.drop(columns=["切寸helper","重量(kg)","s","l and w","private",'searchIP','IP','BVBS','sum_before','sum_after']) ###############
@@ -941,22 +921,19 @@ def main():
                 buf = io.BytesIO()
                 dfsnet1.to_excel(buf, index=False, header=True)
                 file_name_0 = download_excel(session.file_name)
-                if result径 == 1: 
-                    col222.download_button("Download Excel",buf.getvalue(),file_name_0,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                else: 
-                    st.write("")
+                col222.download_button("Download Excel",buf.getvalue(),file_name_0,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
                 ###_Download BVBS_###
+
                 df_BVBS = dfsnet['BVBS']
                 buf = io.BytesIO()
                 df_BVBS.to_csv(buf, index=False, header=False)
                 file_name_3 = download_bvbs(session.file_name)
-                if result径 == 1: 
-                    col333.download_button("Download BVBS",buf.getvalue(),file_name_3)
-                else: 
-                    st.write("")
-###############################################################################################################################
-            # Cài đặt phông chữ tiếng Nhật
+                col333.download_button("Download BVBS",buf.getvalue(),file_name_3)
+            
+#####################################################################                                                        ##########################################################
+            # Cài đặt phông chữ hỗ trợ tiếng Nhật
             pdfmetrics.registerFont(TTFont('msmincho.ttc', 'form/MSMINCHO.TTF'))  ###########################################################
+                                                                                                                             ###########################################################
             # Hàm để tạo mã QR với kích thước cố định
             def create_qr_code(df_bvbs, size=100):
                 qr = qrcode.QRCode(
@@ -973,939 +950,1403 @@ def main():
                 # Chuyển đổi ảnh QR thành đối tượng PIL
                 img_pil = PILImage.new("RGB", img.size, "white")
                 img_pil.paste(img)
-                
+
                 return img_pil
 
+            # Hàm để tạo tệp PDF chứa danh sách BBVS, văn bản và hình ảnh
             def create_pdf(bbvs_list, image_list,text11,text22,text33,text44):
                 buffer = BytesIO()
-                c = canvas.Canvas(buffer, pagesize = A4)  # Sử dụng trang giấy A4
+                c = canvas.Canvas(buffer, pagesize=A4)  # Sử dụng trang giấy A4
 
                 # Kích thước trang A4
                 page_width , page_height = A4
 
                 right_margin = 50
                 # Kích thước cố định cho mã QR code và hình chữ nhật
-                qr_size = 95
-                rect_width = 269.3  # Chiều dài 10cm chuyển thành pixel (1 cm = 28.35 pixel)
-                rect_height = 181.9  # Chiều rộng 7cm chuyển thành pixel
+                qr_size = 100
+                rect_width = 283.5  # Chiều dài 10cm chuyển thành pixel (1 cm = 28.35 pixel)
+                rect_height = 198.45  # Chiều rộng 7cm chuyển thành pixel
 
                 # Vị trí ban đầu của mã QR code trên hình chữ nhật
-                qr_x_offset = 165
+                qr_x_offset = 177
                 qr_y_offset = 27
 
                 # Vị trí ban đầu của hình chữ nhật
-                initial_rect_x_position = 14.175
-                initial_rect_y_position = page_height - rect_height - 14.175
+                initial_rect_x_position = 10
+                initial_rect_y_position = page_height - rect_height - 10
 
                 # Khoảng cách giữa các hình
-                x_spacing = 28.45
-                y_spacing = 28.45
+                x_spacing = 10
+                y_spacing = 10
                 
                 # Đặt độ dày cho đường kẻ và đường viền (thay đổi giá trị tùy ý)
                 line_width = 0.5  # Độ dày của đường kẻ
                 border_width = 0.25  # Độ dày của đường viền
+                
                 # Vị trí hiện tại của hình chữ nhật
                 rect_x_position = initial_rect_x_position
                 rect_y_position = initial_rect_y_position
+
                 # Biến để theo dõi số lượng hình đã in trên trang hiện tại
                 rects_on_page = 0
+
                 # Tạo biến NO ban đầu
                 no = 1
-###############################################################
-                for index, row in dfsnet.iterrows():
-                    value001 = row["BVBS"]
-                    タイプ = row["タイプ"]
-                    index_g = value001.find('@g')
-                    index_at = value001.find('@', index_g + 2)
-                    数量1  = value001[index_g + 2:index_at]
+################################################################
+
+                #df = pd.DataFrame(df_bvbs)
+                #selected_column = 'BVBS'
+                
+                for value001 in dfsnet["BVBS"]:
+                    # Sử dụng biểu thức chính quy để tìm số sau "SD" đến ký tự "@"
+                    数量 = r'SD(\d+\.\d+|\d+)@'
+                    # Tìm tất cả các kết quả phù hợp với biểu thức chính quy
+                    数量1 = re.findall(数量 , value001)
                     qr_image = create_qr_code(value001, size=qr_size)
 ################################################################
                     # Vẽ hình chữ nhật trắng với đường viền đen
                     c.setLineWidth(border_width)
                     c.rect(rect_x_position, rect_y_position, rect_width, rect_height, stroke=1, fill=0)
+
                     # Thêm đường gạch ngang 0.5 cm từ đường viền phía trên của hình chữ nhật
                     c.setLineWidth(line_width)
                     c.line(rect_x_position, rect_y_position + rect_height - (20), rect_x_position + rect_width, rect_y_position + rect_height - (20))
+
                     # Thêm đường gạch ngang 1 cm từ đường viền phía trên của hình chữ nhật
                     c.line(rect_x_position, rect_y_position + rect_height - (40), rect_x_position + rect_width, rect_y_position + rect_height - (40))
+
                     # Đặt hình QR lên trang PDF với tọa độ đã điều chỉnh
                     c.drawImage(ImageReader(qr_image), rect_x_position + qr_x_offset, rect_y_position + qr_y_offset, width=qr_size, height=qr_size)
+
                     # Thêm văn bản "NO" và số thứ tự vào hình chữ nhật
                     c.setFont('msmincho.ttc', 15)
-                    c.drawString(rect_x_position + 10, rect_y_position + 8, f'No.{no}')
-                    if タイプ_OFF:
-                        c.setFont('msmincho.ttc', 15)
-                        c.drawCentredString(rect_x_position + 75, rect_y_position + 23, タイプ)
-                    else:
-                        c.drawCentredString(rect_x_position + 75, rect_y_position + 23, "")
+                    c.drawString(rect_x_position + 10, rect_y_position + 10, f'No.{no}')
+
+            # 59TH có thể xảy ra 
                     value001_str = str(value001)
                     count_l = value001.count('l')
                     count_w = value001.count('w')
                     w1, w2, w3, w4, w5, w6, w7 = process_data1(value001_str)
-                    l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)  
-                    ERROR = - 5  
+                    l1, l2, l3, l4, l5, l6, l7 = process_data(value001_str)    
             #TH60   BF2D@Hj@r@i@p1@l11680@n5@e58.11@d13@gSD295@s52@v@a@Gl1500@w90@l1300@w76@l2250@w14@l1680@w14@l2250@w76@l1300@w90@l1500@w0@C82@
                     if count_l == 8 and count_w == 7 and w1=="90" and 0 < int(w2) < 90 and 0 < int(w3) < 90 and 0 < int(w4) < 90 and 0 < int(w5) < 90 and w6=="90" and w7=="0":
-                        value001_str = str(value001)  
-                        result = extract_numbers(value001_str)      
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                                  
                         img_path = image_list[60]
+
                         exec(code_string)
-                        c.drawString(rect_x_position + 126, rect_y_position + 42 + ERROR, l1) #phải trên
-                        c.drawString(rect_x_position + 144, rect_y_position + 68 + ERROR, l2) #phải
-                        c.drawString(rect_x_position + 125, rect_y_position + 97 + ERROR, l3) #trên
-                        c.drawCentredString(rect_x_position + 93, rect_y_position + 105 + ERROR, l4)  #trái 
-                        c.drawRightString(rect_x_position + 60, rect_y_position + 97 + ERROR, l5) #phải trên
-                        c.drawRightString(rect_x_position + 42, rect_y_position + 68 + ERROR, l6) #phải trên
-                        c.drawRightString(rect_x_position + 60, rect_y_position + 43 + ERROR, l7) #phải trên
+
+                        c.drawString(rect_x_position + 125, rect_y_position + 43, l1) #phải trên
+                        c.drawString(rect_x_position + 142, rect_y_position + 68, l2) #phải
+                        c.drawString(rect_x_position + 125, rect_y_position + 97, l3) #trên
+
+                        c.drawCentredString(rect_x_position + 93, rect_y_position + 105, l4)  #trái 
+
+                        c.drawRightString(rect_x_position + 60, rect_y_position + 97, l5) #phải trên
+                        c.drawRightString(rect_x_position + 41, rect_y_position + 68, l6) #phải trên
+                        c.drawRightString(rect_x_position + 58, rect_y_position + 43, l7) #phải trên
+                        
             #TH59   BF2D@Hj@r@i@p1@l1480@n1@e2.31@d16@gSD295@s80@v@a@Gl218@w90@l400@w90@l400@w90@l400@w-90@l218@w0@PtSEGOPT;o0;o1;o1;o0;o0@C82@
                     elif count_l == 6 and count_w == 5 and (w1=="90" and w2=="90" and w3=="90" and w4=="-90" and w5=="0" and "PtSEGOPT" in value001 or w1=="90" and w2=="-90" and w3=="-90" and w4=="-90" and w5=="0" and "PtSEGOPT" in value001):
-                        value001_str = str(value001)  
-                        result = extract_numbers(value001_str) 
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                                  
                         img_path = image_list[59]
+
                         exec(code_string)
-                        c.drawString(rect_x_position + 115, rect_y_position + 50 + ERROR, l1) #phải trên
-                        c.drawString(rect_x_position + 110, rect_y_position + 75 + ERROR, l2) #phải
-                        c.drawCentredString(rect_x_position + 96, rect_y_position + 99 + ERROR, l3) #trên
-                        c.drawRightString(rect_x_position + 74, rect_y_position + 81 + ERROR, l4)  #trái 
-                        c.drawRightString(rect_x_position + 65, rect_y_position + 60 + ERROR, l5) #phải trên
+
+                        c.drawString(rect_x_position + 115, rect_y_position + 50, l1) #phải trên
+                        c.drawString(rect_x_position + 110, rect_y_position + 75, l2) #phải
+                        c.drawCentredString(rect_x_position + 96, rect_y_position + 99, l3) #trên
+                        c.drawRightString(rect_x_position + 74, rect_y_position + 81, l4)  #trái 
+                        c.drawRightString(rect_x_position + 65, rect_y_position + 60, l5) #phải trên
+                            
             #TH58   BF2D@Hj@r@i@p1@l1480@n1@e2.31@d16@gSD295@s80@v@a@Gl218@w90@l400@w90@l400@w90@l400@w90@l218@w0@PtSEGOPT;o0;o1;o1;o0;o0@C95@
                     elif count_l == 6 and count_w == 5 and w1=="90" and w2=="90" and w3=="90" and w4=="90" and w5=="0" and "PtSEGOPT" in value001:
-                        value001_str = str(value001)  
-                        result = extract_numbers(value001_str) 
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                                  
                         img_path = image_list[58]
+
                         exec(code_string)
-                        c.drawString(rect_x_position + 98, rect_y_position + 45 + ERROR, l1) #phải trên
-                        c.drawString(rect_x_position + 113, rect_y_position + 75 + ERROR, l2) #phải
-                        c.drawCentredString(rect_x_position + 100, rect_y_position + 101 + ERROR, l3) #trên
-                        c.drawRightString(rect_x_position + 77, rect_y_position + 81 + ERROR, l4)  #trái 
-                        c.drawRightString(rect_x_position + 66, rect_y_position + 60 + ERROR, l5) #phải trên
+                        
+                        c.drawString(rect_x_position + 98, rect_y_position + 45, l1) #phải trên
+                        c.drawString(rect_x_position + 113, rect_y_position + 75, l2) #phải
+                        c.drawCentredString(rect_x_position + 100, rect_y_position + 101, l3) #trên
+                        c.drawRightString(rect_x_position + 77, rect_y_position + 81, l4)  #trái 
+                        c.drawRightString(rect_x_position + 66, rect_y_position + 60, l5) #phải trên
+      
+
             #TH57   BF2D@Hj@r@i@p1@l1825@n1@e1.02@d10@gSD295@s30@v@a@Gl140@w101@l455@w79@l640@w90@l460@w-90@l200@w0@C96@
                     elif count_l == 6 and count_w == 5 and (90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="90" and w4=="-90" and w5=="0" or w1=="90" and w2=="-90" and -90 < int(w3) < 0 and -180 < int(w4) < -90  and w5=="0"):
-                        value001_str = str(value001)  
-                        result = extract_numbers(value001_str) 
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                                  
                         img_path = image_list[57]
+
                         exec(code_string)
+
                         if 90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="90" and w4=="-90" and w5=="0":
-                            c.drawRightString(rect_x_position + 138, rect_y_position + 105 + ERROR, l5) #phải trên
-                            c.drawString(rect_x_position + 117, rect_y_position + 75 + ERROR, l4) #phải
-                            c.drawCentredString(rect_x_position + 91, rect_y_position + 43 + ERROR, l3) #trên
-                            c.drawRightString(rect_x_position + 52, rect_y_position + 75 + ERROR, l2)  #trái 
-                            c.drawString(rect_x_position + 49, rect_y_position + 105 + ERROR, l1) #phải trên
+                            c.drawRightString(rect_x_position + 138, rect_y_position + 105, l5) #phải trên
+                            c.drawString(rect_x_position + 117, rect_y_position + 75, l4) #phải
+                            c.drawCentredString(rect_x_position + 91, rect_y_position + 43, l3) #trên
+                            c.drawRightString(rect_x_position + 52, rect_y_position + 75, l2)  #trái 
+                            c.drawString(rect_x_position + 49, rect_y_position + 105, l1) #phải trên
                         else:
-                            c.drawRightString(rect_x_position + 138, rect_y_position + 105 + ERROR, l1) #phải trên
-                            c.drawString(rect_x_position + 117, rect_y_position + 75 + ERROR, l2) #phải
-                            c.drawCentredString(rect_x_position + 91, rect_y_position + 43 + ERROR, l3) #trên
-                            c.drawRightString(rect_x_position + 52, rect_y_position + 75 + ERROR, l4)  #trái 
-                            c.drawString(rect_x_position + 49, rect_y_position + 105 + ERROR, l5) #phải trên
+                            c.drawRightString(rect_x_position + 138, rect_y_position + 105, l1) #phải trên
+                            c.drawString(rect_x_position + 117, rect_y_position + 75, l2) #phải
+                            c.drawCentredString(rect_x_position + 91, rect_y_position + 43, l3) #trên
+                            c.drawRightString(rect_x_position + 52, rect_y_position + 75, l4)  #trái 
+                            c.drawString(rect_x_position + 49, rect_y_position + 105, l5) #phải trên
+
             #TH56   BF2D@Hj@r@i@p1@l1865@n5@e5.22@d10@gSD295@s30@v@a@Gl140@w101@l455@w79@l640@w90@l460@w90@l240@w0@C91@
                     elif count_l == 6 and count_w == 5 and (90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="90" and w4=="90" and w5=="0" or w1=="90" and w2=="90" and 0 < int(w3) < 90 and 90 < int(w4) < 180  and w5=="0"):
-                        value001_str = str(value001)  
-                        result = extract_numbers(value001_str)     
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                                  
                         img_path = image_list[56]
+
                         exec(code_string)
+
                         if 90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="90" and w4=="90" and w5=="0":
-                            c.drawRightString(rect_x_position + 137, rect_y_position + 105 + ERROR, l5) #phải trên
-                            c.drawString(rect_x_position + 143, rect_y_position + 75 + ERROR, l4) #phải
-                            c.drawCentredString(rect_x_position + 106, rect_y_position + 43 + ERROR, l3) #trên
-                            c.drawRightString(rect_x_position + 53, rect_y_position + 75 + ERROR, l2)  #trái 
-                            c.drawString(rect_x_position + 49, rect_y_position + 105 + ERROR, l1) #phải trên
+                            c.drawRightString(rect_x_position + 137, rect_y_position + 105, l5) #phải trên
+                            c.drawString(rect_x_position + 143, rect_y_position + 75, l4) #phải
+                            c.drawCentredString(rect_x_position + 106, rect_y_position + 43, l3) #trên
+                            c.drawRightString(rect_x_position + 53, rect_y_position + 75, l2)  #trái 
+                            c.drawString(rect_x_position + 49, rect_y_position + 105, l1) #phải trên
                         else:
-                            c.drawRightString(rect_x_position + 137, rect_y_position + 105 + ERROR, l1) #phải trên
-                            c.drawString(rect_x_position + 143, rect_y_position + 75 + ERROR, l2) #phải
-                            c.drawCentredString(rect_x_position + 106, rect_y_position + 43 + ERROR, l3) #trên
-                            c.drawRightString(rect_x_position + 53, rect_y_position + 75 + ERROR, l4)  #trái 
-                            c.drawString(rect_x_position + 49, rect_y_position + 105 + ERROR, l5) #phải trên
+                            c.drawRightString(rect_x_position + 137, rect_y_position + 105, l1) #phải trên
+                            c.drawString(rect_x_position + 143, rect_y_position + 75, l2) #phải
+                            c.drawCentredString(rect_x_position + 106, rect_y_position + 43, l3) #trên
+                            c.drawRightString(rect_x_position + 53, rect_y_position + 75, l4)  #trái 
+                            c.drawString(rect_x_position + 49, rect_y_position + 105, l5) #phải trên
+
             #TH55   BF2D@Hj@r@i@p1@l1841@n1@e1.03@d10@gSD295@s30@v@a@Gl150@w79@l460@w-79@l640@w-90@l460@w90@l200@w0@C89@
                     elif count_l == 6 and count_w == 5 and (0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="-90" and w4=="90" and w5=="0" or w1=="90" and w2=="-90" and -90 < int(w3) < 0 and 0 < int(w4) < 90  and w5=="0"):
-                        value001_str = str(value001)  
-                        result = extract_numbers(value001_str)       
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                                  
                         img_path = image_list[55]
+
                         exec(code_string)
+
                         if 0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="-90" and w4=="90" and w5=="0":
-                            c.drawString(rect_x_position + 118, rect_y_position + 105 + ERROR, l5) #phải trên
-                            c.drawString(rect_x_position + 117, rect_y_position + 75 + ERROR, l4) #phải
-                            c.drawCentredString(rect_x_position + 97, rect_y_position + 43 + ERROR, l3) #trên
-                            c.drawRightString(rect_x_position + 66, rect_y_position + 75 + ERROR, l2)  #trái 
-                            c.drawRightString(rect_x_position + 62, rect_y_position + 105 + ERROR, l1) #phải trên
+                            c.drawString(rect_x_position + 118, rect_y_position + 105, l5) #phải trên
+                            c.drawString(rect_x_position + 117, rect_y_position + 75, l4) #phải
+                            c.drawCentredString(rect_x_position + 97, rect_y_position + 43, l3) #trên
+                            c.drawRightString(rect_x_position + 66, rect_y_position + 75, l2)  #trái 
+                            c.drawRightString(rect_x_position + 62, rect_y_position + 105, l1) #phải trên
                         else:
-                            c.drawString(rect_x_position + 118, rect_y_position + 105 + ERROR, l1) #phải trên
-                            c.drawString(rect_x_position + 117, rect_y_position + 75 + ERROR, l2) #phải
-                            c.drawCentredString(rect_x_position + 97, rect_y_position + 43 + ERROR, l3) #trên
-                            c.drawRightString(rect_x_position + 66, rect_y_position + 75 + ERROR, l4)  #trái 
-                            c.drawRightString(rect_x_position + 62, rect_y_position + 105 + ERROR, l5) #phải trên
+                            c.drawString(rect_x_position + 118, rect_y_position + 105, l1) #phải trên
+                            c.drawString(rect_x_position + 117, rect_y_position + 75, l2) #phải
+                            c.drawCentredString(rect_x_position + 97, rect_y_position + 43, l3) #trên
+                            c.drawRightString(rect_x_position + 66, rect_y_position + 75, l4)  #trái 
+                            c.drawRightString(rect_x_position + 62, rect_y_position + 105, l5) #phải trên
+                            
+
             #TH54   BF2D@Hj@r@i@p1@l2031@n1@e1.14@d10@gSD295@s30@v@a@Gl200@w90@l460@w90@l830@w79@l460@w-79@l150@w0@C75@
                     elif count_l == 6 and count_w == 5 and (0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="-90" and w4=="-90" and w5=="0" or w1=="90" and w2=="90" and 0 < int(w3) < 90 and -90 < int(w4) < 0  and w5=="0"):
-                        value001_str = str(value001)  
-                        result = extract_numbers(value001_str)     
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                                  
                         img_path = image_list[54]
+
                         exec(code_string)
+
                         if 0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="-90" and w4=="-90" and w5=="0":
-                            c.drawRightString(rect_x_position + 137, rect_y_position + 105 + ERROR, l5) #phải trên
-                            c.drawString(rect_x_position + 143, rect_y_position + 75 + ERROR, l4) #phải
-                            c.drawCentredString(rect_x_position + 108, rect_y_position + 43 + ERROR, l3) #trên
-                            c.drawRightString(rect_x_position + 66, rect_y_position + 75 + ERROR, l2)  #trái 
-                            c.drawRightString(rect_x_position + 63, rect_y_position + 105 + ERROR, l1) #phải trên
+                            c.drawRightString(rect_x_position + 137, rect_y_position + 105, l5) #phải trên
+                            c.drawString(rect_x_position + 143, rect_y_position + 75, l4) #phải
+                            c.drawCentredString(rect_x_position + 108, rect_y_position + 43, l3) #trên
+                            c.drawRightString(rect_x_position + 66, rect_y_position + 75, l2)  #trái 
+                            c.drawRightString(rect_x_position + 63, rect_y_position + 105, l1) #phải trên
                         else:
-                            c.drawRightString(rect_x_position + 137, rect_y_position + 105 + ERROR, l1) #phải trên
-                            c.drawString(rect_x_position + 143, rect_y_position + 75 + ERROR, l2) #phải
-                            c.drawCentredString(rect_x_position + 108, rect_y_position + 43 + ERROR, l3) #trên
-                            c.drawRightString(rect_x_position + 66, rect_y_position + 75 + ERROR, l4)  #trái 
-                            c.drawRightString(rect_x_position + 63, rect_y_position + 105 + ERROR, l5) #phải trên
+                            c.drawRightString(rect_x_position + 137, rect_y_position + 105, l1) #phải trên
+                            c.drawString(rect_x_position + 143, rect_y_position + 75, l2) #phải
+                            c.drawCentredString(rect_x_position + 108, rect_y_position + 43, l3) #trên
+                            c.drawRightString(rect_x_position + 66, rect_y_position + 75, l4)  #trái 
+                            c.drawRightString(rect_x_position + 63, rect_y_position + 105, l5) #phải trên
+
             #TH53   BF2D@Hj@r@i@p1@l1924@n1@e1.08@d10@gSD295@s30@v@a@Gl200@w106@l470@w74@l700@w79@l460@w-79@l150@w0@C81@
                     elif count_l == 6 and count_w == 5 and (90 < int(w1) < 180 and 0 < int(w2) < 90 and 0 < int(w3) < 90 and -90 < int(w4) < 0 and w5=="0" or 0 < int(w1) < 90 and -90 < int(w2) < 0 and -90 < int(w3) < 0 and -180 < int(w4) < -90 and w5=="0"):
-                        value001_str = str(value001)  
-                        result = extract_numbers(value001_str)      
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                                  
                         img_path = image_list[53]
+
                         exec(code_string)
+
                         if 90 < int(w1) < 180 and 0 < int(w2) < 90 and 0 < int(w3) < 90 and -90 < int(w4) < 0 and w5=="0":
-                            c.drawRightString(rect_x_position + 137, rect_y_position + 105 + ERROR, l1) #phải trên
-                            c.drawString(rect_x_position + 135, rect_y_position + 75 + ERROR, l2) #phải
-                            c.drawCentredString(rect_x_position + 102, rect_y_position + 43 + ERROR, l3) #trên
-                            c.drawRightString(rect_x_position + 70, rect_y_position + 75 + ERROR, l4)  #trái 
-                            c.drawRightString(rect_x_position + 66, rect_y_position + 105 + ERROR, l5) #phải trên
+                            c.drawRightString(rect_x_position + 137, rect_y_position + 105, l1) #phải trên
+                            c.drawString(rect_x_position + 135, rect_y_position + 75, l2) #phải
+                            c.drawCentredString(rect_x_position + 102, rect_y_position + 43, l3) #trên
+                            c.drawRightString(rect_x_position + 70, rect_y_position + 75, l4)  #trái 
+                            c.drawRightString(rect_x_position + 66, rect_y_position + 105, l5) #phải trên
                         else:
-                            c.drawRightString(rect_x_position + 137, rect_y_position + 105 + ERROR, l5) #phải trên
-                            c.drawString(rect_x_position + 135, rect_y_position + 75 + ERROR, l4) #phải
-                            c.drawCentredString(rect_x_position + 102, rect_y_position + 43 + ERROR, l3) #trên
-                            c.drawRightString(rect_x_position + 70, rect_y_position + 75 + ERROR, l2)  #trái 
-                            c.drawRightString(rect_x_position + 66, rect_y_position + 105 + ERROR, l1) #phải trên
+                            c.drawRightString(rect_x_position + 137, rect_y_position + 105, l5) #phải trên
+                            c.drawString(rect_x_position + 135, rect_y_position + 75, l4) #phải
+                            c.drawCentredString(rect_x_position + 102, rect_y_position + 43, l3) #trên
+                            c.drawRightString(rect_x_position + 70, rect_y_position + 75, l2)  #trái 
+                            c.drawRightString(rect_x_position + 66, rect_y_position + 105, l1) #phải trên
+
             #TH52   BF2D@Hj@r@i@p1@l1770@n2@e1.98@d10@gSD295@s30@v@a@Gl87@w180@l450@w90@l650@w90@l450@w-90@l180@w0@C85@
                     elif count_l == 6 and count_w == 5 and (w1=="180" and w2=="90" and w3=="90" and w4=="-90" and w5=="0" or w1=="90" and w2=="-90" and w3=="-90" and w4=="-180" and w5=="0"):
-                        value001_str = str(value001)  
-                        result = extract_numbers(value001_str) 
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                                  
                         img_path = image_list[52]
+
                         exec(code_string)
+
                         if w1=="180" and w2=="90" and w3=="90" and w4=="-90" and w5=="0":
-                            c.drawRightString(rect_x_position + 128, rect_y_position + 87 + ERROR, l1) #phải trên
-                            c.drawString(rect_x_position + 143, rect_y_position + 75 + ERROR, l2) #phải
-                            c.drawCentredString(rect_x_position + 108, rect_y_position + 43 + ERROR, l3) #trên
-                            c.drawRightString(rect_x_position + 70, rect_y_position + 75 + ERROR, l4)  #trái 
-                            c.drawRightString(rect_x_position + 68, rect_y_position + 105 + ERROR, l5) #phải trên
+                            c.drawRightString(rect_x_position + 128, rect_y_position + 87, l1) #phải trên
+                            c.drawString(rect_x_position + 143, rect_y_position + 75, l2) #phải
+                            c.drawCentredString(rect_x_position + 108, rect_y_position + 43, l3) #trên
+                            c.drawRightString(rect_x_position + 70, rect_y_position + 75, l4)  #trái 
+                            c.drawRightString(rect_x_position + 68, rect_y_position + 105, l5) #phải trên
                         else:
-                            c.drawRightString(rect_x_position + 128, rect_y_position + 87 + ERROR, l5) #phải trên
-                            c.drawString(rect_x_position + 143, rect_y_position + 75 + ERROR, l4) #phải
-                            c.drawCentredString(rect_x_position + 108, rect_y_position + 43 + ERROR, l3) #trên
-                            c.drawRightString(rect_x_position + 70, rect_y_position + 75 + ERROR, l2)  #trái 
-                            c.drawRightString(rect_x_position + 68, rect_y_position + 105 + ERROR, l1) #phải trên
+                            c.drawRightString(rect_x_position + 128, rect_y_position + 87, l5) #phải trên
+                            c.drawString(rect_x_position + 143, rect_y_position + 75, l4) #phải
+                            c.drawCentredString(rect_x_position + 108, rect_y_position + 43, l3) #trên
+                            c.drawRightString(rect_x_position + 70, rect_y_position + 75, l2)  #trái 
+                            c.drawRightString(rect_x_position + 68, rect_y_position + 105, l1) #phải trên
+
             #TH51   BF2D@Hj@r@i@p1@l1766@n3@e2.97@d10@gSD295@s30@v@a@Gl100@w135@l450@w90@l650@w90@l450@w-90@l180@w0@C77@
                     elif count_l == 6 and count_w == 5 and (90 < int(w1) < 180 and w2=="90" and w3=="90" and w4=="-90" and w5=="0" or w1=="90" and w2=="-90" and w3=="-90" and -180 < int(w4) < -90 and w5=="0"):
-                        value001_str = str(value001)  
-                        result = extract_numbers(value001_str) 
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                                  
                         img_path = image_list[51]
+
                         exec(code_string)
+
                         if 90 < int(w1) < 180 and w2=="90" and w3=="90" and w4=="-90" and w5=="0":
-                            c.drawRightString(rect_x_position + 130, rect_y_position + 94 + ERROR, l1) #phải trên
-                            c.drawString(rect_x_position + 143, rect_y_position + 75 + ERROR, l2) #phải
-                            c.drawCentredString(rect_x_position + 108, rect_y_position + 43 + ERROR, l3) #trên
-                            c.drawRightString(rect_x_position + 70, rect_y_position + 75 + ERROR, l4)  #trái 
-                            c.drawRightString(rect_x_position + 68, rect_y_position + 105 + ERROR, l5) #phải trên
+                            c.drawRightString(rect_x_position + 130, rect_y_position + 94, l1) #phải trên
+                            c.drawString(rect_x_position + 143, rect_y_position + 75, l2) #phải
+                            c.drawCentredString(rect_x_position + 108, rect_y_position + 43, l3) #trên
+                            c.drawRightString(rect_x_position + 70, rect_y_position + 75, l4)  #trái 
+                            c.drawRightString(rect_x_position + 68, rect_y_position + 105, l5) #phải trên
                         else:
-                            c.drawRightString(rect_x_position + 130, rect_y_position + 94 + ERROR, l5) #phải trên
-                            c.drawString(rect_x_position + 143, rect_y_position + 75 + ERROR, l4) #phải
-                            c.drawCentredString(rect_x_position + 108, rect_y_position + 43 + ERROR, l3) #trên
-                            c.drawRightString(rect_x_position + 70, rect_y_position + 75 + ERROR, l2)  #trái 
-                            c.drawRightString(rect_x_position + 68, rect_y_position + 105 + ERROR, l1) #phải trên
+                            c.drawRightString(rect_x_position + 130, rect_y_position + 94, l5) #phải trên
+                            c.drawString(rect_x_position + 143, rect_y_position + 75, l4) #phải
+                            c.drawCentredString(rect_x_position + 108, rect_y_position + 43, l3) #trên
+                            c.drawRightString(rect_x_position + 70, rect_y_position + 75, l2)  #trái 
+                            c.drawRightString(rect_x_position + 68, rect_y_position + 105, l1) #phải trên
+
             #TH50   BF2D@Hj@r@i@p1@l1740@n3@e2.92@d10@gSD295@s30@v@a@Gl87@w180@l450@w90@l650@w90@l450@w90@l150@w0@C76@
                     elif count_l == 6 and count_w == 5 and (w1=="180" and w2=="90" and w3=="90" and w4=="90" and w5=="0" or w1=="90" and w2=="90" and w3=="90" and w4=="180" and w5=="0"):
-                        value001_str = str(value001)  
-                        result = extract_numbers(value001_str)      
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                                  
                         img_path = image_list[50]
+
                         exec(code_string)
+
                         if w1=="180" and w2=="90" and w3=="90" and w4=="90" and w5=="0":
-                            c.drawRightString(rect_x_position + 128, rect_y_position + 87 + ERROR, l1) #phải trên
-                            c.drawString(rect_x_position + 143, rect_y_position + 75 + ERROR, l2) #phải
-                            c.drawCentredString(rect_x_position + 90, rect_y_position + 43 + ERROR, l3) #trên
-                            c.drawRightString(rect_x_position + 40, rect_y_position + 75 + ERROR, l4)  #trái 
-                            c.drawRightString(rect_x_position + 68, rect_y_position + 105 + ERROR, l5) #phải trên
+                            c.drawRightString(rect_x_position + 128, rect_y_position + 87, l1) #phải trên
+                            c.drawString(rect_x_position + 143, rect_y_position + 75, l2) #phải
+                            c.drawCentredString(rect_x_position + 90, rect_y_position + 43, l3) #trên
+                            c.drawRightString(rect_x_position + 40, rect_y_position + 75, l4)  #trái 
+                            c.drawRightString(rect_x_position + 68, rect_y_position + 105, l5) #phải trên
                         else:
-                            c.drawRightString(rect_x_position + 128, rect_y_position + 87 + ERROR, l5) #phải trên
-                            c.drawString(rect_x_position + 143, rect_y_position + 75 + ERROR, l4) #phải
-                            c.drawCentredString(rect_x_position + 90, rect_y_position + 43 + ERROR, l3) #trên
-                            c.drawRightString(rect_x_position + 40, rect_y_position + 75 + ERROR, l2)  #trái 
-                            c.drawRightString(rect_x_position + 68, rect_y_position + 105 + ERROR, l1) #phải trêni
+                            c.drawRightString(rect_x_position + 128, rect_y_position + 87, l5) #phải trên
+                            c.drawString(rect_x_position + 143, rect_y_position + 75, l4) #phải
+                            c.drawCentredString(rect_x_position + 90, rect_y_position + 43, l3) #trên
+                            c.drawRightString(rect_x_position + 40, rect_y_position + 75, l2)  #trái 
+                            c.drawRightString(rect_x_position + 68, rect_y_position + 105, l1) #phải trêni
+
             #TH49   BF2D@Hj@r@i@p1@l1736@n1@e0.97@d10@gSD295@s30@v@a@Gl100@w135@l450@w90@l650@w90@l450@w90@l150@w0@C68@
                     elif count_l == 6 and count_w == 5 and (90 < int(w1) < 180 and w2=="90" and w3=="90" and w4=="90" and w5=="0" or w1=="90" and w2=="90" and w3=="90" and 90 < int(w4) < 180 and w5=="0"):
-                        value001_str = str(value001)  
-                        result = extract_numbers(value001_str)     
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                                  
                         img_path = image_list[49]
+
                         exec(code_string)
+
                         if 90 < int(w1) < 180 and w2=="90" and w3=="90" and w4=="90" and w5=="0":
-                            c.drawRightString(rect_x_position + 130, rect_y_position + 94 + ERROR, l1) #phải trên
-                            c.drawString(rect_x_position + 143, rect_y_position + 75 + ERROR, l2) #phải
-                            c.drawCentredString(rect_x_position + 90, rect_y_position + 43 + ERROR, l3) #trên
-                            c.drawRightString(rect_x_position + 40, rect_y_position + 75 + ERROR, l4)  #trái 
-                            c.drawRightString(rect_x_position + 68, rect_y_position + 105 + ERROR, l5) #phải trên
+                            c.drawRightString(rect_x_position + 130, rect_y_position + 94, l1) #phải trên
+                            c.drawString(rect_x_position + 143, rect_y_position + 75, l2) #phải
+                            c.drawCentredString(rect_x_position + 90, rect_y_position + 43, l3) #trên
+                            c.drawRightString(rect_x_position + 40, rect_y_position + 75, l4)  #trái 
+                            c.drawRightString(rect_x_position + 68, rect_y_position + 105, l5) #phải trên
                         else:
-                            c.drawRightString(rect_x_position + 130, rect_y_position + 94 + ERROR, l5) #phải trên
-                            c.drawString(rect_x_position + 143, rect_y_position + 75 + ERROR, l4) #phải
-                            c.drawCentredString(rect_x_position + 90, rect_y_position + 43 + ERROR, l3) #trên
-                            c.drawRightString(rect_x_position + 40, rect_y_position + 75 + ERROR, l2)  #trái 
-                            c.drawRightString(rect_x_position + 68, rect_y_position + 105 + ERROR, l1) #phải trên
+                            c.drawRightString(rect_x_position + 130, rect_y_position + 94, l5) #phải trên
+                            c.drawString(rect_x_position + 143, rect_y_position + 75, l4) #phải
+                            c.drawCentredString(rect_x_position + 90, rect_y_position + 43, l3) #trên
+                            c.drawRightString(rect_x_position + 40, rect_y_position + 75, l2)  #trái 
+                            c.drawRightString(rect_x_position + 68, rect_y_position + 105, l1) #phải trên
+
             #TH48   BF2D@Hj@r@i@p1@l1706@n1@e0.96@d10@gSD295@s30@v@a@Gl100@w135@l450@w90@l650@w90@l450@w180@l87@w0@C95@
                     elif count_l == 6 and count_w == 5 and (90 < int(w1) < 180 and w2=="90" and w3=="90" and w4=="180" and w5=="0" or w1=="180" and w2=="90" and w3=="90" and 90 < int(w4) < 180 and w5=="0"):
-                        value001_str = str(value001)  
-                        result = extract_numbers(value001_str)       
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                                  
                         img_path = image_list[48]
+
                         exec(code_string)
+
                         if 90 < int(w1) < 180 and w2=="90" and w3=="90" and w4=="180" and w5=="0":
-                            c.drawRightString(rect_x_position + 130, rect_y_position + 94 + ERROR, l1) #phải trên
-                            c.drawString(rect_x_position + 143, rect_y_position + 75 + ERROR, l2) #phải
-                            c.drawCentredString(rect_x_position + 90, rect_y_position + 43 + ERROR, l3) #trên
-                            c.drawRightString(rect_x_position + 40, rect_y_position + 75 + ERROR, l4)  #trái 
-                            c.drawRightString(rect_x_position + 67, rect_y_position + 88 + ERROR, l5) #phải trên
+                            c.drawRightString(rect_x_position + 130, rect_y_position + 94, l1) #phải trên
+                            c.drawString(rect_x_position + 143, rect_y_position + 75, l2) #phải
+                            c.drawCentredString(rect_x_position + 90, rect_y_position + 43, l3) #trên
+                            c.drawRightString(rect_x_position + 40, rect_y_position + 75, l4)  #trái 
+                            c.drawRightString(rect_x_position + 67, rect_y_position + 88, l5) #phải trên
                         else:
-                            c.drawRightString(rect_x_position + 130, rect_y_position + 94 + ERROR, l5) #phải trên
-                            c.drawString(rect_x_position + 143, rect_y_position + 75 + ERROR, l4) #phải
-                            c.drawCentredString(rect_x_position + 90, rect_y_position + 43 + ERROR, l3) #trên
-                            c.drawRightString(rect_x_position + 40, rect_y_position + 75 + ERROR, l2)  #trái 
-                            c.drawRightString(rect_x_position + 67, rect_y_position + 88 + ERROR, l1) #phải trên
+                            c.drawRightString(rect_x_position + 130, rect_y_position + 94, l5) #phải trên
+                            c.drawString(rect_x_position + 143, rect_y_position + 75, l4) #phải
+                            c.drawCentredString(rect_x_position + 90, rect_y_position + 43, l3) #trên
+                            c.drawRightString(rect_x_position + 40, rect_y_position + 75, l2)  #trái 
+                            c.drawRightString(rect_x_position + 67, rect_y_position + 88, l1) #phải trên
             #TH47   BF2D@Hj@r@i@p1@l1377@n1@e0.77@d10@gSD295@s30@v@a@Gl87@w180@l400@w90@l500@w76@l410@w0@C84@
                     elif count_l == 5 and count_w == 4 and (w1 =="180" and w2 =="90" and 0 < int(w3) < 90 and w4 =="0" or 0 < int(w1) < 90 and w2 =="90" and w3=="180" and w4=="0"):
-                        value001_str = str(value001)  
-                        result = extract_numbers(value001_str)       
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                                  
                         img_path = image_list[47]
+
                         exec(code_string)
+
                         if w1 =="180" and w2 =="90" and 0 < int(w3) < 90 and w4 =="0":
-                            c.drawRightString(rect_x_position + 128, rect_y_position + 87 + ERROR, l1) #phải trên
-                            c.drawString(rect_x_position + 143, rect_y_position + 75 + ERROR, l2) #phải
-                            c.drawCentredString(rect_x_position + 105, rect_y_position + 43 + ERROR, l3) #trên
-                            c.drawRightString(rect_x_position + 55, rect_y_position + 70 + ERROR, l4)  #trái 
+                            c.drawRightString(rect_x_position + 128, rect_y_position + 87, l1) #phải trên
+                            c.drawString(rect_x_position + 143, rect_y_position + 75, l2) #phải
+                            c.drawCentredString(rect_x_position + 105, rect_y_position + 43, l3) #trên
+                            c.drawRightString(rect_x_position + 55, rect_y_position + 70, l4)  #trái 
                         else:
-                            c.drawRightString(rect_x_position + 128, rect_y_position + 87 + ERROR, l4) #phải trên
-                            c.drawString(rect_x_position + 143, rect_y_position + 75 + ERROR, l3) #phải
-                            c.drawCentredString(rect_x_position + 105, rect_y_position + 43 + ERROR, l2) #trên
-                            c.drawRightString(rect_x_position + 55, rect_y_position + 70 + ERROR, l1)  #trái 
+                            c.drawRightString(rect_x_position + 128, rect_y_position + 87, l4) #phải trên
+                            c.drawString(rect_x_position + 143, rect_y_position + 75, l3) #phải
+                            c.drawCentredString(rect_x_position + 105, rect_y_position + 43, l2) #trên
+                            c.drawRightString(rect_x_position + 55, rect_y_position + 70, l1)  #trái 
+
             #TH46    BF2D@Hj@r@i@p1@l1373@n1@e0.77@d10@gSD295@s30@v@a@Gl100@w135@l400@w90@l500@w76@l410@w0@C86@
                     elif count_l == 5 and count_w == 4 and (90 < int(w1) < 180 and w2 =="90" and 0 < int(w3) < 90 and w4 =="0" or 0 < int(w1) < 90 and w2 =="90" and 90 < int(w3) < 180 and w4=="0"):
-                        value001_str = str(value001)  
-                        result = extract_numbers(value001_str)   
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                                  
                         img_path = image_list[46]
+
                         exec(code_string)
+
                         if 90 < int(w1) < 180 and w2 =="90" and 0 < int(w3) < 90 and w4 =="0":
-                            c.drawRightString(rect_x_position + 130, rect_y_position + 94 + ERROR, l1) #phải trên
-                            c.drawString(rect_x_position + 143, rect_y_position + 75 + ERROR, l2) #phải
-                            c.drawCentredString(rect_x_position + 105, rect_y_position + 43 + ERROR, l3) #trên
-                            c.drawRightString(rect_x_position + 55, rect_y_position + 70 + ERROR, l4)  #trái 
+                            c.drawRightString(rect_x_position + 130, rect_y_position + 94, l1) #phải trên
+                            c.drawString(rect_x_position + 143, rect_y_position + 75, l2) #phải
+                            c.drawCentredString(rect_x_position + 105, rect_y_position + 43, l3) #trên
+                            c.drawRightString(rect_x_position + 55, rect_y_position + 70, l4)  #trái 
                         else:
-                            c.drawRightString(rect_x_position + 130, rect_y_position + 94 + ERROR, l4) #phải trên
-                            c.drawString(rect_x_position + 143, rect_y_position + 75 + ERROR, l3) #phải
-                            c.drawCentredString(rect_x_position + 105, rect_y_position + 43 + ERROR, l2) #trên
-                            c.drawRightString(rect_x_position + 55, rect_y_position + 70 + ERROR, l1)  #trái 
+                            c.drawRightString(rect_x_position + 130, rect_y_position + 94, l4) #phải trên
+                            c.drawString(rect_x_position + 143, rect_y_position + 75, l3) #phải
+                            c.drawCentredString(rect_x_position + 105, rect_y_position + 43, l2) #trên
+                            c.drawRightString(rect_x_position + 55, rect_y_position + 70, l1)  #trái 
             #TH45   BF2D@Hj@r@i@p1@l1460@n1@e0.82@d10@gSD295@s30@v@a@Gl87@w180@l400@w90@l600@w90@l400@w0@C67@
                     elif count_l == 5 and count_w == 4 and (w1=="180" and w2 =="90" and w3=="90" and w4 =="0" or w1=="90" and w2 =="90" and w3=="180" and w4=="0"):
-                        value001_str = str(value001)  
-                        result = extract_numbers(value001_str) 
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                                  
                         img_path = image_list[45]
+
                         exec(code_string)
+
                         if w1=="180" and w2 =="90" and w3=="90" and w4 =="0":
-                            c.drawRightString(rect_x_position + 128, rect_y_position + 88 + ERROR, l1) #phải trên
-                            c.drawString(rect_x_position + 143, rect_y_position + 75 + ERROR, l2) #phải
-                            c.drawCentredString(rect_x_position + 90, rect_y_position + 43 + ERROR, l3) #trên
-                            c.drawRightString(rect_x_position + 40, rect_y_position + 75 + ERROR, l4)  #trái 
+                            c.drawRightString(rect_x_position + 128, rect_y_position + 88, l1) #phải trên
+                            c.drawString(rect_x_position + 143, rect_y_position + 75, l2) #phải
+                            c.drawCentredString(rect_x_position + 90, rect_y_position + 43, l3) #trên
+                            c.drawRightString(rect_x_position + 40, rect_y_position + 75, l4)  #trái 
                         else:
-                            c.drawRightString(rect_x_position + 128, rect_y_position + 88 + ERROR, l4) #phải trên
-                            c.drawString(rect_x_position + 143, rect_y_position + 75 + ERROR, l3) #phải
-                            c.drawCentredString(rect_x_position + 90, rect_y_position + 43 + ERROR, l2) #trên
-                            c.drawRightString(rect_x_position + 40, rect_y_position + 75 + ERROR, l1)  #trái 
+                            c.drawRightString(rect_x_position + 128, rect_y_position + 88, l4) #phải trên
+                            c.drawString(rect_x_position + 143, rect_y_position + 75, l3) #phải
+                            c.drawCentredString(rect_x_position + 90, rect_y_position + 43, l2) #trên
+                            c.drawRightString(rect_x_position + 40, rect_y_position + 75, l1)  #trái 
+
             #TH44   BF2D@Hj@r@i@p1@l1456@n1@e0.82@d10@gSD295@s30@v@a@Gl100@w135@l400@w90@l600@w90@l400@w0@C92@
                     elif count_l == 5 and count_w == 4 and (90 < int(w1) < 180 and w2 =="90" and w3=="90" and w4 =="0" or w1=="90" and w2 =="90" and 90 < int(w3) < 180 and w4=="0"):
-                        value001_str = str(value001)  
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                                  
                         img_path = image_list[44]
+
                         exec(code_string)
+
                         if 90 < int(w1) < 180 and w2 =="90" and w3=="90" and w4 =="0":
-                            c.drawRightString(rect_x_position + 130, rect_y_position + 94 + ERROR, l1) #phải trên
-                            c.drawString(rect_x_position + 143, rect_y_position + 75 + ERROR, l2) #phải
-                            c.drawCentredString(rect_x_position + 90, rect_y_position + 43 + ERROR, l3) #trên
-                            c.drawRightString(rect_x_position + 40, rect_y_position + 75 + ERROR, l4)  #trái 
+                            c.drawRightString(rect_x_position + 130, rect_y_position + 94, l1) #phải trên
+                            c.drawString(rect_x_position + 143, rect_y_position + 75, l2) #phải
+                            c.drawCentredString(rect_x_position + 90, rect_y_position + 43, l3) #trên
+                            c.drawRightString(rect_x_position + 40, rect_y_position + 75, l4)  #trái 
                         else:
-                            c.drawRightString(rect_x_position + 130, rect_y_position + 94 + ERROR, l4) #phải trên
-                            c.drawString(rect_x_position + 143, rect_y_position + 75 + ERROR, l3) #phải
-                            c.drawCentredString(rect_x_position + 90, rect_y_position + 43 + ERROR, l2) #trên
-                            c.drawRightString(rect_x_position + 40, rect_y_position + 75 + ERROR, l1)  #trái 
+                            c.drawRightString(rect_x_position + 130, rect_y_position + 94, l4) #phải trên
+                            c.drawString(rect_x_position + 143, rect_y_position + 75, l3) #phải
+                            c.drawCentredString(rect_x_position + 90, rect_y_position + 43, l2) #trên
+                            c.drawRightString(rect_x_position + 40, rect_y_position + 75, l1)  #trái 
+
+
             #TH43   BF2D@Hj@r@i@p1@l1539@n1@e0.86@d10@gSD295@s30@v@a@Gl231@w25@l500@w-90@l350@w-90@l500@w0@C69@
                     elif count_l == 5 and count_w == 4 and (0 < int(w1) < 90 and w2 =="-90" and w3=="-90" and w4 =="0" or w1=="90" and w2 =="90" and -90 < int(w3) < 0 and w4=="0"):
-                        value001_str = str(value001)  
-                        result = extract_numbers(value001_str)       
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                                  
                         img_path = image_list[43]
+
                         exec(code_string)
+
                         if 0 < int(w1) < 90 and w2 =="-90" and w3=="-90" and w4 =="0":
-                            c.drawString(rect_x_position + 120, rect_y_position + 62 + ERROR, l1)  
-                            c.drawCentredString(rect_x_position + 78, rect_y_position + 52 + ERROR, l2) 
-                            c.drawRightString(rect_x_position + 41, rect_y_position + 80 + ERROR, l3) 
-                            c.drawCentredString(rect_x_position + 78, rect_y_position + 105 + ERROR, l4)
+                            c.drawString(rect_x_position + 120, rect_y_position + 62, l1)  
+                            c.drawCentredString(rect_x_position + 78, rect_y_position + 52, l2) 
+                            c.drawRightString(rect_x_position + 41, rect_y_position + 80, l3) 
+                            c.drawCentredString(rect_x_position + 78, rect_y_position + 105, l4)
                         else:
-                            c.drawString(rect_x_position + 120, rect_y_position + 62 + ERROR, l4)  
-                            c.drawCentredString(rect_x_position + 78, rect_y_position + 52 + ERROR, l3) 
-                            c.drawRightString(rect_x_position + 41, rect_y_position + 80 + ERROR, l2 )
-                            c.drawCentredString(rect_x_position + 78, rect_y_position + 105 + ERROR, l1)
+                            c.drawString(rect_x_position + 120, rect_y_position + 62, l4)  
+                            c.drawCentredString(rect_x_position + 78, rect_y_position + 52, l3) 
+                            c.drawRightString(rect_x_position + 41, rect_y_position + 80, l2 )
+                            c.drawCentredString(rect_x_position + 78, rect_y_position + 105, l1)
+
             #TH42   BF2D@Hj@r@i@p1@l1508@n1@e0.84@d10@gSD295@s30@v@a@Gl200@w23@l500@w90@l350@w90@l500@w0@C75@
                     elif count_l == 5 and count_w == 4 and (0 < int(w1) < 90 and w2 =="90" and w3=="90" and w4 =="0" or w1=="90" and w2 =="90" and 0 < int(w3) < 90 and w4=="0"):
-                        value001_str = str(value001)  
-                        result = extract_numbers(value001_str)       
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                                  
                         img_path = image_list[42]
+
                         exec(code_string)
+
                         if 0 < int(w1) < 90 and w2 =="90" and w3=="90" and w4 =="0":
-                            c.drawRightString(rect_x_position + 120, rect_y_position + 65 + ERROR, l1)  
-                            c.drawString(rect_x_position + 58, rect_y_position + 56 + ERROR, l2) 
-                            c.drawRightString(rect_x_position + 41, rect_y_position + 75 + ERROR, l3) 
-                            c.drawCentredString(rect_x_position + 78, rect_y_position + 105 + ERROR, l4)
+                            c.drawRightString(rect_x_position + 120, rect_y_position + 65, l1)  
+                            c.drawString(rect_x_position + 58, rect_y_position + 56, l2) 
+                            c.drawRightString(rect_x_position + 41, rect_y_position + 75, l3) 
+                            c.drawCentredString(rect_x_position + 78, rect_y_position + 105, l4)
                         else:
-                            c.drawRightString(rect_x_position + 120, rect_y_position + 65 + ERROR, l4)  
-                            c.drawString(rect_x_position + 58, rect_y_position + 56 + ERROR, l3) 
-                            c.drawRightString(rect_x_position + 41, rect_y_position + 75 + ERROR, l2) 
-                            c.drawCentredString(rect_x_position + 78, rect_y_position + 105 + ERROR, l1)
+                            c.drawRightString(rect_x_position + 120, rect_y_position + 65, l4)  
+                            c.drawString(rect_x_position + 58, rect_y_position + 56, l3) 
+                            c.drawRightString(rect_x_position + 41, rect_y_position + 75, l2) 
+                            c.drawCentredString(rect_x_position + 78, rect_y_position + 105, l1)
+
             #TH41   BF2D@Hj@r@i@p1@l1268@n1@e0.71@d10@gSD295@s30@v@a@Gl450@w65@l150@w25@l200@w90@l500@w0@C70@
                     elif count_l == 5 and count_w == 4 and (0 < int(w1) < 90 and 0 < int(w2) < 90 and w3=="90" and w4 =="0" or w1=="90" and 0 < int(w2) < 90 and 0 < int(w3) < 90 and w4=="0"):
-                        value001_str = str(value001)  
-                        result = extract_numbers(value001_str)       
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                                  
                         img_path = image_list[41]
+
                         exec(code_string)
+
                         if 0 < int(w1) < 90 and 0 < int(w2) < 90 and w3=="90" and w4 =="0":
-                            c.drawString(rect_x_position + 98, rect_y_position + 43 + ERROR, l1)  
-                            c.drawString(rect_x_position + 58, rect_y_position + 64 + ERROR, l2) 
-                            c.drawRightString(rect_x_position + 41, rect_y_position + 82 + ERROR, l3) 
-                            c.drawCentredString(rect_x_position + 80, rect_y_position + 105 + ERROR, l4)
+                            c.drawString(rect_x_position + 98, rect_y_position + 43, l1)  
+                            c.drawString(rect_x_position + 58, rect_y_position + 64, l2) 
+                            c.drawRightString(rect_x_position + 41, rect_y_position + 82, l3) 
+                            c.drawCentredString(rect_x_position + 80, rect_y_position + 105, l4)
                         else:
-                            c.drawString(rect_x_position + 98, rect_y_position + 43 + ERROR, l4)  
-                            c.drawString(rect_x_position + 58, rect_y_position + 64 + ERROR, l3) 
-                            c.drawRightString(rect_x_position + 41, rect_y_position + 82 + ERROR, l2) 
-                            c.drawCentredString(rect_x_position + 80, rect_y_position + 105 + ERROR, l1)
+                            c.drawString(rect_x_position + 98, rect_y_position + 43, l4)  
+                            c.drawString(rect_x_position + 58, rect_y_position + 64, l3) 
+                            c.drawRightString(rect_x_position + 41, rect_y_position + 82, l2) 
+                            c.drawCentredString(rect_x_position + 80, rect_y_position + 105, l1)
+                              
+
             #TH40   BF2D@Hj@r@i@p1@l1180@n1@e0.66@d10@gSD295@s30@v@a@Gl400@w106@l394@w74@l302@w90@l130@w0@C82@
                     elif count_l == 5 and count_w == 4 and (90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="90" and w4 =="0" or w1=="90" and 0 < int(w2) < 90 and 90 < int(w3) < 180 and w4=="0"):
-                        value001_str = str(value001)  
-                        result = extract_numbers(value001_str)     
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                                  
                         img_path = image_list[40]
+
                         exec(code_string)
+
                         if 90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="90" and w4 =="0":
-                            c.drawString(rect_x_position + 142, rect_y_position + 75 + ERROR, l1) 
-                            c.drawRightString(rect_x_position + 100, rect_y_position + 98 + ERROR, l2)  
-                            c.drawRightString(rect_x_position + 41, rect_y_position + 69 + ERROR, l3) 
-                            c.drawString(rect_x_position + 50, rect_y_position + 56 + ERROR, l4)
+                            c.drawString(rect_x_position + 142, rect_y_position + 75, l1) 
+                            c.drawRightString(rect_x_position + 100, rect_y_position + 98, l2)  
+                            c.drawRightString(rect_x_position + 41, rect_y_position + 69, l3) 
+                            c.drawString(rect_x_position + 50, rect_y_position + 56, l4)
                         else:
-                            c.drawString(rect_x_position + 142, rect_y_position + 75 + ERROR, l4) 
-                            c.drawRightString(rect_x_position + 100, rect_y_position + 98 + ERROR, l3)  
-                            c.drawRightString(rect_x_position + 41, rect_y_position + 69 + ERROR, l2) 
-                            c.drawString(rect_x_position + 50, rect_y_position + 56 + ERROR, l1) 
+                            c.drawString(rect_x_position + 142, rect_y_position + 75, l4) 
+                            c.drawRightString(rect_x_position + 100, rect_y_position + 98, l3)  
+                            c.drawRightString(rect_x_position + 41, rect_y_position + 69, l2) 
+                            c.drawString(rect_x_position + 50, rect_y_position + 56, l1) 
+
             #TH39   BF2D@Hj@r@i@p1@l1058@n1@e0.59@d10@gSD295@s30@v@a@Gl400@w113@l250@w67@l300@w-90@l150@w0@C72@
                     elif count_l == 5 and count_w == 4 and (90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="-90" and w4 =="0" or w1=="90" and -90 < int(w2) < 0 and -180 < int(w3) < -90 and w4=="0"):
-                        value001_str = str(value001)  
-                        result = extract_numbers(value001_str)         
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                                  
                         img_path = image_list[39]
+
                         exec(code_string)
+
                         if 90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="-90" and w4 =="0":
-                            c.drawString(rect_x_position + 142, rect_y_position + 75 + ERROR, l1) 
-                            c.drawRightString(rect_x_position + 117, rect_y_position + 98 + ERROR, l2)  
-                            c.drawString(rect_x_position + 84, rect_y_position + 69 + ERROR, l3) 
-                            c.drawRightString(rect_x_position + 67, rect_y_position + 56 + ERROR, l4)
+                            c.drawString(rect_x_position + 142, rect_y_position + 75, l1) 
+                            c.drawRightString(rect_x_position + 117, rect_y_position + 98, l2)  
+                            c.drawString(rect_x_position + 84, rect_y_position + 69, l3) 
+                            c.drawRightString(rect_x_position + 67, rect_y_position + 56, l4)
                         else:
-                            c.drawString(rect_x_position + 142, rect_y_position + 75 + ERROR, l4) 
-                            c.drawRightString(rect_x_position + 117, rect_y_position + 98 + ERROR, l3)  
-                            c.drawString(rect_x_position + 84, rect_y_position + 69 + ERROR, l2) 
-                            c.drawRightString(rect_x_position + 70, rect_y_position + 56 + ERROR, l1) 
+                            c.drawString(rect_x_position + 142, rect_y_position + 75, l4) 
+                            c.drawRightString(rect_x_position + 117, rect_y_position + 98, l3)  
+                            c.drawString(rect_x_position + 84, rect_y_position + 69, l2) 
+                            c.drawRightString(rect_x_position + 70, rect_y_position + 56, l1) 
+
             #TH38   BF2D@Hj@r@i@p1@l1210@n1@e1.2@d13@gSD295@s39@v@a@Gl200@w90@l300@w-45@l250@w45@l500@w0@C84@
                     elif count_l == 5 and count_w == 4 and (w1=="90" and -90 < int(w2) < 0 and 0 < int(w3) < 90 and w4 =="0" or 0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="90" and w4=="0"):
 
-                        value001_str = str(value001)  
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                                  
                         img_path = image_list[38]
+
                         exec(code_string)
+
                         if w1=="90" and -90 < int(w2) < 0 and 0 < int(w3) < 90 and w4 =="0":
-                            c.drawCentredString(rect_x_position + 120, rect_y_position + 56 + ERROR, l4)  
-                            c.drawRightString(rect_x_position + 82, rect_y_position + 60 + ERROR, l3) 
-                            c.drawString(rect_x_position + 50, rect_y_position + 80 + ERROR, l2) 
-                            c.drawRightString(rect_x_position + 40, rect_y_position + 85 + ERROR, l1) 
+                            c.drawCentredString(rect_x_position + 120, rect_y_position + 56, l4)  
+                            c.drawRightString(rect_x_position + 82, rect_y_position + 60, l3) 
+                            c.drawString(rect_x_position + 50, rect_y_position + 80, l2) 
+                            c.drawRightString(rect_x_position + 40, rect_y_position + 85, l1) 
                         else:
-                            c.drawCentredString(rect_x_position + 120, rect_y_position + 56 + ERROR, l1)  
-                            c.drawRightString(rect_x_position + 82, rect_y_position + 60 + ERROR, l2) 
-                            c.drawString(rect_x_position + 50, rect_y_position + 80 + ERROR, l3) 
-                            c.drawRightString(rect_x_position + 40, rect_y_position + 85 + ERROR, l4)  
+                            c.drawCentredString(rect_x_position + 120, rect_y_position + 56, l1)  
+                            c.drawRightString(rect_x_position + 82, rect_y_position + 60, l2) 
+                            c.drawString(rect_x_position + 50, rect_y_position + 80, l3) 
+                            c.drawRightString(rect_x_position + 40, rect_y_position + 85, l4)  
+
             #TH37   BF2D@Hj@r@i@p1@l1238@n1@e1.23@d13@gSD295@s39@v@a@Gl400@w66@l300@w-66@l250@w-59@l325@w0@C88@
                     elif count_l == 5 and count_w == 4 and (0 < int(w1) < 90 and -90 < int(w2) < 0 and -90 < int(w3) < 0 and w4 =="0" or 0 < int(w1) < 90 and 0 < int(w2) < 90 and -90 < int(w3) < 0 and w4=="0"):
-                        value001_str = str(value001)  
-                        result = extract_numbers(value001_str)      
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                                  
                         img_path = image_list[37]
+
                         exec(code_string)
+
                         if 0 < int(w1) < 90 and -90 < int(w2) < 0 and -90 < int(w3) < 0 and w4 =="0":
-                            c.drawCentredString(rect_x_position + 126, rect_y_position + 105 + ERROR, l1)  
-                            c.drawString(rect_x_position + 107, rect_y_position + 75 + ERROR, l2) 
-                            c.drawCentredString(rect_x_position + 76, rect_y_position + 42 + ERROR, l3) 
-                            c.drawRightString(rect_x_position + 47, rect_y_position + 76 + ERROR, l4)   
+                            c.drawCentredString(rect_x_position + 126, rect_y_position + 105, l1)  
+                            c.drawString(rect_x_position + 107, rect_y_position + 75, l2) 
+                            c.drawCentredString(rect_x_position + 76, rect_y_position + 42, l3) 
+                            c.drawRightString(rect_x_position + 47, rect_y_position + 76, l4)   
                         else:
-                            c.drawCentredString(rect_x_position + 126, rect_y_position + 105 + ERROR, l4)  
-                            c.drawString(rect_x_position + 107, rect_y_position + 75 + ERROR, l3) 
-                            c.drawCentredString(rect_x_position + 76, rect_y_position + 42 + ERROR, l2) 
-                            c.drawRightString(rect_x_position + 47, rect_y_position + 76 + ERROR, l1)  
+                            c.drawCentredString(rect_x_position + 126, rect_y_position + 105, l4)  
+                            c.drawString(rect_x_position + 107, rect_y_position + 75, l3) 
+                            c.drawCentredString(rect_x_position + 76, rect_y_position + 42, l2) 
+                            c.drawRightString(rect_x_position + 47, rect_y_position + 76, l1)  
+
             #TH36   BF2D@Hj@r@i@p1@l1187@n1@e1.18@d13@gSD295@s39@v@a@Gl400@w66@l308@w-66@l250@w-90@l280@w0@C78@
                     elif count_l == 5 and count_w == 4 and (0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="-90" and w4 =="0" or w1=="90" and 0 < int(w2) < 90 and -90 < int(w3) < 0 and w4=="0"):
-                        value001_str = str(value001)  
-                        result = extract_numbers(value001_str)       
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                                  
                         img_path = image_list[36]
+
                         exec(code_string)
                         if 0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="-90" and w4 =="0":
-                            c.drawString(rect_x_position + 112, rect_y_position + 105 + ERROR, l1)  
-                            c.drawString(rect_x_position + 92, rect_y_position + 75 + ERROR, l2) 
-                            c.drawCentredString(rect_x_position + 58, rect_y_position + 42 + ERROR, l3) 
-                            c.drawRightString(rect_x_position + 41, rect_y_position + 76 + ERROR, l4)   
+                            c.drawString(rect_x_position + 112, rect_y_position + 105, l1)  
+                            c.drawString(rect_x_position + 92, rect_y_position + 75, l2) 
+                            c.drawCentredString(rect_x_position + 58, rect_y_position + 42, l3) 
+                            c.drawRightString(rect_x_position + 41, rect_y_position + 76, l4)   
                         else:
-                            c.drawString(rect_x_position + 112, rect_y_position + 105 + ERROR, l4)  
-                            c.drawString(rect_x_position + 92, rect_y_position + 75 + ERROR, l3) 
-                            c.drawCentredString(rect_x_position + 58, rect_y_position + 42 + ERROR, l2) 
-                            c.drawRightString(rect_x_position + 41, rect_y_position + 76 + ERROR, l1)  
+                            c.drawString(rect_x_position + 112, rect_y_position + 105, l4)  
+                            c.drawString(rect_x_position + 92, rect_y_position + 75, l3) 
+                            c.drawCentredString(rect_x_position + 58, rect_y_position + 42, l2) 
+                            c.drawRightString(rect_x_position + 41, rect_y_position + 76, l1)  
+                            
             #TH35   BF2D@Hj@r@i@p1@l2738@n1@e2.72@d13@gSD295@s39@v@a@Gl112@w135@l650@w90@l650@w90@l650@w90@l650@w135@l111@w0@C95@
                     elif count_l == 7 and count_w == 6 and w1=="135" and w2=="90" and w3=="90" and w4=="90" and w5=="135" and w6=="0":
-                        value001_str = str(value001)  
-                        result = extract_numbers(value001_str)     
+ 
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                                  
                         img_path = image_list[35]
+
                         exec(code_string)
+
                         if int(l2) > int(l3):
-                            c.drawString(rect_x_position + 95, rect_y_position + 82 + ERROR, l1.rjust(6))  #giữa .rjust(6)
-                            c.drawString(rect_x_position + 78, rect_y_position + 105 + ERROR, l2.center(6)) #trên
-                            c.drawString(rect_x_position + 9, rect_y_position + 76 + ERROR, l3.rjust(6))  #trái .center(6)
-                            c.drawString(rect_x_position + 78, rect_y_position + 42 + ERROR, l4.center(6))  #dưới
-                            c.drawString(rect_x_position + 144, rect_y_position + 76 + ERROR, l5) #phải
+                            c.drawString(rect_x_position + 95, rect_y_position + 82, l1.rjust(6))  #giữa .rjust(6)
+                            c.drawString(rect_x_position + 78, rect_y_position + 105, l2.center(6)) #trên
+                            c.drawString(rect_x_position + 8, rect_y_position + 76, l3.rjust(6))  #trái .center(6)
+                            c.drawString(rect_x_position + 78, rect_y_position + 42, l4.center(6))  #dưới
+                            c.drawString(rect_x_position + 143, rect_y_position + 76, l5) #phải
                         else:
-                            c.drawString(rect_x_position + 95, rect_y_position + 82 + ERROR, l1.rjust(6))  #giữa .rjust(6)
-                            c.drawString(rect_x_position + 78, rect_y_position + 105 + ERROR, l5.center(6)) #trên
-                            c.drawString(rect_x_position + 9, rect_y_position + 76 + ERROR, l4.rjust(6))  #trái .center(6)
-                            c.drawString(rect_x_position + 78, rect_y_position + 42 + ERROR, l3.center(6))  #dưới
-                            c.drawString(rect_x_position + 144, rect_y_position + 76 + ERROR, l2) #phải
+                            c.drawString(rect_x_position + 95, rect_y_position + 82, l1.rjust(6))  #giữa .rjust(6)
+                            c.drawString(rect_x_position + 78, rect_y_position + 105, l5.center(6)) #trên
+                            c.drawString(rect_x_position + 8, rect_y_position + 76, l4.rjust(6))  #trái .center(6)
+                            c.drawString(rect_x_position + 78, rect_y_position + 42, l3.center(6))  #dưới
+                            c.drawString(rect_x_position + 143, rect_y_position + 76, l2) #phải
+                            
             #TH34   BF2D@Hj@r@i@p1@l1151@n1@e1.15@d13@gSD295@s39@v@a@Gl190@w64@l310@w-64@l220@w-75@l290@w75@l200@w0@C93@
                     elif count_l == 6 and count_w == 5 and 0 < int(w1) < 90 and -90 < int(w2) < 0 and -90 < int(w3) < 0 and 0 < int(w4) < 90 and w5=="0":
-                        value001_str = str(value001)  
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+
                         img_path = image_list[34]
+
                         exec(code_string)
-                        c.drawString(rect_x_position + 114, rect_y_position + 105 + ERROR, l5) #phải trên
-                        c.drawString(rect_x_position + 114, rect_y_position + 72 + ERROR, l4) #phải
-                        c.drawString(rect_x_position + 78, rect_y_position + 42 + ERROR, l3.center(6)) #trên
-                        c.drawString(rect_x_position + 38, rect_y_position + 72 + ERROR, l2.rjust(6))  #trái
-                        c.drawString(rect_x_position + 38, rect_y_position + 105 + ERROR, l1.rjust(6))  #trái trÊN
+
+                        c.drawString(rect_x_position + 114, rect_y_position + 105, l5) #phải trên
+                        c.drawString(rect_x_position + 114, rect_y_position + 72, l4) #phải
+                        c.drawString(rect_x_position + 78, rect_y_position + 42, l3.center(6)) #trên
+                        c.drawString(rect_x_position + 38, rect_y_position + 72, l2.rjust(6))  #trái
+                        c.drawString(rect_x_position + 38, rect_y_position + 105, l1.rjust(6))  #trái trÊN
+
             #TH33   BF2D@Hj@r@i@p1@l1719@n1@e1.71@d13@gSD295@s39@v@a@Gl530@w90@l360@w90@l300@w90@l280@w-90@l350@w0@C95@   
                     elif count_l == 6 and count_w == 5 and (w1=="90" and w2=="90" and w3=="90" and w4=="-90" and w5=="0" or w1=="90" and w2=="-90" and w3=="-90" and w4=="-90" and w5=="0"):
-                        value001_str = str(value001)  
-                        result = extract_numbers(value001_str)        
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
+                        result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+                                    
                         img_path = image_list[33]
+
                         exec(code_string)
+
                         if w1=="90" and w2=="90" and w3=="90" and w4=="-90" and w5=="0":
-                            c.drawString(rect_x_position + 100, rect_y_position + 86 + ERROR, l5.rjust(6))  #giữa
-                            c.drawString(rect_x_position + 75, rect_y_position + 65 + ERROR, l4) #phải
-                            c.drawString(rect_x_position + 43, rect_y_position + 43 + ERROR, l3.center(6))  #dưới
-                            c.drawString(rect_x_position + 8, rect_y_position + 75 + ERROR, l2.rjust(6))  #trái
-                            c.drawString(rect_x_position + 65, rect_y_position + 105 + ERROR, l1.rjust(6)) #trên
+                            c.drawString(rect_x_position + 100, rect_y_position + 86, l5.rjust(6))  #giữa
+                            c.drawString(rect_x_position + 75, rect_y_position + 65, l4) #phải
+                            c.drawString(rect_x_position + 43, rect_y_position + 43, l3.center(6))  #dưới
+                            c.drawString(rect_x_position + 8, rect_y_position + 75, l2.rjust(6))  #trái
+                            c.drawString(rect_x_position + 65, rect_y_position + 105, l1.rjust(6)) #trên
                         else: 
-                            c.drawString(rect_x_position + 100, rect_y_position + 86 + ERROR, l1.rjust(6))  #giữa
-                            c.drawString(rect_x_position + 75, rect_y_position + 65 + ERROR, l2) #phải
-                            c.drawString(rect_x_position + 43, rect_y_position + 43 + ERROR, l3.center(6))  #dưới
-                            c.drawString(rect_x_position + 8, rect_y_position + 75 + ERROR, l4.rjust(6))  #trái
-                            c.drawString(rect_x_position + 65, rect_y_position + 105 + ERROR, l5.rjust(6)) #trên
+                            c.drawString(rect_x_position + 100, rect_y_position + 86, l1.rjust(6))  #giữa
+                            c.drawString(rect_x_position + 75, rect_y_position + 65, l2) #phải
+                            c.drawString(rect_x_position + 43, rect_y_position + 43, l3.center(6))  #dưới
+                            c.drawString(rect_x_position + 8, rect_y_position + 75, l4.rjust(6))  #trái
+                            c.drawString(rect_x_position + 65, rect_y_position + 105, l5.rjust(6)) #trên
              #TH32  BF2D@Hj@r@i@p1@l1376@n1@e1.37@d13@gSD295@s39@v@a@Gl164@w90@l200@w90@l750@w90@l200@w90@l164@w0@C75@
                     elif count_l == 6 and count_w == 5 and w1=="90" and w2=="90" and w3=="90" and w4=="90" and w5=="0":
-                        value001_str = str(value001)  
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+
                         img_path = image_list[32]
+
                         exec(code_string)
-                        c.drawString(rect_x_position + 111, rect_y_position + 43 + ERROR, l1) #phải trên
-                        c.drawString(rect_x_position + 144, rect_y_position + 63 + ERROR, l2) #phải
-                        c.drawString(rect_x_position + 78, rect_y_position + 81 + ERROR, l3.center(6))  #giữa 
-                        c.drawString(rect_x_position + 9, rect_y_position + 63 + ERROR, l4.rjust(6))  #trái
-                        c.drawString(rect_x_position + 40, rect_y_position + 43 + ERROR, l5.rjust(6))  #trái trÊN
+
+                        c.drawString(rect_x_position + 111, rect_y_position + 43, l1) #phải trên
+                        c.drawString(rect_x_position + 143, rect_y_position + 63, l2) #phải
+                        c.drawString(rect_x_position + 78, rect_y_position + 81, l3.center(6))  #giữa 
+                        c.drawString(rect_x_position + 8, rect_y_position + 63, l4.rjust(6))  #trái
+                        c.drawString(rect_x_position + 40, rect_y_position + 43, l5.rjust(6))  #trái trÊN
+          
             #TH31   BF2D@Hj@r@i@p1@l1202@n1@e0.67@d10@gSD295@s30@v@a@Gl100@w135@l210@w90@l630@w90@l210@w135@l100@w0@C86@
                     elif count_l == 6 and count_w == 5 and 90 < int(w1) < 180 and w2=="90" and w3=="90" and 90 < int(w4) < 180 and w5=="0":
 
-                        value001_str = str(value001)  
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+
                         img_path = image_list[31]
+
                         exec(code_string)
-                        c.drawString(rect_x_position + 97, rect_y_position + 93 + ERROR, l1.rjust(6)) #phải trên
-                        c.drawString(rect_x_position + 143, rect_y_position + 75 + ERROR, l2) #phải
-                        c.drawString(rect_x_position + 77, rect_y_position + 43 + ERROR, l3.center(6)) #trên
-                        c.drawString(rect_x_position + 8, rect_y_position + 75 + ERROR, l4.rjust(6))  #trái 
-                        c.drawString(rect_x_position + 55, rect_y_position + 93 + ERROR, l5)  #trái trÊN
+
+                        c.drawString(rect_x_position + 97, rect_y_position + 93, l1.rjust(6)) #phải trên
+                        c.drawString(rect_x_position + 143, rect_y_position + 75, l2) #phải
+                        c.drawString(rect_x_position + 77, rect_y_position + 43, l3.center(6)) #trên
+                        c.drawString(rect_x_position + 8, rect_y_position + 75, l4.rjust(6))  #trái 
+                        c.drawString(rect_x_position + 55, rect_y_position + 93, l5)  #trái trÊN
+   
             #TH30   BF2D@Hj@r@i@p1@l1140@n1@e0.64@d10@gSD295@s30@v@a@Gl87@w180@l340@w90@l300@w90@l340@w180@l87@w0@C90@
                     elif count_l == 6 and count_w == 5 and w1=="180" and w2=="90" and w3=="90" and w4=="180" and w5=="0":
-                        value001_str = str(value001)  
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+
                         img_path = image_list[30]
+
                         exec(code_string)
-                        c.drawString(rect_x_position + 95, rect_y_position + 88 + ERROR, l1.rjust(6)) #phải trên
-                        c.drawString(rect_x_position + 143, rect_y_position + 75 + ERROR, l2) #phải
-                        c.drawString(rect_x_position + 77, rect_y_position + 43 + ERROR, l3.center(6)) #trên
-                        c.drawString(rect_x_position + 8, rect_y_position + 75 + ERROR, l4.rjust(6))  #trái 
-                        c.drawString(rect_x_position + 56, rect_y_position + 88 + ERROR, l5)  #trái trÊN
+
+                        c.drawString(rect_x_position + 95, rect_y_position + 88, l1.rjust(6)) #phải trên
+                        c.drawString(rect_x_position + 143, rect_y_position + 75, l2) #phải
+                        c.drawString(rect_x_position + 77, rect_y_position + 43, l3.center(6)) #trên
+                        c.drawString(rect_x_position + 8, rect_y_position + 75, l4.rjust(6))  #trái 
+                        c.drawString(rect_x_position + 56, rect_y_position + 88, l5)  #trái trÊN
+
             #TH29   BF2D@Hj@r@i@p1@l1369@n1@e1.36@d13@gSD295@s39@v@a@Gl220@w90@l300@w-90@l300@w-90@l300@w90@l350@w0@C84@
                     elif count_l == 6 and count_w == 5 and w1=="90" and w2=="-90" and w3=="-90" and w4=="90" and w5=="0":
-                        value001_str = str(value001)  
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+
                         img_path = image_list[29]
+
                         exec(code_string)
-                        c.drawString(rect_x_position + 112, rect_y_position + 41 + ERROR, l5) #phải dưới
-                        c.drawString(rect_x_position + 114, rect_y_position + 75 + ERROR, l4) #phải trên
-                        c.drawString(rect_x_position + 79, rect_y_position + 105 + ERROR, l3.center(6)) #trên
-                        c.drawString(rect_x_position + 37, rect_y_position + 75 + ERROR, l2.rjust(6))  #trái
-                        c.drawString(rect_x_position + 39, rect_y_position + 41 + ERROR, l1.rjust(6))  #trái dưới
+
+                        c.drawString(rect_x_position + 112, rect_y_position + 41, l5) #phải dưới
+                        c.drawString(rect_x_position + 114, rect_y_position + 75, l4) #phải trên
+                        c.drawString(rect_x_position + 79, rect_y_position + 105, l3.center(6)) #trên
+                        c.drawString(rect_x_position + 37, rect_y_position + 75, l2.rjust(6))  #trái
+                        c.drawString(rect_x_position + 39, rect_y_position + 41, l1.rjust(6))  #trái dưới
+                        
             #TH28   BF2D@Hj@r@i@p1@l1181@n1@e0.66@d10@gSD295@s30@v@a@Gl150@w90@l300@w-90@l230@w90@l560@w0@C88@
                     elif count_l == 5 and count_w == 4 and w1 == "90" and w2 == "-90" and w3 == "90" and w4 == "0":
-                        value001_str = str(value001)  
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+
                         img_path = image_list[28]
+
                         exec(code_string)
+
                         if int(l1) > int(l4):
-                            c.drawString(rect_x_position + 8, rect_y_position + 57 + ERROR, l4.rjust(6))  #trái
-                            c.drawString(rect_x_position + 36, rect_y_position + 73 + ERROR, l3.rjust(6))  #dưới
-                            c.drawString(rect_x_position + 75, rect_y_position + 81 + ERROR, l2) #phải
-                            c.drawString(rect_x_position + 90, rect_y_position + 104 + ERROR, l1.rjust(6)) #trên 
+                            c.drawString(rect_x_position + 8, rect_y_position + 57, l4.rjust(6))  #trái
+                            c.drawString(rect_x_position + 36, rect_y_position + 73, l3.rjust(6))  #dưới
+                            c.drawString(rect_x_position + 75, rect_y_position + 81, l2) #phải
+                            c.drawString(rect_x_position + 90, rect_y_position + 104, l1.rjust(6)) #trên 
                         else:
-                            c.drawString(rect_x_position + 8, rect_y_position + 57 + ERROR, l1.rjust(6))  #trái
-                            c.drawString(rect_x_position + 36, rect_y_position + 73 + ERROR, l2.rjust(6))  #dưới
-                            c.drawString(rect_x_position + 75, rect_y_position + 81 + ERROR, l3) #phải
-                            c.drawString(rect_x_position + 90, rect_y_position + 104 + ERROR, l4.rjust(6)) #trên 
+                            c.drawString(rect_x_position + 8, rect_y_position + 57, l1.rjust(6))  #trái
+                            c.drawString(rect_x_position + 36, rect_y_position + 73, l2.rjust(6))  #dưới
+                            c.drawString(rect_x_position + 75, rect_y_position + 81, l3) #phải
+                            c.drawString(rect_x_position + 90, rect_y_position + 104, l4.rjust(6)) #trên 
+
             #TH27   BF2D@Hj@r@i@p1@l1204@n1@e1.2@d13@gSD295@s39@v@a@Gl350@w90@l300@w90@l280@w-90@l350@w0@C69@
                     elif count_l == 5 and count_w == 4 and (w1=="90" and w2=="90" and w3=="-90" and w4=="0" or w1=="90" and w2=="-90" and w3=="-90" and w4=="0"):
-                        value001_str = str(value001)  
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
                         img_path = image_list[27]
+
                         exec(code_string)
+
                         if w1=="90" and w2=="90" and w3=="-90" and w4=="0":
-                            c.drawString(rect_x_position + 90, rect_y_position + 105 + ERROR, l4.rjust(6)) #trên
-                            c.drawString(rect_x_position + 75, rect_y_position + 75 + ERROR, l3) #phải
-                            c.drawString(rect_x_position + 44, rect_y_position + 43 + ERROR, l2.center(6))  #dưới
-                            c.drawString(rect_x_position + 8, rect_y_position + 75 + ERROR, l1.rjust(6))  #trái
+                            c.drawString(rect_x_position + 90, rect_y_position + 105, l4.rjust(6)) #trên
+                            c.drawString(rect_x_position + 75, rect_y_position + 75, l3) #phải
+                            c.drawString(rect_x_position + 44, rect_y_position + 43, l2.center(6))  #dưới
+                            c.drawString(rect_x_position + 8, rect_y_position + 75, l1.rjust(6))  #trái
                         else:
-                            c.drawString(rect_x_position + 90, rect_y_position + 105 + ERROR, l1.rjust(6)) #trên
-                            c.drawString(rect_x_position + 75, rect_y_position + 75 + ERROR, l2) #phải
-                            c.drawString(rect_x_position + 44, rect_y_position + 43 + ERROR, l3.center(6))  #dưới
-                            c.drawString(rect_x_position + 8, rect_y_position + 75 + ERROR, l4.rjust(6))  #trái
+                            c.drawString(rect_x_position + 90, rect_y_position + 105, l1.rjust(6)) #trên
+                            c.drawString(rect_x_position + 75, rect_y_position + 75, l2) #phải
+                            c.drawString(rect_x_position + 44, rect_y_position + 43, l3.center(6))  #dưới
+                            c.drawString(rect_x_position + 8, rect_y_position + 75, l4.rjust(6))  #trái
+                            
             #TH26   BF2D@Hj@r@i@p1@l1721@n1@e2.68@d16@gSD295@s80@v@a@Gl218@w90@l1070@w90@l300@w90@l250@w0@C66@
                     elif count_l == 5 and count_w == 4 and w1=="90" and w2=="90" and w3=="90" and w4=="0":
-                        value001_str = str(value001)  
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+
                         img_path = image_list[26]
+
                         exec(code_string)
+
                         if int(l2) > int(l3):
-                            c.drawString(rect_x_position + 143, rect_y_position + 63 + ERROR, l1) #phải
-                            c.drawString(rect_x_position + 75, rect_y_position + 43 + ERROR, l2.center(6))  #dưới
-                            c.drawString(rect_x_position + 8, rect_y_position + 75 + ERROR, l3.rjust(6))  #trái
-                            c.drawString(rect_x_position + 41, rect_y_position + 105 + ERROR, l4.rjust(6)) #trên
+                            c.drawString(rect_x_position + 143, rect_y_position + 63, l1) #phải
+                            c.drawString(rect_x_position + 75, rect_y_position + 43, l2.center(6))  #dưới
+                            c.drawString(rect_x_position + 8, rect_y_position + 75, l3.rjust(6))  #trái
+                            c.drawString(rect_x_position + 41, rect_y_position + 105, l4.rjust(6)) #trên
                         else:
-                            c.drawString(rect_x_position + 143, rect_y_position + 63 + ERROR, l4) #phải
-                            c.drawString(rect_x_position + 75, rect_y_position + 43 + ERROR, l3.center(6))  #dưới
-                            c.drawString(rect_x_position + 8, rect_y_position + 75 + ERROR, l2.rjust(6))  #trái
-                            c.drawString(rect_x_position + 41, rect_y_position + 105 + ERROR, l1.rjust(6)) #trên
+                            c.drawString(rect_x_position + 143, rect_y_position + 63, l4) #phải
+                            c.drawString(rect_x_position + 75, rect_y_position + 43, l3.center(6))  #dưới
+                            c.drawString(rect_x_position + 8, rect_y_position + 75, l2.rjust(6))  #trái
+                            c.drawString(rect_x_position + 41, rect_y_position + 105, l1.rjust(6)) #trên
+
             #TH25   BF2D@Hj@r@i@p1@l1164@n1@e1.16@d13@gSD295@s39@v@a@Gl112@w135@l950@w-135@l111@w0@C79@
                     elif count_l == 4 and count_w == 3 and 90 < int(w1) < 180 and -180 < int(w2) < -90 and w3=="0":
-                        value001_str = str(value001)  
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+
                         img_path = image_list[25]
+
                         exec(code_string)
-                        c.drawString(rect_x_position + 22, rect_y_position + 58 + ERROR, l1.rjust(6))  #trái
-                        c.drawString(rect_x_position + 78, rect_y_position + 81 + ERROR, l2.center(6))  #giữa           
-                        c.drawString(rect_x_position + 130, rect_y_position + 90 + ERROR, l3) #phải
+
+                        c.drawString(rect_x_position + 22, rect_y_position + 58, l1.rjust(6))  #trái
+                        c.drawString(rect_x_position + 78, rect_y_position + 81, l2.center(6))  #giữa           
+                        c.drawString(rect_x_position + 130, rect_y_position + 90, l3) #phải
+                        
             #TH24   BF2D@Hj@r@i@p1@l1987@n1@e6.04@d22@gSD345@s88@v@a@Gl204@w180@l1500@w-180@l204@w0@C83@
                     elif count_l == 4 and count_w == 3 and w1=="180" and w2=="-180" and w3=="0":
-                        value001_str = str(value001)  
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+
                         img_path = image_list[24]
+
                         exec(code_string)
-                        c.drawString(rect_x_position + 41, rect_y_position + 105 + ERROR, l1.rjust(6))  #trái
-                        c.drawString(rect_x_position + 75, rect_y_position + 81 + ERROR, l2.center(6))  #giữa           
-                        c.drawString(rect_x_position + 109, rect_y_position + 43 + ERROR, l3) #phải
+
+                        c.drawString(rect_x_position + 41, rect_y_position + 105, l1.rjust(6))  #trái
+                        c.drawString(rect_x_position + 75, rect_y_position + 81, l2.center(6))  #giữa           
+                        c.drawString(rect_x_position + 109, rect_y_position + 43, l3) #phải
+
             #TH23   BF2D@Hj@r@i@p1@l1961@n1@e3.06@d16@gSD295@s80@v@a@Gl450@w67@l1050@w-67@l500@w0@C83@
                     elif count_l == 4 and count_w == 3 and 0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="0":
-                        value001_str = str(value001)  
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+
                         img_path = image_list[23]
+
                         exec(code_string)
-                        c.drawString(rect_x_position + 36, rect_y_position + 105 + ERROR, l1.rjust(6))  #trái
-                        c.drawString(rect_x_position + 61, rect_y_position + 70 + ERROR, l2.center(6))  #giữa           
-                        c.drawString(rect_x_position + 115, rect_y_position + 57 + ERROR, l3) #phải
+
+                        c.drawString(rect_x_position + 36, rect_y_position + 105, l1.rjust(6))  #trái
+                        c.drawString(rect_x_position + 61, rect_y_position + 70, l2.center(6))  #giữa           
+                        c.drawString(rect_x_position + 115, rect_y_position + 57, l3) #phải
+
             #TH22   BF2D@Hj@r@i@p1@l2458@n1@e3.83@d16@gSD295@s80@v@a@Gl218@w90@l2100@w-90@l218@w0@C79@
                     elif count_l == 4 and count_w == 3 and w1=="90" and w2=="-90" and w3=="0":
-                        value001_str = str(value001)  
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+
                         img_path = image_list[22]
+
                         exec(code_string)
-                        c.drawString(rect_x_position + 8, rect_y_position + 86 + ERROR, l1.rjust(6))  #trái
-                        c.drawString(rect_x_position + 77, rect_y_position + 81 + ERROR, l2.center(6))  #giữa           
-                        c.drawString(rect_x_position + 142, rect_y_position + 63 + ERROR, l3) #phải
+
+                        c.drawString(rect_x_position + 8, rect_y_position + 86, l1.rjust(6))  #trái
+                        c.drawString(rect_x_position + 77, rect_y_position + 81, l2.center(6))  #giữa           
+                        c.drawString(rect_x_position + 142, rect_y_position + 63, l3) #phải
+
             #TH21   BF2D@Hj@r@i@p1@l1644@n1@e2.56@d16@gSD295@s80@v@a@Gl154@w135@l1300@w-45@l200@w0@C77@
                     elif count_l == 4 and count_w == 3 and (90 < int(w1) < 180 and -90 < int(w2) < 0 and w3=="0" or 0 < int(w1) < 90 and -180 < int(w2) < -90 and w3=="0"):
-                        value001_str = str(value001)  
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+
                         img_path = image_list[21]
+
                         exec(code_string)
+
                         if 90 < int(w1) < 180:
-                            c.drawString(rect_x_position + 128, rect_y_position + 90 + ERROR, l1) #phải
-                            c.drawString(rect_x_position + 85, rect_y_position + 67 + ERROR, l2.center(6))  #giữa 
-                            c.drawString(rect_x_position + 25, rect_y_position + 67 + ERROR, l3.rjust(6))  #trái
+                            c.drawString(rect_x_position + 128, rect_y_position + 90, l1) #phải
+                            c.drawString(rect_x_position + 85, rect_y_position + 67, l2.center(6))  #giữa 
+                            c.drawString(rect_x_position + 25, rect_y_position + 67, l3.rjust(6))  #trái
                         else:
-                            c.drawString(rect_x_position + 128, rect_y_position + 90 + ERROR, l3) #phải
-                            c.drawString(rect_x_position + 85, rect_y_position + 67 + ERROR, l2.center(6))  #giữa 
-                            c.drawString(rect_x_position + 25, rect_y_position + 67 + ERROR, l1.rjust(6))  #trái
+                            c.drawString(rect_x_position + 128, rect_y_position + 90, l3) #phải
+                            c.drawString(rect_x_position + 85, rect_y_position + 67, l2.center(6))  #giữa 
+                            c.drawString(rect_x_position + 25, rect_y_position + 67, l1.rjust(6))  #trái
+
             #TH20   BF2D@Hj@r@i@p1@l1944@n1@e3.03@d16@gSD295@s80@v@a@Gl400@w78@l1000@w102@l600@w0@C67@
                     elif count_l == 4 and count_w == 3 and (0 < int(w1) < 90 and 90 < int(w2) < 180 and w3=="0" or 90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="0"):
-                        value001_str = str(value001)  
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
-                        img_path = image_list[20]    
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+
+                        img_path = image_list[20]  
+                               
                         exec(code_string)
+
                         if 0 < int(w1) < 90:
-                            c.drawString(rect_x_position + 8, rect_y_position + 68 + ERROR, l1.rjust(6))  #trái 
-                            c.drawString(rect_x_position + 75, rect_y_position + 100 + ERROR, l2.center(6)) #trên     
-                            c.drawString(rect_x_position + 143, rect_y_position + 75 + ERROR, l3) #phải
+                            c.drawString(rect_x_position + 8, rect_y_position + 68, l1.rjust(6))  #trái 
+                            c.drawString(rect_x_position + 75, rect_y_position + 100, l2.center(6)) #trên     
+                            c.drawString(rect_x_position + 143, rect_y_position + 75, l3) #phải
                         else:
-                            c.drawString(rect_x_position + 8, rect_y_position + 68 + ERROR, l3.rjust(6))  #trái 
-                            c.drawString(rect_x_position + 75, rect_y_position + 100 + ERROR, l2.center(6)) #trên     
-                            c.drawString(rect_x_position + 143, rect_y_position + 75 + ERROR, l1) #phải
+                            c.drawString(rect_x_position + 8, rect_y_position + 68, l3.rjust(6))  #trái 
+                            c.drawString(rect_x_position + 75, rect_y_position + 100, l2.center(6)) #trên     
+                            c.drawString(rect_x_position + 143, rect_y_position + 75, l1) #phải
+
             #TH19   BF2D@Hj@r@i@p1@l1970@n1@e3.07@d16@gSD295@s80@v@a@Gl122@w180@l1600@w-45@l220@w0@C78@
                     elif count_l == 4 and count_w == 3 and (w1=="180" and -90 < int(w2) < 0 and w3=="0" or 0 < int(w1) < 90 and w2=="-180" and w3=="0"):
-                        value001_str = str(value001)  
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+
                         img_path = image_list[19]
+
                         exec(code_string)
+
                         if w1=="180":
-                            c.drawString(rect_x_position + 110, rect_y_position + 105 + ERROR, l1) #phải
-                            c.drawString(rect_x_position + 82, rect_y_position + 81 + ERROR, l2.center(6))  #giữa
-                            c.drawString(rect_x_position + 21, rect_y_position + 66 + ERROR, l3.rjust(6))  #trái 
+                            c.drawString(rect_x_position + 110, rect_y_position + 105, l1) #phải
+                            c.drawString(rect_x_position + 82, rect_y_position + 81, l2.center(6))  #giữa
+                            c.drawString(rect_x_position + 21, rect_y_position + 66, l3.rjust(6))  #trái 
                         else:
-                            c.drawString(rect_x_position + 110, rect_y_position + 105 + ERROR, l3) #phải
-                            c.drawString(rect_x_position + 82, rect_y_position + 81 + ERROR, l2.center(6))  #giữa
-                            c.drawString(rect_x_position + 21, rect_y_position + 66 + ERROR, l1.rjust(6))  #trái 
+                            c.drawString(rect_x_position + 110, rect_y_position + 105, l3) #phải
+                            c.drawString(rect_x_position + 82, rect_y_position + 81, l2.center(6))  #giữa
+                            c.drawString(rect_x_position + 21, rect_y_position + 66, l1.rjust(6))  #trái 
+
+                        #c.drawString(rect_x_position + 75, rect_y_position + 40, l5)  #dưới
             #TH18   BF2D@Hj@r@i@p1@l2441@n1@e7.42@d22@gSD345@s88@v@a@Gl204@w180@l2000@w45@l210@w0@C66@
                     elif count_l == 4 and count_w == 3 and (w1=="180" and 0 < int(w2) < 90 and w3=="0" or 0 < int(w1) < 90 and w2=="180" and w3=="0"):
-                        value001_str = str(value001)  
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+
                         img_path = image_list[18]
+
                         exec(code_string)
+
                         if w1=="180":
-                            c.drawString(rect_x_position + 110, rect_y_position + 105 + ERROR, l1) #phải
-                            c.drawString(rect_x_position + 82, rect_y_position + 67 + ERROR, l2.center(6))  #giữa           
-                            c.drawString(rect_x_position + 21, rect_y_position + 83 + ERROR, l3.rjust(6))  #trái 
+                            c.drawString(rect_x_position + 110, rect_y_position + 105, l1) #phải
+                            c.drawString(rect_x_position + 82, rect_y_position + 67, l2.center(6))  #giữa           
+                            c.drawString(rect_x_position + 21, rect_y_position + 83, l3.rjust(6))  #trái 
                         else:
-                            c.drawString(rect_x_position + 110, rect_y_position + 105 + ERROR, l3) #phải
-                            c.drawString(rect_x_position + 82, rect_y_position + 67 + ERROR, l2.center(6))  #giữa           
-                            c.drawString(rect_x_position + 21, rect_y_position + 83 + ERROR, l1.rjust(6))  #trái                       
+                            c.drawString(rect_x_position + 110, rect_y_position + 105, l3) #phải
+                            c.drawString(rect_x_position + 82, rect_y_position + 67, l2.center(6))  #giữa           
+                            c.drawString(rect_x_position + 21, rect_y_position + 83, l1.rjust(6))  #trái                       
+
             #TH17   BF2D@Hj@r@i@p1@l1477@n1@e1.47@d13@gSD295@s39@v@a@Gl86@w180@l1200@w135@l180@w0@C76@
                     elif count_l == 4 and count_w == 3 and (w1=="180" and 90 < int(w2) < 180 and w3=="0" or 90 < int(w1) < 180 and w2=="180" and w3=="0"):
-                        value001_str = str(value001)  
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+
                         img_path = image_list[17]
+
                         exec(code_string)
+
                         if w1=="180":
-                            c.drawString(rect_x_position + 110, rect_y_position + 105 + ERROR, l1) #phải
-                            c.drawString(rect_x_position + 80, rect_y_position + 67 + ERROR, l2.center(6))  #giữa
-                            c.drawString(rect_x_position + 21, rect_y_position + 90 + ERROR, l3.rjust(6))  #trái        
+                            c.drawString(rect_x_position + 110, rect_y_position + 105, l1) #phải
+                            c.drawString(rect_x_position + 80, rect_y_position + 67, l2.center(6))  #giữa
+                            c.drawString(rect_x_position + 21, rect_y_position + 90, l3.rjust(6))  #trái        
                         else:
-                            c.drawString(rect_x_position + 110, rect_y_position + 105 + ERROR, l3) #phải
-                            c.drawString(rect_x_position + 80, rect_y_position + 67 + ERROR, l2.center(6))  #giữa
-                            c.drawString(rect_x_position + 21, rect_y_position + 90 + ERROR, l1.rjust(6))  #trái 
+                            c.drawString(rect_x_position + 110, rect_y_position + 105, l3) #phải
+                            c.drawString(rect_x_position + 80, rect_y_position + 67, l2.center(6))  #giữa
+                            c.drawString(rect_x_position + 21, rect_y_position + 90, l1.rjust(6))  #trái 
+
             #TH16   BF2D@Hj@r@i@p1@l1267@n1@e1.26@d13@gSD295@s39@v@a@Gl86@w180@l1000@w-135@l170@w0@C72@
                     elif count_l == 4 and count_w == 3 and (w1=="180" and -180 < int(w2) < -90 and w3=="0" or 90 < int(w1) < 180 and w2=="-180" and w3=="0"):
-                        value001_str = str(value001)  
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+
                         img_path = image_list[16]
+
                         exec(code_string)
+
                         if w1=="180":
-                            c.drawString(rect_x_position + 110, rect_y_position + 105 + ERROR, l1)  #trái
-                            c.drawString(rect_x_position + 80, rect_y_position + 81 + ERROR, l2.center(6))  #giữa           
-                            c.drawString(rect_x_position + 21, rect_y_position + 58 + ERROR, l3.rjust(6)) #phải
+                            c.drawString(rect_x_position + 110, rect_y_position + 105, l1)  #trái
+                            c.drawString(rect_x_position + 80, rect_y_position + 81, l2.center(6))  #giữa           
+                            c.drawString(rect_x_position + 21, rect_y_position + 58, l3.rjust(6)) #phải
                         else:
-                            c.drawString(rect_x_position + 110, rect_y_position + 105 + ERROR, l3)  #trái
-                            c.drawString(rect_x_position + 80, rect_y_position + 81 + ERROR, l2.center(6))  #giữa           
-                            c.drawString(rect_x_position + 21, rect_y_position + 58 + ERROR, l1.rjust(6)) #phải
+                            c.drawString(rect_x_position + 110, rect_y_position + 105, l3)  #trái
+                            c.drawString(rect_x_position + 80, rect_y_position + 81, l2.center(6))  #giữa           
+                            c.drawString(rect_x_position + 21, rect_y_position + 58, l1.rjust(6)) #phải
+
             #TH15   BF2D@Hj@r@i@p1@l1278@n1@e1.99@d16@gSD295@s80@v@a@Gl218@w90@l900@w-135@l200@w0@C78@
                     elif count_l == 4 and count_w == 3 and (w1=="90" and -180 < int(w2) < -90 and w3=="0" or 90 < int(w1) < 180 and w2=="-90" and w3=="0"):
-                        value001_str = str(value001)  
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+
                         img_path = image_list[15]
+
                         exec(code_string)
+
                         if w1=="90":
-                            c.drawString(rect_x_position + 8, rect_y_position + 62 + ERROR, l1.rjust(6))  #trái
-                            c.drawString(rect_x_position + 74, rect_y_position + 67 + ERROR, l2.center(6))  #giữa           
-                            c.drawString(rect_x_position + 130, rect_y_position + 90 + ERROR, l3) #phải
+                            c.drawString(rect_x_position + 8, rect_y_position + 62, l1.rjust(6))  #trái
+                            c.drawString(rect_x_position + 74, rect_y_position + 67, l2.center(6))  #giữa           
+                            c.drawString(rect_x_position + 130, rect_y_position + 90, l3) #phải
                         else:
-                            c.drawString(rect_x_position + 8, rect_y_position + 62 + ERROR, l3.rjust(6))  #trái
-                            c.drawString(rect_x_position + 74, rect_y_position + 67 + ERROR, l2.center(6))  #giữa           
-                            c.drawString(rect_x_position + 130, rect_y_position + 90 + ERROR, l1) #phải
+                            c.drawString(rect_x_position + 8, rect_y_position + 62, l3.rjust(6))  #trái
+                            c.drawString(rect_x_position + 74, rect_y_position + 67, l2.center(6))  #giữa           
+                            c.drawString(rect_x_position + 130, rect_y_position + 90, l1) #phải
+
             #TH14   BF2D@Hj@r@i@p1@l2489@n1@e3.88@d16@gSD295@s80@v@a@Gl218@w90@l1860@w-45@l460@w0@C91@
                     elif count_l == 4 and count_w == 3 and (w1=="90" and -90 < int(w2) < 0 and w3=="0" or 0 < int(w1) < 90 and w2=="-90" and w3=="0"):
-                        value001_str = str(value001)  
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+
                         img_path = image_list[14]
+
                         exec(code_string)
+                    
                         if w1=="90":
-                            c.drawString(rect_x_position + 8, rect_y_position + 62 + ERROR, l1.rjust(6))  #trái
-                            c.drawString(rect_x_position + 65, rect_y_position + 81 + ERROR, l2.center(6))  #giữa           
-                            c.drawString(rect_x_position + 127, rect_y_position + 80 + ERROR, l3) #phải
+                            c.drawString(rect_x_position + 8, rect_y_position + 62, l1.rjust(6))  #trái
+                            c.drawString(rect_x_position + 65, rect_y_position + 81, l2.center(6))  #giữa           
+                            c.drawString(rect_x_position + 127, rect_y_position + 80, l3) #phải
                         else:
-                            c.drawString(rect_x_position + 8, rect_y_position + 62 + ERROR, l3.rjust(6))  #trái
-                            c.drawString(rect_x_position + 65, rect_y_position + 81 + ERROR, l2.center(6))  #giữa           
-                            c.drawString(rect_x_position + 127, rect_y_position + 80 + ERROR, l1) #phải
+                            c.drawString(rect_x_position + 8, rect_y_position + 62, l3.rjust(6))  #trái
+                            c.drawString(rect_x_position + 65, rect_y_position + 81, l2.center(6))  #giữa           
+                            c.drawString(rect_x_position + 127, rect_y_position + 80, l1) #phải
+
             #TH13   BF2D@Hj@r@i@p1@l2128@n1@e4.79@d19@gSD345@s114@v@a@Gl268@w90@l1700@w-180@l154@w0@C73@
                     elif count_l == 4 and count_w == 3 and (w1=="90" and w2=="-180" and w3=="0" or w1=="180" and w2=="-90" and w3=="0"):
-                        value001_str = str(value001)  
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+
                         img_path = image_list[13]
+                    
                         exec(code_string)
+                    
                         if  w1=="90":
-                            c.drawString(rect_x_position + 8, rect_y_position + 62 + ERROR, l1.rjust(6))  #trái
-                            c.drawString(rect_x_position + 75, rect_y_position + 81 + ERROR, l2.center(6))  #giữa           
-                            c.drawString(rect_x_position + 110, rect_y_position + 105 + ERROR, l3) #phải
+                            c.drawString(rect_x_position + 8, rect_y_position + 62, l1.rjust(6))  #trái
+                            c.drawString(rect_x_position + 75, rect_y_position + 81, l2.center(6))  #giữa           
+                            c.drawString(rect_x_position + 110, rect_y_position + 105, l3) #phải
                         else:
-                            c.drawString(rect_x_position + 8, rect_y_position + 62 + ERROR, l3.rjust(6))  #trái
-                            c.drawString(rect_x_position + 75, rect_y_position + 81 + ERROR, l2.center(6))  #giữa           
-                            c.drawString(rect_x_position + 110, rect_y_position + 105 + ERROR, l1) #phải
+                            c.drawString(rect_x_position + 8, rect_y_position + 62, l3.rjust(6))  #trái
+                            c.drawString(rect_x_position + 75, rect_y_position + 81, l2.center(6))  #giữa           
+                            c.drawString(rect_x_position + 110, rect_y_position + 105, l1) #phải
+
             #TH12   BF2D@Hj@r@i@p1@l2248@n1@e3.51@d16@gSD295@s80@v@a@Gl218@w90@l1800@w135@l270@w0@C80@
                     elif count_l == 4 and count_w == 3 and (w1 == "90" and 90 < int(w2) < 180 and w3 == "0" or 90 < int(w1) < 180 and w2 == "90" and w3 == "0"):
-                        value001_str = str(value001)  
+                        
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+                        
                         img_path = image_list[12]
+                    
                         exec(code_string)
+                    
                         if w1 == "90":
-                            c.drawString(rect_x_position + 142, rect_y_position + 85 + ERROR, l1) #phải
-                            c.drawString(rect_x_position + 80, rect_y_position + 67 + ERROR, l2.center(6))  #giữa           
-                            c.drawString(rect_x_position + 24, rect_y_position + 90 + ERROR, l3.rjust(6))  #trái
+                            c.drawString(rect_x_position + 142, rect_y_position + 85, l1) #phải
+                            c.drawString(rect_x_position + 80, rect_y_position + 67, l2.center(6))  #giữa           
+                            c.drawString(rect_x_position + 24, rect_y_position + 90, l3.rjust(6))  #trái
                         else:
-                            c.drawString(rect_x_position + 142, rect_y_position + 85 + ERROR, l3) #phải
-                            c.drawString(rect_x_position + 80, rect_y_position + 67 + ERROR, l2.center(6))  #giữa           
-                            c.drawString(rect_x_position + 24, rect_y_position + 90 + ERROR, l1.rjust(6))  #trái
+                            c.drawString(rect_x_position + 142, rect_y_position + 85, l3) #phải
+                            c.drawString(rect_x_position + 80, rect_y_position + 67, l2.center(6))  #giữa           
+                            c.drawString(rect_x_position + 24, rect_y_position + 90, l1.rjust(6))  #trái
+
+                        #c.drawString(rect_x_position + 75, rect_y_position + 40, l5)  #dưới
             #TH11   BF2D@Hj@r@i@p1@l2559@n1@e7.78@d22@gSD345@s88@v@a@Gl311@w90@l2100@w45@l210@w0@C95@
                     elif count_l == 4 and count_w == 3 and (w1 == "90" and 0 < int(w2) < 90 and w3 =="0" or 0 < int(w1) < 90 and w2 =="90"  and w3 =="0"):
-                        value001_str = str(value001)  
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+
                         img_path = image_list[11]  #Thay hình
+                    
                         exec(code_string)
+                    
                         if w1=="90":
-                            c.drawString(rect_x_position + 8, rect_y_position + 75 + ERROR, l1.rjust(6))  #trái
-                            c.drawString(rect_x_position + 65, rect_y_position + 105 + ERROR, l2.center(6)) #trên
-                            c.drawString(rect_x_position + 130, rect_y_position + 75 + ERROR, l3) #phải
+                            c.drawString(rect_x_position + 8, rect_y_position + 75, l1.rjust(6))  #trái
+                            c.drawString(rect_x_position + 65, rect_y_position + 105, l2.center(6)) #trên
+                            c.drawString(rect_x_position + 130, rect_y_position + 75, l3) #phải
                         else:
-                            c.drawString(rect_x_position + 8, rect_y_position + 75 + ERROR, l3.rjust(6))  #trái
-                            c.drawString(rect_x_position + 65, rect_y_position + 105 + ERROR, l2.center(6)) #trên
-                            c.drawString(rect_x_position + 130, rect_y_position + 75 + ERROR, l1) #phải
+                            c.drawString(rect_x_position + 8, rect_y_position + 75, l3.rjust(6))  #trái
+                            c.drawString(rect_x_position + 65, rect_y_position + 105, l2.center(6)) #trên
+                            c.drawString(rect_x_position + 130, rect_y_position + 75, l1) #phải
+                            
             #TH10   BF2D@Hj@r@i@p1@l2105@n1@e6.4@d22@gSD345@s88@v@a@Gl204@w180@l1600@w90@l311@w0@C81@
                     elif count_l == 4 and count_w == 3 and (w1=="90" and w2=="180" and w3=="0" or w1=="180" and w2=="90" and w3=="0"):
-                        value001_str = str(value001)  
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+
                         img_path = image_list[10]
+                    
                         exec(code_string)
+                    
                         if w1=="180":
-                            c.drawString(rect_x_position + 110, rect_y_position + 67 + ERROR, l1) #phải
-                            c.drawString(rect_x_position + 72, rect_y_position + 105 + ERROR, l2.center(6)) #trên        
-                            c.drawString(rect_x_position + 8, rect_y_position + 75 + ERROR, l3.rjust(6))  #trái
+                            c.drawString(rect_x_position + 110, rect_y_position + 67, l1) #phải
+                            c.drawString(rect_x_position + 72, rect_y_position + 105, l2.center(6)) #trên        
+                            c.drawString(rect_x_position + 8, rect_y_position + 75, l3.rjust(6))  #trái
                         else:
-                            c.drawString(rect_x_position + 110, rect_y_position + 67 + ERROR, l3) #phải
-                            c.drawString(rect_x_position + 72, rect_y_position + 105 + ERROR, l2.center(6)) #trên        
-                            c.drawString(rect_x_position + 8, rect_y_position + 75 + ERROR, l1.rjust(6))  #trái
+                            c.drawString(rect_x_position + 110, rect_y_position + 67, l3) #phải
+                            c.drawString(rect_x_position + 72, rect_y_position + 105, l2.center(6)) #trên        
+                            c.drawString(rect_x_position + 8, rect_y_position + 75, l1.rjust(6))  #trái
+
             #TH9    BF2D@Hj@r@i@p1@l1514@n1@e2.36@d16@gSD295@s48@v@a@Gl138@w135@l1250@w135@l138@w0@C92@
                     elif count_l == 4 and count_w == 3 and 90 < int(w1) < 180 and 90 < int(w2) < 180 and w3=="0":
-                        value001_str = str(value001)  
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+
                         img_path = image_list[9]
+                    
                         exec(code_string)
-                        c.drawString(rect_x_position + 21, rect_y_position + 58 + ERROR, l1.rjust(6))  #trái
-                        c.drawString(rect_x_position + 77, rect_y_position + 81 + ERROR, l2.center(6))  #giữa           
-                        c.drawString(rect_x_position + 130, rect_y_position + 58 + ERROR, l3) #phải
+                    
+                        c.drawString(rect_x_position + 21, rect_y_position + 58, l1.rjust(6))  #trái
+                        c.drawString(rect_x_position + 77, rect_y_position + 81, l2.center(6))  #giữa           
+                        c.drawString(rect_x_position + 130, rect_y_position + 58, l3) #phải
+
             #TH8    BF2D@Hj@r@i@p1@l2117@n1@e4.76@d19@gSD345@s114@v@a@Gl398@w85@l1509@w45@l265@w0@C89@
                     elif count_l == 4 and count_w == 3 and 0 < int(w1) < 90 and 0 < int(w2) < 90 and w3=="0":
-                        value001_str = str(value001)  
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+
                         img_path = image_list[8]
+                    
                         exec(code_string)
-                        c.drawString(rect_x_position + 21, rect_y_position + 66 + ERROR, l1.rjust(6))  #trái
-                        c.drawString(rect_x_position + 75, rect_y_position + 81 + ERROR, l2.center(6))  #giữa
-                        c.drawString(rect_x_position + 130, rect_y_position + 66 + ERROR, l3) #phải
+                    
+                        c.drawString(rect_x_position + 21, rect_y_position + 66, l1.rjust(6))  #trái
+                        c.drawString(rect_x_position + 75, rect_y_position + 81, l2.center(6))  #giữa
+                        c.drawString(rect_x_position + 130, rect_y_position + 66, l3) #phải
+
             #TH7 BF2D@Hj@r@i@p1@l2300@n1@e1.29@d10@gSD295@s30@v@a@Gl87@w180@l2100@w180@l87@w0@C79@
                     elif count_l == 4 and count_w == 3 and w1=="180" and w2=="180" and w3=="0":
-                        value001_str = str(value001)  
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+
                         img_path = image_list[7]
+                    
                         exec(code_string)
-                        c.drawString(rect_x_position + 40, rect_y_position + 105 + ERROR, l1.rjust(6))  #trái
-                        c.drawString(rect_x_position + 78, rect_y_position + 67 + ERROR, l2.center(6))  #giữa
-                        c.drawString(rect_x_position + 111, rect_y_position + 105 + ERROR, l3) #phải
+                    
+                        c.drawString(rect_x_position + 40, rect_y_position + 105, l1.rjust(6))  #trái
+                        c.drawString(rect_x_position + 78, rect_y_position + 67, l2.center(6))  #giữa
+                        c.drawString(rect_x_position + 111, rect_y_position + 105, l3) #phải
+
         #TH6    BF2D@Hj@r@i@p1@l2158@n1@e3.37@d16@gSD295@s80@v@a@Gl218@w90@l1800@w90@l218@w0@C90@ 
                     elif count_l == 4 and count_w == 3 and w1=="90" and w2=="90" and w3=="0":
-                        value001_str = str(value001)  
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+
                         img_path = image_list[6]
+                    
                         exec(code_string)
-                        c.drawString(rect_x_position + 8, rect_y_position + 63 + ERROR, l1.rjust(6))  #trái
-                        c.drawString(rect_x_position + 78, rect_y_position + 81 + ERROR, l2.center(6))  #giữa
-                        c.drawString(rect_x_position + 142, rect_y_position + 63 + ERROR, l3) #phải 
+                    
+                        c.drawString(rect_x_position + 8, rect_y_position + 63, l1.rjust(6))  #trái
+                        c.drawString(rect_x_position + 78, rect_y_position + 81, l2.center(6))  #giữa
+                        c.drawString(rect_x_position + 142, rect_y_position + 63, l3) #phải 
+
             #TH5    BF2D@Hj@r@i@p1@l1057@n1@e1.05@d13@gSD295@s39@v@a@Gl111@w135@l950@w0@C77@    
                     elif count_l == 3 and count_w == 2 and 90 < int(w1) < 180 and int(w2) == 0: 
-                        value001_str = str(value001)  
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+
                         img_path = image_list[5]
+                    
                         exec(code_string)
+                    
                         if int(l1) > int(l2):
-                            c.drawString(rect_x_position + 21, rect_y_position + 90 + ERROR, l2.rjust(6))
-                            c.drawString(rect_x_position + 80, rect_y_position + 67 + ERROR, l1.center(6))
+                            c.drawString(rect_x_position + 21, rect_y_position + 90, l2.rjust(6))
+                            c.drawString(rect_x_position + 80, rect_y_position + 67, l1.center(6))
                         else:
-                            c.drawString(rect_x_position + 21, rect_y_position + 90 + ERROR, l1.rjust(6))
-                            c.drawString(rect_x_position + 80, rect_y_position + 67 + ERROR, l2.center(6))
+                            c.drawString(rect_x_position + 21, rect_y_position + 90, l1.rjust(6))
+                            c.drawString(rect_x_position + 80, rect_y_position + 67, l2.center(6))
+
             #TH4    BF2D@Hj@r@i@p1@l2088@n1@e4.7@d19@gSD345@s114@v@a@Gl600@w45@l1500@w0@C76@    
                     elif count_l == 3 and count_w == 2 and 0 < int(w1) < 90 and int(w2) == 0 :  
-                        value001_str = str(value001)  
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+
                         img_path = image_list[4]
+                    
                         exec(code_string)
+                    
                         if int(l1) > int(l2):
-                            c.drawString(rect_x_position + 23, rect_y_position + 67 + ERROR, l2.rjust(6))
-                            c.drawString(rect_x_position + 85, rect_y_position + 81 + ERROR, l1.center(6))
+                            c.drawString(rect_x_position + 23, rect_y_position + 67, l2.rjust(6))
+                            c.drawString(rect_x_position + 85, rect_y_position + 81, l1.center(6))
                         else:
-                            c.drawString(rect_x_position + 23, rect_y_position + 67 + ERROR, l1.rjust(6))
-                            c.drawString(rect_x_position + 85, rect_y_position + 81 + ERROR, l2.center(6))                  
+                            c.drawString(rect_x_position + 23, rect_y_position + 67, l1.rjust(6))
+                            c.drawString(rect_x_position + 85, rect_y_position + 81, l2.center(6))                  
+
             #TH3    BF2D@Hj@r@i@p1@l1744@n1@e5.3@d22@gSD345@s88@v@a@Gl204@w180@l1500@w0@C77@    
                     elif count_l == 3 and count_w == 2 and w1=="180" and w2=="0": 
-                        value001_str = str(value001)  
+
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+
                         img_path = image_list[3]
+                    
                         exec(code_string)
+                    
                         if int(l1) > int(l2):
-                            c.drawString(rect_x_position + 80, rect_y_position + 67 + ERROR, l1.center(6))
-                            c.drawString(rect_x_position + 40, rect_y_position + 105 + ERROR, l2.rjust(6))
+                            c.drawString(rect_x_position + 80, rect_y_position + 67, l1.center(6))
+                            c.drawString(rect_x_position + 40, rect_y_position + 105, l2.rjust(6))
                         else:
-                            c.drawString(rect_x_position + 80, rect_y_position + 67 + ERROR, l2.center(6))
-                            c.drawString(rect_x_position + 40, rect_y_position + 105 + ERROR, l1.rjust(6))
+                            c.drawString(rect_x_position + 80, rect_y_position + 67, l2.center(6))
+                            c.drawString(rect_x_position + 40, rect_y_position + 105, l1.rjust(6))
+
             #TH2    BF2D@Hj@r@i@p1@l1979@n1@e3.09@d16@gSD295@s80@v@a@Gl218@w90@l1800@w0@C88@    
                     elif count_l == 3 and count_w == 2 and w1=="90" and w2=="0": 
-                        value001_str = str(value001)  
+                        
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+                        
                         img_path = image_list[2]
+                    
                         exec(code_string)
+                    
                         if int(l1) > int(l2):
-                            c.drawString(rect_x_position + 8, rect_y_position + 62 + ERROR, l2.rjust(6))
-                            c.drawString(rect_x_position + 79, rect_y_position + 81 + ERROR, l1.center(6))
+                            c.drawString(rect_x_position + 8, rect_y_position + 62, l2.rjust(6))
+                            c.drawString(rect_x_position + 79, rect_y_position + 81, l1.center(6))
                         else:
-                            c.drawString(rect_x_position + 8, rect_y_position + 62 + ERROR, l1.rjust(6))
-                            c.drawString(rect_x_position + 79, rect_y_position + 81 + ERROR, l2.center(6))
+                            c.drawString(rect_x_position + 8, rect_y_position + 62, l1.rjust(6))
+                            c.drawString(rect_x_position + 79, rect_y_position + 81, l2.center(6))
+
             #TH1    BF2D@Hj@r@i@p1@l2250@n1@e14.02@d32@gSD390@s@v@a@Gl2250@w0@C83@
                     elif count_l == 2 and count_w == 1 and w1=="0":                         
-
+                        # Chuyển đổi aaaa thành chuỗi
                         value001_str = str(value001)
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+
                         img_path = image_list[1]
+                    
                         exec(code_string)
-                        c.drawString(rect_x_position + 79, rect_y_position + 81 + ERROR, l1.center(6))
+                    
+                        c.drawString(rect_x_position + 79, rect_y_position + 81, l1.center(6))
             #TH0
                     else:
-                        value001_str = str(value001) 
+                        value001_str = str(value001)  # Chuyển đổi aaaa thành chuỗi
+                        # Chuỗi dữ liệu đã lấy từ đầu đến ký tự 'G'
                         result = extract_numbers(value001_str)
+                        # Kiểm tra nếu 'G' không tồn tại trong chuỗi
+                        
+
+                        # Thêm văn bản vào
                         c.setFont('msmincho.ttc', 10)
-                        c.drawString(rect_x_position + 110, rect_y_position + 134, 'mm') #
-                        c.drawString(rect_x_position + 165, rect_y_position + 132, '本')
+                        c.drawString(rect_x_position + 110, rect_y_position + 149, 'mm')
+                        c.drawString(rect_x_position + 165, rect_y_position + 147, '本')
                         if result['s'] == "":
-                            c.drawString(rect_x_position + 210, rect_y_position + 128, '')
+                            c.drawString(rect_x_position + 220, rect_y_position + 147, '')
                         else:
-                            c.drawString(rect_x_position + 210, rect_y_position + 128, 'ピン＝')
+                            c.drawString(rect_x_position + 220, rect_y_position + 147, 'ピン＝')
                         c.setFont('msmincho.ttc', 16)
-                        c.drawString(rect_x_position + 15, rect_y_position + 120, result['d'])
-                        c.drawString(rect_x_position + 80, rect_y_position + 120, result['l'])
-                        c.drawString(rect_x_position + 152, rect_y_position + 120, result['n'])
+                        c.drawString(rect_x_position + 15, rect_y_position + 135, "D" + result['d'])
+                        c.drawString(rect_x_position + 80, rect_y_position + 135, result['l'])
+                        c.drawString(rect_x_position + 152, rect_y_position + 135, result['n'])
 
                         c.setFont('msmincho.ttc', 10)
-                        c.drawString(rect_x_position + 243, rect_y_position + 128, result['s'])
+                        c.drawString(rect_x_position + 255, rect_y_position + 147, result['s'] )
+
                         c.setFont('msmincho.ttc', 20)
                         c.drawString(rect_x_position + 70, rect_y_position + 70, "非定型")  #giữa
 #######################################################################################################           
@@ -1916,6 +2357,7 @@ def main():
                     #Lệnh canh lề phải trong pdf
                     c.drawRightString(rect_x_position + x3, rect_y_position + y3, text33)
                     c.drawRightString(rect_x_position + x4, rect_y_position + y4, text44)
+                    
                     # Thiết lập múi giờ
                     desired_timezone = 'Asia/Tokyo'
                     # Tạo đối tượng múi giờ
@@ -1926,7 +2368,7 @@ def main():
                     formatted_time = current_time.strftime("%Y/%m/%d")
                     time1 = current_time.strftime("%H:%M:%S")
                     c.setFont('msmincho.ttc', 10)
-                    c.drawString(rect_x_position + 202, rect_y_position + 8, formatted_time)
+                    c.drawString(rect_x_position + 202, rect_y_position + 10, formatted_time)
 
                     # Di chuyển đến vị trí tiếp theo
                     rect_x_position += rect_width + x_spacing
@@ -1936,16 +2378,20 @@ def main():
                     if rects_on_page % 2 == 0:
                         rect_x_position = initial_rect_x_position
                         rect_y_position -= rect_height + y_spacing
+
                     # Tăng biến đếm NO
                     no += 1
+
                     # Kiểm tra nếu đã in đủ 4 hình từ trên xuống dưới, thì thêm trang mới
                     if rects_on_page >= 8:
                         c.showPage()  # Thêm trang mới
                         
                         rect_x_position = initial_rect_x_position
-                        rect_y_position = initial_rect_y_position
+                        rect_y_position = page_height - rect_height - 10
                         rects_on_page = 0
+                        
                         #no = 1  # Đặt lại biến đếm NO
+
                 # Đặt vị trí và in văn bản
                 #c.drawString(-10, -10, text_content)
                 # Lưu PDF
@@ -1996,21 +2442,23 @@ def main():
                 for x_cm, y_cm, width_cm, height_cm in rectangles:
                     # Vẽ các hình chữ nhật
                     exec(code_string1)
+                    
                 # Xét chuỗi BBVS
                 for value001 in dfsnet["BVBS"]:
+                    #st.write(value001)
                     value001_str = str(value001)
-                    index_g = value001.find('@g')
-                    index_at = value001.find('@', index_g + 2)
-                    数量1  = value001[index_g + 2:index_at]
+                    
                     # Sử dụng biểu thức chính quy để tìm số sau "SD" đến ký tự "@"
-                    #数量 = r'SD(\d+\.\d+|\d+)@'
+                    数量 = r'SD(\d+\.\d+|\d+)@'
                     # Tìm tất cả các kết quả phù hợp với biểu thức chính quy
-                    #数量1 = re.findall(数量 , value001_str)
+                    数量1 = re.findall(数量 , value001_str)
+
                     # Sử dụng biểu thức chính quy để tìm số sau "SD" (bao gồm cả số thập phân)
                     ee = r'e(\d+\.\d+|\d+)@'
                     # Tìm kết quả phù hợp với biểu thức chính quy
                     number = re.search(ee, value001_str)
                     ee1 = number.group(1)
+                    
                     count_l = value001.count('l')
                     count_w = value001.count('w')
                     w1, w2, w3, w4, w5, w6, w7 = process_data1(value001_str)
@@ -2021,23 +2469,29 @@ def main():
                         img_path = image_list[60]
                         exec(code_string2)
                         p.setFont('msmincho.ttc', 10)
+                        
                         p.drawRightString(13.95 * 28.3465, (y1 + 0.15) * 28.3465 , l1)
                         p.drawRightString(13.55 * 28.3465, (y1 + 0.75) * 28.3465 , l2) #p.drawCentredString
                         p.drawRightString(13.95 * 28.3465, (y1 + 1.36) * 28.3465 , l3) #p.drawRightString
+
                         p.drawCentredString(14.6 * 28.3465, (y1 + 1.51) * 28.3465 , l4) #p.drawRightString
+
                         p.drawString(15.25 * 28.3465, (y1 + 1.36) * 28.3465 , l5) #p.drawRightString
                         p.drawString(15.65 * 28.3465, (y1 + 0.75) * 28.3465 , l6) #p.drawCentredString
                         p.drawString(15.28 * 28.3465, (y1 + 0.15) * 28.3465 , l7)
+
     #TH59   BF2D@Hj@r@i@p1@l1480@n1@e2.31@d16@gSD295@s80@v@a@Gl218@w90@l400@w90@l400@w90@l400@w-90@l218@w0@PtSEGOPT;o0;o1;o1;o0;o0@C82@            
                     elif count_l == 6 and count_w == 5 and (w1=="90" and w2=="90" and w3=="90" and w4=="-90" and w5=="0" and "PtSEGOPT" in value001 or w1=="90" and w2=="-90" and w3=="-90" and w4=="-90" and w5=="0" and "PtSEGOPT" in value001):
                         img_path = image_list[59]
                         exec(code_string2)
                         p.setFont('msmincho.ttc', 10)
+
                         p.drawRightString(14.15 * 28.3465, (y1 + 0.2) * 28.3465 , l1)
                         p.drawRightString(14.25 * 28.3465, (y1 + 0.9) * 28.3465 , l2) #p.drawCentredString
                         p.drawCentredString(14.63 * 28.3465, (y1 + 1.4) * 28.3465 , l3) #p.drawRightString
                         p.drawString(15 * 28.3465, (y1 + 0.85) * 28.3465 , l4) #p.drawCentredString
                         p.drawString(15 * 28.3465, (y1 + 0.2) * 28.3465 , l5)
+
     #TH58   BF2D@Hj@r@i@p1@l1480@n1@e2.31@d16@gSD295@s80@v@a@Gl218@w90@l400@w90@l400@w90@l400@w90@l218@w0@PtSEGOPT;o0;o1;o1;o0;o0@C95@
                     elif count_l == 6 and count_w == 5 and w1=="90" and w2=="90" and w3=="90" and w4=="90" and w5=="0" and "PtSEGOPT" in value001:
                         img_path = image_list[58]
@@ -2048,6 +2502,7 @@ def main():
                         p.drawCentredString(14.68 * 28.3465, (y1 + 1.49) * 28.3465 , l3) #p.drawRightString
                         p.drawString(15.06 * 28.3465, (y1 + 0.85) * 28.3465 , l4) #p.drawCentredString
                         p.drawString(14.8 * 28.3465, (y1 + 0.2) * 28.3465 , l5)
+
     #TH57   BF2D@Hj@r@i@p1@l1825@n1@e1.02@d10@gSD295@s30@v@a@Gl140@w101@l455@w79@l640@w90@l460@w-90@l200@w0@C96@
                     elif count_l == 6 and count_w == 5 and (90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="90" and w4=="-90" and w5=="0" or w1=="90" and w2=="-90" and -90 < int(w3) < 0 and -180 < int(w4) < -90  and w5=="0"):
                         img_path = image_list[57]
@@ -2065,6 +2520,7 @@ def main():
                             p.drawCentredString(14.6 * 28.3465, (y1 + 0.15) * 28.3465 , l3)
                             p.drawString(15.14 * 28.3465, (y1 + 0.84) * 28.3465 , l2) #p.drawCentredString
                             p.drawString(15.1 * 28.3465, (y1 + 1.54) * 28.3465 , l1) #p.drawRightString
+                        
     #TH56   BF2D@Hj@r@i@p1@l1865@n5@e5.22@d10@gSD295@s30@v@a@Gl140@w101@l455@w79@l640@w90@l460@w90@l240@w0@C91@
                     elif count_l == 6 and count_w == 5 and (90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="90" and w4=="90" and w5=="0" or w1=="90" and w2=="90" and 0 < int(w3) < 90 and 90 < int(w4) < 180  and w5=="0"):
                         img_path = image_list[56]
@@ -2081,6 +2537,8 @@ def main():
                             p.drawRightString(13.8 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #p.drawCentredString
                             p.drawCentredString(14.9 * 28.3465, (y1 + 0.15) * 28.3465 , l3)
                             p.drawString(15.65 * 28.3465, (y1 + 0.84) * 28.3465 , l2) #p.drawCentredString
+                            p.drawString(15.1 * 28.3465, (y1 + 1.54) * 28.3465 , l1) #p.drawRightString
+                        
     #TH55   BF2D@Hj@r@i@p1@l1841@n1@e1.03@d10@gSD295@s30@v@a@Gl150@w79@l460@w-79@l640@w-90@l460@w90@l200@w0@C89@
                     elif count_l == 6 and count_w == 5 and (0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="-90" and w4=="90" and w5=="0" or w1=="90" and w2=="-90" and -90 < int(w3) < 0 and 0 < int(w4) < 90  and w5=="0"):
                         img_path = image_list[55]
@@ -2103,6 +2561,7 @@ def main():
                         img_path = image_list[54]
                         exec(code_string2)
                         p.setFont('msmincho.ttc', 10)
+
                         if 0 < int(w1) < 90 and -90 < int(w2) < 0 and w3=="-90" and w4=="-90" and w5=="0":
                             p.drawRightString(14 * 28.3465, (y1 + 1.54) * 28.3465 , l1) #p.drawRightString
                             p.drawRightString(14.07 * 28.3465, (y1 + 0.8) * 28.3465 , l2) #p.drawCentredString
@@ -2115,6 +2574,7 @@ def main():
                             p.drawCentredString(15 * 28.3465, (y1 + 0.15) * 28.3465 , l3)
                             p.drawString(15.65 * 28.3465, (y1 + 0.84) * 28.3465 , l2) #p.drawCentredString
                             p.drawString(15.1 * 28.3465, (y1 + 1.54) * 28.3465 , l1) #p.drawRightString
+
     #TH53   BF2D@Hj@r@i@p1@l1924@n1@e1.08@d10@gSD295@s30@v@a@Gl200@w106@l470@w74@l700@w79@l460@w-79@l150@w0@C81@
                     elif count_l == 6 and count_w == 5 and (90 < int(w1) < 180 and 0 < int(w2) < 90 and 0 < int(w3) < 90 and -90 < int(w4) < 0 and w5=="0" or 0 < int(w1) < 90 and -90 < int(w2) < 0 and -90 < int(w3) < 0 and -180 < int(w4) < -90 and w5=="0"):
                         img_path = image_list[53]
@@ -2132,6 +2592,7 @@ def main():
                             p.drawCentredString(14.8 * 28.3465, (y1 + 0.15) * 28.3465 , l3)
                             p.drawString(15.55 * 28.3465, (y1 + 0.84) * 28.3465 , l4) #p.drawCentredString
                             p.drawString(15 * 28.3465, (y1 + 1.54) * 28.3465 , l5) #p.drawRightString
+                            
     #TH52   BF2D@Hj@r@i@p1@l1770@n2@e1.98@d10@gSD295@s30@v@a@Gl87@w180@l450@w90@l650@w90@l450@w-90@l180@w0@C85@
                     elif count_l == 6 and count_w == 5 and (w1=="180" and w2=="90" and w3=="90" and w4=="-90" and w5=="0" or w1=="90" and w2=="-90" and w3=="-90" and w4=="-180" and w5=="0"):
                         img_path = image_list[52]
@@ -2292,6 +2753,7 @@ def main():
                             p.drawRightString(13.55 * 28.3465, (y1 + 0.9) * 28.3465 , l2) #p.drawCentredString
                             p.drawCentredString(14.3 * 28.3465, (y1 + 0.36) * 28.3465 , l3) #p.drawCentredString
                             p.drawString(15.26 * 28.3465, (y1 + 0.62) * 28.3465 , l4) #p.drawCentredString
+
     #TH42   BF2D@Hj@r@i@p1@l1508@n1@e0.84@d10@gSD295@s30@v@a@Gl200@w23@l500@w90@l350@w90@l500@w0@C75@
                     elif count_l == 5 and count_w == 4 and (0 < int(w1) < 90 and w2 =="90" and w3=="90" and w4 =="0" or w1=="90" and w2 =="90" and 0 < int(w3) < 90 and w4=="0"):
                         img_path = image_list[42]
@@ -2336,7 +2798,8 @@ def main():
                             p.drawString(15.64 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #p.drawCentredString
                             p.drawRightString(14.85 * 28.3465, (y1 + 1.4) * 28.3465 , l3) #p.drawRightString
                             p.drawRightString(13.55 * 28.3465, (y1 + 0.73) * 28.3465 , l2) #p.drawCentredString
-                            p.drawString(13.6 * 28.3465, (y1 + 0.15) * 28.3465 , l1)  
+                            p.drawString(13.6 * 28.3465, (y1 + 0.15) * 28.3465 , l1)
+                            
     #TH39   BF2D@Hj@r@i@p1@l1058@n1@e0.59@d10@gSD295@s30@v@a@Gl400@w113@l250@w67@l300@w-90@l150@w0@C72@
                     elif count_l == 5 and count_w == 4 and (90 < int(w1) < 180 and 0 < int(w2) < 90 and w3=="-90" and w4 =="0" or w1=="90" and -90 < int(w2) < 0 and -180 < int(w3) < -90 and w4=="0"):
                         img_path = image_list[39]
@@ -2367,6 +2830,7 @@ def main():
                             p.drawString(13.75 * 28.3465, (y1 + 1) * 28.3465 , l3) #p.drawCentredString
                             p.drawRightString(14.45 * 28.3465, (y1 + 0.5) * 28.3465 , l2) #p.drawCentredString
                             p.drawString(14.85 * 28.3465, (y1 + 0.5) * 28.3465 , l1)
+
     #TH37   BF2D@Hj@r@i@p1@l1238@n1@e1.23@d13@gSD295@s39@v@a@Gl400@w66@l300@w-66@l250@w-59@l325@w0@C88@
                     elif count_l == 5 and count_w == 4 and (0 < int(w1) < 90 and -90 < int(w2) < 0 and -90 < int(w3) < 0 and w4 =="0" or 0 < int(w1) < 90 and 0 < int(w2) < 90 and -90 < int(w3) < 0 and w4=="0"):
                         img_path = image_list[37]
@@ -2377,6 +2841,7 @@ def main():
                             p.drawString(14.9 * 28.3465, (y1 + 0.8) * 28.3465 , l2) #p.drawCentredString
                             p.drawCentredString(14.3 * 28.3465, (y1 + 0.15) * 28.3465 , l3)
                             p.drawRightString(13.72 * 28.3465, (y1 + 0.73) * 28.3465 , l4) #p.drawCentredString
+                            
                         else:
                             p.drawString(15 * 28.3465, (y1 + 1.53) * 28.3465 , l4) #p.drawRightString
                             p.drawString(14.9 * 28.3465, (y1 + 0.8) * 28.3465 , l3) #p.drawCentredString
@@ -2397,6 +2862,7 @@ def main():
                             p.drawString(14.58 * 28.3465, (y1 + 0.8) * 28.3465 , l3) #p.drawCentredString
                             p.drawCentredString(13.89 * 28.3465, (y1 + 0.15) * 28.3465 , l2)
                             p.drawRightString(13.55 * 28.3465, (y1 + 0.8) * 28.3465 , l1) #p.drawCentredString
+                   
     #TH35               
                     elif count_l == 7 and count_w == 6 and w1=="135" and w2=="90" and w3=="90" and w4=="90" and w5=="135" and w6=="0":
                         img_path = image_list[35]
@@ -2404,12 +2870,14 @@ def main():
                         p.setFont('msmincho.ttc', 10)
                         if int(l2) >= int(l3):
                             p.drawString(14.4 * 28.3465, (y1 + 1) * 28.3465 , l1.rjust(5))
+
                             p.drawString(14.2 * 28.3465, (y1 + 1.55) * 28.3465 , l2.center(6))
                             p.drawString(12.65 * 28.3465, (y1 + 0.8) * 28.3465 , l3.rjust(5))
                             p.drawString(14.2 * 28.3465, (y1 + 0.1) * 28.3465 , l4.center(6))
                             p.drawString(15.7 * 28.3465, (y1 + 0.8) * 28.3465 , l5) 
                         else:
                             p.drawString(14.4 * 28.3465, (y1 + 1) * 28.3465 , l1.rjust(5))
+
                             p.drawString(14.2 * 28.3465, (y1 + 1.55) * 28.3465 , l5.center(6))
                             p.drawString(12.65 * 28.3465, (y1 + 0.8) * 28.3465 , l4.rjust(5))
                             p.drawString(14.2 * 28.3465, (y1 + 0.1) * 28.3465 , l3.center(6))
@@ -2442,11 +2910,13 @@ def main():
                             p.drawString(13.31 * 28.3465, (y1 + 0.15) * 28.3465 , l3.rjust(5)) #1.rjust(5)
                             p.drawString(14.3 * 28.3465, (y1 + 0.65) * 28.3465 , l2) #l4.center(6)                  
                             p.drawString(14.8 * 28.3465, (y1 + 1.15) * 28.3465 , l1) #1.rjust(5)
+
     #TH32   BF2D@Hj@r@i@p1@l1376@n1@e1.37@d13@gSD295@s39@v@a@Gl164@w90@l200@w90@l750@w90@l200@w90@l164@w0@C75@
                     elif count_l == 6 and count_w == 5 and w1=="90" and w2=="90" and w3=="90" and w4=="90" and w5=="0":
                         img_path = image_list[32]
                         exec(code_string2) 
                         p.setFont('msmincho.ttc', 10)   
+                        
                         p.drawString(13.35 * 28.3465, (y1 + 0.15) * 28.3465 , l1.rjust(5)) #1.rjust(5)
                         p.drawString(12.68 * 28.3465, (y1 + 0.6) * 28.3465 , l2.rjust(5)) #1.rjust(5)
                         p.drawString(14.2 * 28.3465, (y1 + 1.05) * 28.3465 , l3.center(6)) #l4.center(6)
@@ -2462,6 +2932,7 @@ def main():
                         p.drawString(14.2 * 28.3465, (y1 + 0.15) * 28.3465 , l3.center(6)) #l4.center(6)
                         p.drawString(15.65 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #
                         p.drawString(14.55 * 28.3465, (y1 + 1.3) * 28.3465 , l5.rjust(5)) #1.rjust(5)
+
     #TH30   BF2D@Hj@r@i@p1@l1140@n1@e0.64@d10@gSD295@s30@v@a@Gl87@w180@l340@w90@l300@w90@l340@w180@l87@w0@C90@
                     elif count_l == 6 and count_w == 5 and w1=="180" and w2=="90" and w3=="90" and w4=="180" and w5=="0":
                         img_path = image_list[30]
@@ -2472,6 +2943,7 @@ def main():
                         p.drawString(14.2 * 28.3465, (y1 + 0.15) * 28.3465 , l3.center(6)) #l4.center(6)
                         p.drawString(15.65 * 28.3465, (y1 + 0.8) * 28.3465 , l4) #
                         p.drawString(14.46 * 28.3465, (y1 + 1.06) * 28.3465 , l5.rjust(5)) #1.rjust(5)
+                        
     #TH29   BF2D@Hj@r@i@p1@l1369@n1@e1.36@d13@gSD295@s39@v@a@Gl220@w90@l300@w-90@l300@w-90@l300@w90@l350@w0@C84@
                     elif count_l == 6 and count_w == 5 and w1=="90" and w2=="-90" and w3=="-90" and w4=="90" and w5=="0":
                         img_path = image_list[29]
@@ -2535,6 +3007,7 @@ def main():
                         p.drawString(12.9 * 28.3465, (y1 + 0.5) * 28.3465 , l1.rjust(5)) #1.rjust(5)
                         p.drawString(14.1 * 28.3465, (y1 + 1.05) * 28.3465 , l2.center(6)) #l4.center(6)
                         p.drawString(15.35 * 28.3465, (y1 + 1.2) * 28.3465 , l3) #
+
     #TH24   BF2D@Hj@r@i@p1@l1987@n1@e6.04@d22@gSD345@s88@v@a@Gl204@w180@l1500@w-180@l204@w0@C83@
                     elif count_l == 4 and count_w == 3 and w1=="180" and w2=="-180" and w3=="0":
                         img_path = image_list[24]
@@ -2723,6 +3196,7 @@ def main():
                         p.drawString(12.9 * 28.3465, (y1 + 0.5) * 28.3465 , l1.rjust(5)) #1.rjust(5)
                         p.drawString(14.1 * 28.3465, (y1 + 1.05) * 28.3465 , l2.center(6)) #l4.center(6)
                         p.drawString(15.45 * 28.3465, (y1 + 0.5) * 28.3465 , l3) #
+
     #TH8    BF2D@Hj@r@i@p1@l2117@n1@e4.76@d19@gSD345@s114@v@a@Gl398@w85@l1509@w45@l265@w0@C89@
                     elif count_l == 4 and count_w == 3 and 0 < int(w1) < 90 and 0 < int(w2) < 90 and w3=="0":
                         img_path = image_list[8]
@@ -2731,6 +3205,7 @@ def main():
                         p.drawString(12.9 * 28.3465, (y1 + 0.7) * 28.3465 , l1.rjust(5)) #1.rjust(5)
                         p.drawString(14.1 * 28.3465, (y1 + 1.05) * 28.3465 , l2.center(6)) #l4.center(6)
                         p.drawString(15.45 * 28.3465, (y1 + 0.7) * 28.3465 , l3) #
+
     #TH7 BF2D@Hj@r@i@p1@l2300@n1@e1.29@d10@gSD295@s30@v@a@Gl87@w180@l2100@w180@l87@w0@C79@
                     elif count_l == 4 and count_w == 3 and w1=="180" and w2=="180" and w3=="0":
                         img_path = image_list[7]
@@ -2739,6 +3214,7 @@ def main():
                         p.drawString(13.35 * 28.3465, (y1 + 1.52) * 28.3465 , l1.rjust(5)) #l1.rjust(5)
                         p.drawString(14.1 * 28.3465, (y1 + 0.63) * 28.3465 , l2.center(6)) #l4.center(6)
                         p.drawString(14.98 * 28.3465, (y1 + 1.52) * 28.3465 , l3) #
+
     #TH6    BF2D@Hj@r@i@p1@l2158@n1@e3.37@d16@gSD295@s80@v@a@Gl218@w90@l1800@w90@l218@w0@C90@ 
                     elif count_l == 4 and count_w == 3 and w1=="90" and w2=="90" and w3=="0":
                         img_path = image_list[6]
@@ -2747,6 +3223,7 @@ def main():
                         p.drawString(12.6 * 28.3465, (y1 + 0.6) * 28.3465 , l1.rjust(5)) #1.rjust(5)
                         p.drawString(14.1 * 28.3465, (y1 + 1.05) * 28.3465 , l2.center(6)) #l4.center(6)
                         p.drawString(15.7 * 28.3465, (y1 + 0.6) * 28.3465 , l3) #
+
     #TH5    BF2D@Hj@r@i@p1@l1057@n1@e1.05@d13@gSD295@s39@v@a@Gl111@w135@l950@w0@C77@    
                     elif count_l == 3 and count_w == 2 and 90 < int(w1) < 180 and int(w2) == 0: 
                         img_path = image_list[5]
@@ -2800,11 +3277,14 @@ def main():
     #TH0
                     else:
                         for x_cm, y_cm, width_cm, height_cm in rectangles1:
+                            # Chèn hình ảnh vào hình chữ nhật tại tọa độ và điều chỉnh kích thước
                             p.setLineWidth(border_width1)
+                            # Vẽ các hình chữ nhật khác
                             p.rect(x_cm * 28.3465, y1 * 28.3465, width_cm * 28.3465, height_cm * 28.3465)
                             p.setFont('msmincho.ttc', 16) 
+                            # Vẽ văn bản tiếng Nhật và tiếng Anh với kích thước font khác nhau
                             p.drawString(0.85 * 28.3465, (y1 + 0.7) * 28.3465 , (f'No.{NO1}').center(5))  #1
-                            p.drawString(2.9 * 28.3465, (y1 + 0.7) * 28.3465 , (result['d']).center(5))  #2 
+                            p.drawString(2.9 * 28.3465, (y1 + 0.7) * 28.3465 , ("D" + result['d']).center(5))  #2 
                             p.drawString(4.75 * 28.3465, (y1 + 0.7) * 28.3465 , (result['l']).center(5))  #3 
                             p.drawString(6.85 * 28.3465, (y1 + 0.7) * 28.3465 , (result['n']).center(5))  #4 
                             p.drawString(8.9 * 28.3465, (y1 + 0.7) * 28.3465 , "")  #5 
@@ -2830,6 +3310,7 @@ def main():
                 buffer.seek(0)
                 return buffer
 #################################################################################################################################        
+            # Danh sách điều kiện và đường dẫn đến các hình ảnh
             image_list = [
 		        "image/0.png",
                 "image/1.png",
@@ -2898,42 +3379,42 @@ def main():
             st.title("情報を入力する")
             colA0, colA1, colA2, colA3, colA4, colA5, colA6 = st.columns(7)
             text11 = colA1.text_input("工事名", "某工事名")
+            #text11 = st.text_input("工事名", "某工事名")
             text22 = colA2.text_input("協力会社", "株式会社ABC")
             text33 = colA3.text_input("鉄筋メーカー", "某会社")
             text44 = colA4.text_input("使用場所", "Y1-X1 柱")
             text55 = colA5.date_input('運搬日')
 
-            x1, y1 = 3, 167 
-            x2, y2 = 3, 147
-            x3, y3 = 266, 167
-            x4, y4 = 266, 147
+            x1, y1 = 2, 184
+            x2, y2 = 2, 164
+            x3, y3 = 280, 184
+            x4, y4 = 280, 164
 
             selected_option = colA6.radio("", ["AM", "PM"])
+            # Hiển thị thông báo dựa trên tùy chọn được chọn
             if selected_option == "AM":
                 text66 = "AM"
             else:
                 text66 = "PM"
+
+            # Tạo PDF khi người dùng nhấn nút "Tạo PDF"
             st.subheader(' ', divider='rainbow')
+            #st.write("------------------------------------------------------")
             st.title("エフ・加工帳 PDF出力")
             #st.markdown('<h1 style="text-align: center;">BVBSと加工帳のPDFを作成する</h1>', unsafe_allow_html=True)
+            # Tạo hai cột với tỷ lệ chiều rộng 2:1
             col11, col22, col33, col44, col55, col66  = st.columns(6)
+            
+            if len(selected_rows):
+                if col33.button("エフ.PDFを作成"):
+                    pdf_buffer = create_pdf(dfs, image_list, text11, text22, text33, text44)
+                    col33.download_button("Download エフ.pdf", pdf_buffer, file_name="エフ.pdf", key="download_pdf")
 
             if len(selected_rows):
-                if result径 == 1: 
-                    if col33.button("エフ.PDFを作成"):
-                        pdf_buffer = create_pdf(dfs, image_list, text11, text22, text33, text44)
-                        col33.download_button("Download エフ.pdf", pdf_buffer, file_name="エフ.pdf", key="download_pdf")
-                else:
-                    st.write("")
-            if len(selected_rows):
-                if result径 == 1:
-                    if col44.button("加工帳.PDFを作成"):
-                        pdf_buffer = create_pdf1(text11, text22, text44, text55, text66)
-                        col44.download_button("Download 加工帳.pdf", pdf_buffer, file_name="加工帳.pdf", key="download-pdf-button")
-                    else:
-                        st.write("")
+                if col44.button("加工帳.PDFを作成"):
+                    pdf_buffer = create_pdf1(text11, text22, text44, text55, text66)
+                    col44.download_button("Download 加工帳.pdf", pdf_buffer, file_name="加工帳.pdf", key="download-pdf-button")
             st.subheader(' ', divider='rainbow')
-
 if __name__ == "__main__":
     session = st.session_state
     main()
