@@ -11,3 +11,4 @@ datetime
 fpdf
 pytz
 streamlit-aggrid
+PyMuPDF
