@@ -874,7 +874,7 @@ def main():
             )
             selected_rows = grid_return["selected_rows"]
             dfs = pd.DataFrame(selected_rows)
-            st.write(len(selected_rows))
+            #st.write(len(selected_rows))
 ################################################
 
             result径 = 1
