@@ -870,7 +870,7 @@ def main():
             selected_rows = grid_return["selected_rows"]
             dfs = pd.DataFrame(selected_rows)
             #st.write(len(selected_rows))
-            if len(selected_rows) >= 1 :
+            if selected_rows is not None and len(selected_rows) >= 1:
                 dfsnet = dfs.drop(columns=['_selectedRowNodeInfo'])
                 dfsnet['径'] = dfsnet['径'].astype(str).str.replace('D', '', regex=False)
                 #dfsnet['番号'] = dfsnet['番号'].astype(str).str.replace('No.', '', regex=False) #
