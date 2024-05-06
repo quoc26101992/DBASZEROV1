@@ -878,7 +878,7 @@ def main():
             selected_rows = grid_return["selected_rows"]
             dfs = pd.DataFrame(selected_rows)
             #st.write(dfs)
-            if len(selected_rows):
+            if selected_rows:
                 result径 = 1
                 dfsnet = dfs.drop(columns=['_selectedRowNodeInfo'])
                 def process_value(径):
