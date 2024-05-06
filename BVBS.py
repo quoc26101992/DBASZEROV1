@@ -877,6 +877,7 @@ def main():
             #st.write(selected_rows)
 ################################################
             if selected_rows:
+		st.write(selected_rows)
                 result径 = 1
                 dfsnet = dfs.drop(columns=['_selectedRowNodeInfo'])
                 def process_value(径):
