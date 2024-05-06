@@ -7,3 +7,4 @@ Pillow
 reportlab
 fpdf
 streamlit-aggrid
+openpyxl
