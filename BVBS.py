@@ -625,11 +625,14 @@ def main():
     st.header('モデルのアップロード')
     st.file_uploader("IFCデータを選択してください", type=['ifc'], key="uploaded_file", on_change=callback_upload)
 ##############################################################################################
-    if not "IsDataFrameLoaded" in session:
+    
+    if 'IsDataFrameLoaded' not in st.session_state:
         initialize_session_state()
-    if not session.IsDataFrameLoaded:
+
+    if not st.session_state.get('IsDataFrameLoaded', False):
         load_data()
-    if session.IsDataFrameLoaded:  
+
+    if st.session_state.get('IsDataFrameLoaded', False):
         
             ## DATAFRAME REVIEW           
 
@@ -874,75 +877,86 @@ def main():
             )
             selected_rows = grid_return["selected_rows"]
             dfs = pd.DataFrame(selected_rows)
-            #st.write(len(selected_rows))
-################################################
+            #st.write(dfs)
+            if len(selected_rows):
+                result径 = 1
+                dfsnet = dfs.drop(columns=['_selectedRowNodeInfo'])
+                def process_value(径):
+                    if 径[0] != 'D' or (径[0] == 'D' and (径[1:].isalpha() or not 径[1:].isdigit())):
+                        return 'D0'
+                    return 径
+                
+                column_to_check = dfsnet['径']
 
-            result径 = 1
-            dfsnet = dfs
-            
-######################################################
-            dfsnet['径'] = dfsnet['径'].astype(str).str.replace('D', '', regex=False) #LOẠI D RA KHỎI CHUỖI
-            #dfsnet['番号'] = dfsnet['番号'].astype(str).str.replace('No.', '', regex=False) #
+                condition_result = column_to_check.apply(process_value)
+                dfsnet['径'] = condition_result
 
-            df_l_after = dfsnet.iloc[:,-(max_count+1):] ###############
-            df_sum_before = dfsnet['sum_before']
-            dfsnet.loc[:, 'sum_after'] = df_l_after.astype(int).sum(axis = 1)
-            df_sum_after = dfsnet.loc[:, 'sum_after']
-            df_DELTA = df_sum_after.astype(int) - df_sum_before.astype(int)            
-            dfsnet['切寸'] = dfsnet['切寸helper'].astype(int) +  df_DELTA.astype(int)
-            
-            dfsnet['重量(kg)'] = round(dfsnet['数量'].astype(int) * dfsnet['切寸'].astype(int) * dfsnet['径'].astype(int).map(dictionary1) / 1000,2) 
-            for i in range(1,max_count_plus2):
-                dfsnet['l'+str(i)+'help'] = dfsnet['l and w'].astype(str).str.split("l").str[i]
-                dfsnet['l'+str(i)+'help'] = dfsnet['l'+str(i)+'help'].astype(str).str.split("@").str[1]
-                dfsnet['l'+str(i)+'help'].fillna("",inplace=True)
-                dfsnet['l'+str(i)+'help'] = "@" + dfsnet['l'+str(i)+'help'] + "@"
-                dfsnet['l'+str(i)+'help'] = dfsnet['l'+str(i)+'help'].replace("@@","",regex=False)
-                dfsnet['l'+str(i)+'help'] = "l" + dfsnet['l'+str(i)].astype(str) + dfsnet['l'+str(i)+'help']
-                dfsnet['l'+str(i)+'help'] = dfsnet['l'+str(i)+'help'].replace("l0","", regex=False)
-            df_l_help = dfsnet.iloc[:,-(max_count+1):]
-            dfsnet['l and w'] = df_l_help.astype(str).values.sum(axis=1) ###############
-            
-            dfsnet['searchIP'] = "BF2D@Hj@r@i@p"+ (dfsnet.index+1).astype(str)+"@l"+dfsnet['切寸'].astype(str).str.replace('.0', '', regex=False)+"@n"+dfsnet['数量'].astype(str)+"@e"+dfsnet['重量(kg)'].astype(str)+"@d"+dfsnet['径'].astype(str).str.replace('.0', '', regex=False)+"@g"+dfsnet['材質']+"@s"+dfsnet['s']+"@v@a@G"+dfsnet['l and w'].str.replace('threeD', '', regex=False)+dfsnet['private']
-            dfsnet['IP'] = [96-(sum([ord(ele) for ele in sub]))%32 for sub in dfsnet['searchIP']]
-            dfsnet['BVBS'] = dfsnet['searchIP'] + dfsnet['IP'].astype(str) + "@"
+                if 'D0' in condition_result.values:
+                    dfsnet['径'] = 'D0'
+                    result径 = 0
+                    st.warning('先頭に D を入力してください。 例 : (D16)', icon= "⚠️")
 
-            zz = 0
-            if result径 == 1:
-                with st.expander("鉄筋を左右反転にしたい場合は、該当箇所のチェックボックスにチェックを入れてください"):
-                    for value000 in dfsnet['BVBS']:
-                        zz += 1
-                        is_checked = st.checkbox(f" No.{zz} : {value000}")
-                        if is_checked:
-                            value002 = process_input_string(value000)
-                            dfsnet.at[zz - 1, 'BVBS'] = value002
-                            colored_text = change_color(value002)
-                            st.markdown('<span style="color: red; font-size: 15px;"> 左右反転後: </span>' + colored_text, unsafe_allow_html=True)
-            else: 
-                st.write("")
-            col000, col111, col222, col333, col444, col555 = st.columns(6)
-            ###_#Download Excel_###
-            dfsnet1 = dfsnet.drop(columns=["切寸helper","重量(kg)","s","l and w","private",'searchIP','IP','BVBS','sum_before','sum_after']) ###############
-            dfsnet1['番号'] = "No." + (dfsnet.index+1).astype(str)
-            dfsnet1 = dfsnet1.iloc[:, :(5+max_count+1)] ###############
-            dfsnet1['径'] = 'D' + dfsnet1['径']
-            buf = io.BytesIO()
-            dfsnet1.to_excel(buf, index=False, header=True)
-            file_name_0 = download_excel(session.file_name)
-            if result径 == 1: 
-                col222.download_button("Download Excel",buf.getvalue(),file_name_0,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-            else: 
-                st.write("")
-            ###_Download BVBS_###
-            df_BVBS = dfsnet['BVBS']
-            buf = io.BytesIO()
-            df_BVBS.to_csv(buf, index=False, header=False)
-            file_name_3 = download_bvbs(session.file_name)
-            if result径 == 1: 
-                col333.download_button("Download BVBS",buf.getvalue(),file_name_3)
-            else: 
-                st.write("")
+                dfsnet['径'] = dfsnet['径'].astype(str).str.replace('D', '', regex=False)
+                #dfsnet['番号'] = dfsnet['番号'].astype(str).str.replace('No.', '', regex=False) #
 
+                df_l_after = dfsnet.iloc[:,-(max_count+1):] ###############
+                df_sum_before = dfsnet['sum_before']
+                dfsnet.loc[:, 'sum_after'] = df_l_after.astype(int).sum(axis = 1)
+                df_sum_after = dfsnet.loc[:, 'sum_after']
+                df_DELTA = df_sum_after.astype(int) - df_sum_before.astype(int)            
+                dfsnet['切寸'] = dfsnet['切寸helper'].astype(int) +  df_DELTA.astype(int)
+                
+                dfsnet['重量(kg)'] = round(dfsnet['数量'].astype(int) * dfsnet['切寸'].astype(int) * dfsnet['径'].astype(int).map(dictionary1) / 1000,2) 
+                for i in range(1,max_count_plus2):
+                    dfsnet['l'+str(i)+'help'] = dfsnet['l and w'].astype(str).str.split("l").str[i]
+                    dfsnet['l'+str(i)+'help'] = dfsnet['l'+str(i)+'help'].astype(str).str.split("@").str[1]
+                    dfsnet['l'+str(i)+'help'].fillna("",inplace=True)
+                    dfsnet['l'+str(i)+'help'] = "@" + dfsnet['l'+str(i)+'help'] + "@"
+                    dfsnet['l'+str(i)+'help'] = dfsnet['l'+str(i)+'help'].replace("@@","",regex=False)
+                    dfsnet['l'+str(i)+'help'] = "l" + dfsnet['l'+str(i)].astype(str) + dfsnet['l'+str(i)+'help']
+                    dfsnet['l'+str(i)+'help'] = dfsnet['l'+str(i)+'help'].replace("l0","", regex=False)
+                df_l_help = dfsnet.iloc[:,-(max_count+1):]
+                dfsnet['l and w'] = df_l_help.astype(str).values.sum(axis=1) ###############
+                
+                dfsnet['searchIP'] = "BF2D@Hj@r@i@p"+ (dfsnet.index+1).astype(str)+"@l"+dfsnet['切寸'].astype(str).str.replace('.0', '', regex=False)+"@n"+dfsnet['数量'].astype(str)+"@e"+dfsnet['重量(kg)'].astype(str)+"@d"+dfsnet['径'].astype(str).str.replace('.0', '', regex=False)+"@g"+dfsnet['材質']+"@s"+dfsnet['s']+"@v@a@G"+dfsnet['l and w'].str.replace('threeD', '', regex=False)+dfsnet['private']
+                dfsnet['IP'] = [96-(sum([ord(ele) for ele in sub]))%32 for sub in dfsnet['searchIP']]
+                dfsnet['BVBS'] = dfsnet['searchIP'] + dfsnet['IP'].astype(str) + "@"
+
+                zz = 0
+                if result径 == 1:
+                    with st.expander("鉄筋を左右反転にしたい場合は、該当箇所のチェックボックスにチェックを入れてください"):
+                        for value000 in dfsnet['BVBS']:
+                            zz += 1
+                            is_checked = st.checkbox(f" No.{zz} : {value000}")
+                            if is_checked:
+                                value002 = process_input_string(value000)
+                                dfsnet.at[zz - 1, 'BVBS'] = value002
+                                colored_text = change_color(value002)
+                                st.markdown('<span style="color: red; font-size: 15px;"> 左右反転後: </span>' + colored_text, unsafe_allow_html=True)
+                else: 
+                    st.write("")
+                col000, col111, col222, col333, col444, col555 = st.columns(6)
+                ###_#Download Excel_###
+                dfsnet1 = dfsnet.drop(columns=["切寸helper","重量(kg)","s","l and w","private",'searchIP','IP','BVBS','sum_before','sum_after']) ###############
+                dfsnet1['番号'] = "No." + (dfsnet.index+1).astype(str)
+                dfsnet1 = dfsnet1.iloc[:, :(5+max_count+1)] ###############
+                dfsnet1['径'] = 'D' + dfsnet1['径']
+                buf = io.BytesIO()
+                dfsnet1.to_excel(buf, index=False, header=True)
+                file_name_0 = download_excel(session.file_name)
+                if result径 == 1: 
+                    col222.download_button("Download Excel",buf.getvalue(),file_name_0,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                else: 
+                    st.write("")
+                ###_Download BVBS_###
+                df_BVBS = dfsnet['BVBS']
+                buf = io.BytesIO()
+                df_BVBS.to_csv(buf, index=False, header=False)
+                file_name_3 = download_bvbs(session.file_name)
+                if result径 == 1: 
+                    col333.download_button("Download BVBS",buf.getvalue(),file_name_3)
+                else: 
+                    st.write("")
 ###############################################################################################################################
             # Cài đặt phông chữ tiếng Nhật
             pdfmetrics.registerFont(TTFont('msmincho.ttc', 'form/MSMINCHO.TTF'))  ###########################################################
@@ -2907,14 +2921,14 @@ def main():
             #st.markdown('<h1 style="text-align: center;">BVBSと加工帳のPDFを作成する</h1>', unsafe_allow_html=True)
             col11, col22, col33, col44, col55, col66  = st.columns(6)
 
-            if selected_rows:
+            if len(selected_rows):
                 if result径 == 1: 
                     if col33.button("エフ.PDFを作成"):
                         pdf_buffer = create_pdf(dfs, image_list, text11, text22, text33, text44)
                         col33.download_button("Download エフ.pdf", pdf_buffer, file_name="エフ.pdf", key="download_pdf")
                 else:
                     st.write("")
-            if selected_rows:
+            if len(selected_rows):
                 if result径 == 1:
                     if col44.button("加工帳.PDFを作成"):
                         pdf_buffer = create_pdf1(text11, text22, text44, text55, text66)
