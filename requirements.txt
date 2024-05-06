@@ -6,4 +6,4 @@ qrcode
 Pillow
 reportlab
 fpdf
-st-aggrid
+streamlit-aggrid
