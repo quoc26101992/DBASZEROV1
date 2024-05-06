@@ -625,11 +625,14 @@ def main():
     st.header('モデルのアップロード')
     st.file_uploader("IFCデータを選択してください", type=['ifc'], key="uploaded_file", on_change=callback_upload)
 ##############################################################################################
-    if not "IsDataFrameLoaded" in session:
+    
+    if 'IsDataFrameLoaded' not in st.session_state:
         initialize_session_state()
-    if not session.IsDataFrameLoaded:
+
+    if not st.session_state.get('IsDataFrameLoaded', False):
         load_data()
-    if session.IsDataFrameLoaded:  
+
+    if st.session_state.get('IsDataFrameLoaded', False):
         
             ## DATAFRAME REVIEW           
 
