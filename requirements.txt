@@ -9,6 +9,9 @@ qrcode
 Pillow
 datetime
 fpdf
-canvas
 pytz
 streamlit-aggrid
+PyMuPDF
+setuptools
+mathutils
+lark
