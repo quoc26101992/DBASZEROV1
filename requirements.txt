@@ -9,5 +9,6 @@ qrcode
 Pillow
 datetime
 fpdf
+canvas
 pytz
 streamlit-aggrid
