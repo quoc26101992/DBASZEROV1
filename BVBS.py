@@ -879,7 +879,7 @@ def main():
                 if '_selectedRowNodeInfo' in dfs.columns:
                     dfsnet = dfs.drop(columns=['_selectedRowNodeInfo'])
                     dfsnet['径'] = dfsnet['径'].astype(str).str.replace('D', '', regex=False)
-
+                dfsnet['径'] = dfsnet['径'].astype(str).str.replace('D', '', regex=False)
                 #dfsnet['径'] = dfsnet['径'].astype(str).str.replace('D', '', regex=False)
                 #dfsnet['番号'] = dfsnet['番号'].astype(str).str.replace('No.', '', regex=False) #
                 df_l_after = dfsnet.iloc[:,-(max_count+1):] ###############
