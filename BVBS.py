@@ -878,8 +878,13 @@ def main():
 ################################################
             if len(selected_rows) >= 1:
                 result径 = 1
-                dfsnet = dfs.drop(columns=['_selectedRowNodeInfo'])
-                st.write(dfsnet)
+                # Thực hiện các thao tác với selected_rows
+                st.write(selected_rows)
+                result径 = 1
+                if '_selectedRowNodeInfo' in dfs.columns:
+                    dfsnet = dfs.drop(columns=['_selectedRowNodeInfo'])
+                else:
+                    st.write("Cột '_selectedRowNodeInfo' không tồn tại trong DataFrame.")
                 def process_value(径):
                     if 径[0] != 'D' or (径[0] == 'D' and (径[1:].isalpha() or not 径[1:].isdigit())):
                         return 'D0'
