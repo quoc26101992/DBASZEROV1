@@ -19,7 +19,7 @@ import re
 import pytz
 from st_aggrid import GridOptionsBuilder, AgGrid, JsCode
 from st_aggrid.shared import ColumnsAutoSizeMode
-from io import BytesIO
+
 
 def createList(n):
     list = []
@@ -869,18 +869,10 @@ def main():
             )
             selected_rows = grid_return["selected_rows"]
             dfs = pd.DataFrame(selected_rows)
-#############################################################################################
             #st.write(len(selected_rows))
             if selected_rows is not None and len(selected_rows) >= 1:
-                if '_selectedRowNodeInfo' in dfs.columns:
-                    dfsnet = dfs.drop(columns=['_selectedRowNodeInfo'])
-                #dfsnet = dfs.drop(columns=['_selectedRowNodeInfo'])
-                dfsnet = None  # Khởi tạo biến dfsnet trước khi sử dụng
-                if '_selectedRowNodeInfo' in dfs.columns:
-                    dfsnet = dfs.drop(columns=['_selectedRowNodeInfo'])
-                    dfsnet['径'] = dfsnet['径'].astype(str).str.replace('D', '', regex=False)
+                dfsnet = dfs.drop(columns=['_selectedRowNodeInfo'])
                 dfsnet['径'] = dfsnet['径'].astype(str).str.replace('D', '', regex=False)
-                #dfsnet['径'] = dfsnet['径'].astype(str).str.replace('D', '', regex=False)
                 #dfsnet['番号'] = dfsnet['番号'].astype(str).str.replace('No.', '', regex=False) #
                 df_l_after = dfsnet.iloc[:,-(max_count+1):] ###############
                 df_sum_before = dfsnet['sum_before']
