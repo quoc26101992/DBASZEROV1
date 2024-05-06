@@ -19,7 +19,7 @@ import re
 import pytz
 from st_aggrid import GridOptionsBuilder, AgGrid, JsCode
 from st_aggrid.shared import ColumnsAutoSizeMode
-
+from io import BytesIO
 
 def createList(n):
     list = []
@@ -873,6 +873,7 @@ def main():
             if selected_rows is not None and len(selected_rows) >= 1:
                 if '_selectedRowNodeInfo' in dfs.columns:
                     dfsnet = dfs.drop(columns=['_selectedRowNodeInfo'])
+                #dfsnet = dfs.drop(columns=['_selectedRowNodeInfo'])
                 dfsnet['径'] = dfsnet['径'].astype(str).str.replace('D', '', regex=False)
                 #dfsnet['番号'] = dfsnet['番号'].astype(str).str.replace('No.', '', regex=False) #
                 df_l_after = dfsnet.iloc[:,-(max_count+1):] ###############
@@ -3400,12 +3401,12 @@ def main():
             # Tạo hai cột với tỷ lệ chiều rộng 2:1
             col11, col22, col33, col44, col55, col66  = st.columns(6)
             
-            if selected_rows is not None and len(selected_rows) >= 1:
+            if len(selected_rows):
                 if col33.button("エフ.PDFを作成"):
                     pdf_buffer = create_pdf(dfs, image_list, text11, text22, text33, text44)
                     col33.download_button("Download エフ.pdf", pdf_buffer, file_name="エフ.pdf", key="download_pdf")
 
-            if selected_rows is not None and len(selected_rows) >= 1:
+            if len(selected_rows):
                 if col44.button("加工帳.PDFを作成"):
                     pdf_buffer = create_pdf1(text11, text22, text44, text55, text66)
                     col44.download_button("Download 加工帳.pdf", pdf_buffer, file_name="加工帳.pdf", key="download-pdf-button")
