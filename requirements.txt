@@ -11,9 +11,6 @@ datetime
 fpdf
 pytz
 streamlit-aggrid
-PyMuPDF
 setuptools
-mathutils
 lark
-ifcopenshell
 
