@@ -876,10 +876,10 @@ def main():
             dfs = pd.DataFrame(selected_rows)
             #st.write(selected_rows)
 ################################################
-            if selected_rows:
-                st.write(selected_rows)
+            if len(selected_rows) >= 1:
                 result径 = 1
                 dfsnet = dfs.drop(columns=['_selectedRowNodeInfo'])
+                st.write(dfsnet)
                 def process_value(径):
                     if 径[0] != 'D' or (径[0] == 'D' and (径[1:].isalpha() or not 径[1:].isdigit())):
                         return 'D0'
