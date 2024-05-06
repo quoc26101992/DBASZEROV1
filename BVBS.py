@@ -625,14 +625,11 @@ def main():
     st.header('モデルのアップロード')
     st.file_uploader("IFCデータを選択してください", type=['ifc'], key="uploaded_file", on_change=callback_upload)
 ##############################################################################################
-    
-    if 'IsDataFrameLoaded' not in st.session_state:
+    if not "IsDataFrameLoaded" in session:
         initialize_session_state()
-
-    if not st.session_state.get('IsDataFrameLoaded', False):
+    if not session.IsDataFrameLoaded:
         load_data()
-
-    if st.session_state.get('IsDataFrameLoaded', False):
+    if session.IsDataFrameLoaded:  
         
             ## DATAFRAME REVIEW           
 
@@ -877,7 +874,8 @@ def main():
             )
             selected_rows = grid_return["selected_rows"]
             dfs = pd.DataFrame(selected_rows)
-            #st.write(dfs)
+            #st.write(selected_rows)
+################################################
             if selected_rows:
                 result径 = 1
                 dfsnet = dfs.drop(columns=['_selectedRowNodeInfo'])
@@ -957,6 +955,7 @@ def main():
                     col333.download_button("Download BVBS",buf.getvalue(),file_name_3)
                 else: 
                     st.write("")
+      
 ###############################################################################################################################
             # Cài đặt phông chữ tiếng Nhật
             pdfmetrics.registerFont(TTFont('msmincho.ttc', 'form/MSMINCHO.TTF'))  ###########################################################
