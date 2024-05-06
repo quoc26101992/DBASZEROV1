@@ -878,7 +878,7 @@ def main():
 ################################################
 
             result径 = 1
-            dfsnet = dfs.drop(columns=['_selectedRowNodeInfo'])
+            dfsnet = dfs
             
 ######################################################
             dfsnet['径'] = dfsnet['径'].astype(str).str.replace('D', '', regex=False) #LOẠI D RA KHỎI CHUỖI
