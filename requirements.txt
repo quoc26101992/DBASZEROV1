@@ -11,4 +11,3 @@ datetime
 fpdf
 pytz
 streamlit-aggrid
-mathutils
