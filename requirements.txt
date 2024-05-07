@@ -10,4 +10,4 @@ Pillow
 datetime
 fpdf
 pytz
-streamlit-aggrid
+streamlit-aggrid==0.3.4
